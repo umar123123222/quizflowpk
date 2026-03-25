@@ -40,7 +40,7 @@ const Features = () => {
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
             Everything you need to{" "}
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="text-accent">
               quiz smarter
             </span>
           </h2>
