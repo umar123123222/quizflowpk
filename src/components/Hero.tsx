@@ -19,7 +19,7 @@ const Hero = () => {
 
           <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl opacity-0 animate-fade-up [animation-delay:100ms]">
             Build engaging quizzes{" "}
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="text-accent">
               in minutes
             </span>
           </h1>
