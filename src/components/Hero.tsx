@@ -35,7 +35,7 @@ const Hero = () => {
               Get Started Free
               <ArrowRight className="ml-1 h-5 w-5" />
             </Button>
-            <Button variant="hero-outline" size="lg" className="text-base px-8 py-6">
+            <Button variant="hero-outline" size="lg" className="text-base px-8 py-6 bg-primary border-primary text-primary-foreground hover:bg-primary/90">
               See How It Works
             </Button>
           </div>
