@@ -31,6 +31,8 @@ const ExamBuilder = () => {
   const [timeLimit, setTimeLimit] = useState("");
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
   const [saving, setSaving] = useState(false);
+  const [shareLink, setShareLink] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const addQuestion = () => {
     setQuestions((prev) => [...prev, createEmptyQuestion()]);
