@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -16,13 +16,19 @@ const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  useEffect(() => {
+    if (role) {
+      const path = role === "organization_owner" ? "/dashboard/owner" : "/dashboard/teacher";
+      navigate(path, { replace: true });
+    }
+  }, [role, navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
       await signIn(email, password);
       toast({ title: "Welcome back!", description: "Redirecting to your dashboard..." });
-      // Role-based redirect happens via useEffect below
     } catch (error: any) {
       toast({ title: "Login failed", description: error.message, variant: "destructive" });
     } finally {
