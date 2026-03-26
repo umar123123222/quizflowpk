@@ -2,6 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { Routes, Route } from "react-router-dom";
 import OwnerHome from "@/components/owner/OwnerHome";
+import ExamBuilder from "@/components/owner/ExamBuilder";
 
 const OwnerDashboard = () => {
   return (
