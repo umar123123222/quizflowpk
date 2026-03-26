@@ -32,6 +32,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return data?.role as AppRole | null;
   };
 
+  const ensureOrganization = async (userId: string, fullName: string) => {
+    const { data: existing } = await supabase
+      .from("organizations")
+      .select("id")
+      .eq("owner_id", userId)
+      .maybeSingle();
+    if (!existing) {
+      await supabase.from("organizations").insert({
+        name: `${fullName || "My"}'s Organization`,
+        owner_id: userId,
+      });
+    }
+  };
+
   useEffect(() => {
     let mounted = true;
 
