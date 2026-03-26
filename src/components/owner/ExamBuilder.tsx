@@ -119,6 +119,9 @@ const ExamBuilder = () => {
       const { error: qError } = await supabase.from("questions").insert(questionsToInsert);
       if (qError) throw qError;
 
+      const examLink = `${window.location.origin}/exam/${exam.id}`;
+      setShareLink(examLink);
+      setCopied(false);
       toast({ title: "Success", description: "Exam saved successfully!" });
       setTitle("");
       setTimeLimit("");
