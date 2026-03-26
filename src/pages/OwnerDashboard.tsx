@@ -2,6 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { Routes, Route } from "react-router-dom";
 import OwnerHome from "@/components/owner/OwnerHome";
+import ExamBuilder from "@/components/owner/ExamBuilder";
 
 const OwnerDashboard = () => {
   return (
@@ -16,7 +17,7 @@ const OwnerDashboard = () => {
           <main className="flex-1 bg-secondary/30 p-6">
             <Routes>
               <Route index element={<OwnerHome />} />
-              <Route path="exams" element={<PlaceholderPage title="Exams" />} />
+              <Route path="exams" element={<ExamBuilder />} />
               <Route path="users" element={<PlaceholderPage title="Users" />} />
               <Route path="results" element={<PlaceholderPage title="Results" />} />
               <Route path="settings" element={<PlaceholderPage title="Settings" />} />
