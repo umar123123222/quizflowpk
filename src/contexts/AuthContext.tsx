@@ -58,6 +58,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           try {
             const userRole = await fetchRole(session.user.id);
             if (mounted) setRole(userRole);
+            if (userRole === "organization_owner") {
+              await ensureOrganization(session.user.id, session.user.user_metadata?.full_name || "");
+            }
           } catch {
             if (mounted) setRole(null);
           }
