@@ -229,6 +229,33 @@ const ExamBuilder = () => {
           {saving ? "Saving..." : "Save Exam"}
         </Button>
       </div>
+      <Dialog open={!!shareLink} onOpenChange={(open) => !open && setShareLink(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Link className="h-5 w-5" />
+              Exam Shareable Link
+            </DialogTitle>
+            <DialogDescription>
+              Share this link with students to take the exam.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center gap-2 mt-2">
+            <Input value={shareLink || ""} readOnly className="font-mono text-sm" />
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => {
+                navigator.clipboard.writeText(shareLink || "");
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+            >
+              {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
