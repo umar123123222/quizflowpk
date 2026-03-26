@@ -77,15 +77,15 @@ const ExamBuilder = () => {
 
     setSaving(true);
     try {
-      // First get the user's organization
+      // Get the user's organization
       const { data: org, error: orgError } = await supabase
         .from("organizations")
         .select("id")
         .eq("owner_id", user?.id)
-        .single();
+        .maybeSingle();
 
       if (orgError || !org) {
-        toast({ title: "Error", description: "No organization found. Please create one first.", variant: "destructive" });
+        toast({ title: "Error", description: "No organization found. Please log out and back in.", variant: "destructive" });
         setSaving(false);
         return;
       }
