@@ -26,7 +26,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<AuthRedirect><Login /></AuthRedirect>} />
             <Route path="/signup" element={<AuthRedirect><Signup /></AuthRedirect>} />
-            <Route path="/dashboard/owner" element={<ProtectedRoute allowedRole="organization_owner"><OwnerDashboard /></ProtectedRoute>} />
+            <Route path="/dashboard/owner/*" element={<ProtectedRoute allowedRole="organization_owner"><OwnerDashboard /></ProtectedRoute>} />
             <Route path="/dashboard/teacher" element={<ProtectedRoute allowedRole="teacher"><TeacherDashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
