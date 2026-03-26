@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Plus, Trash2, Save, GripVertical } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Plus, Trash2, Save, GripVertical, Link, Copy, Check } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -30,6 +31,8 @@ const ExamBuilder = () => {
   const [timeLimit, setTimeLimit] = useState("");
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
   const [saving, setSaving] = useState(false);
+  const [shareLink, setShareLink] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const addQuestion = () => {
     setQuestions((prev) => [...prev, createEmptyQuestion()]);
@@ -116,6 +119,9 @@ const ExamBuilder = () => {
       const { error: qError } = await supabase.from("questions").insert(questionsToInsert);
       if (qError) throw qError;
 
+      const examLink = `${window.location.origin}/exam/${exam.id}`;
+      setShareLink(examLink);
+      setCopied(false);
       toast({ title: "Success", description: "Exam saved successfully!" });
       setTitle("");
       setTimeLimit("");
@@ -223,6 +229,33 @@ const ExamBuilder = () => {
           {saving ? "Saving..." : "Save Exam"}
         </Button>
       </div>
+      <Dialog open={!!shareLink} onOpenChange={(open) => !open && setShareLink(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Link className="h-5 w-5" />
+              Exam Shareable Link
+            </DialogTitle>
+            <DialogDescription>
+              Share this link with students to take the exam.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center gap-2 mt-2">
+            <Input value={shareLink || ""} readOnly className="font-mono text-sm" />
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => {
+                navigator.clipboard.writeText(shareLink || "");
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+            >
+              {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
