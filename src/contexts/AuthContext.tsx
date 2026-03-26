@@ -33,31 +33,48 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    let mounted = true;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        if (!mounted) return;
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          const userRole = await fetchRole(session.user.id);
-          setRole(userRole);
+          try {
+            const userRole = await fetchRole(session.user.id);
+            if (mounted) setRole(userRole);
+          } catch {
+            if (mounted) setRole(null);
+          }
         } else {
           setRole(null);
         }
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     );
 
     supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!mounted) return;
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        const userRole = await fetchRole(session.user.id);
-        setRole(userRole);
+        try {
+          const userRole = await fetchRole(session.user.id);
+          if (mounted) setRole(userRole);
+        } catch {
+          if (mounted) setRole(null);
+        }
       }
-      setLoading(false);
+      if (mounted) setLoading(false);
+    }).catch(() => {
+      if (mounted) setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string, role: AppRole, fullName: string) => {
