@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 const OwnerDashboard = () => {
-  const { user, signOut } = useAuth();
+  const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
 
   const { data: examCount = 0 } = useQuery({

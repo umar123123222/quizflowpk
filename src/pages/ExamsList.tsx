@@ -17,7 +17,7 @@ interface Exam {
 }
 
 const ExamsList = () => {
-  const { user, signOut } = useAuth();
+  const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -31,16 +31,23 @@ const ExamsList = () => {
 
   useEffect(() => {
     const fetchExams = async () => {
-      const { data, error } = await supabase
+      if (!user) return;
+      let query = supabase
         .from("exams")
         .select("id, title, description, created_at, is_published, time_limit")
         .order("created_at", { ascending: false });
 
+      // Teachers only see their own exams
+      if (role === "teacher") {
+        query = query.eq("created_by", user.id);
+      }
+
+      const { data, error } = await query;
       if (!error && data) setExams(data);
       setLoading(false);
     };
     fetchExams();
-  }, []);
+  }, [user, role]);
 
   const handleSignOut = async () => {
     await signOut();
