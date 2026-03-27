@@ -97,6 +97,11 @@ const CreateExam = () => {
     loadExam();
   }, [editId]);
 
+  // Owners cannot create exams — redirect to dashboard
+  if (role === "organization_owner") {
+    return <Navigate to="/dashboard/owner" replace />;
+  }
+
   const copyLink = async () => {
     await navigator.clipboard.writeText(examLink);
     toast({ title: "Link copied!", description: "Shareable exam link copied to clipboard." });
