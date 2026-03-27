@@ -141,6 +141,12 @@ const TeacherDashboard = () => {
               <h1 className="font-serif text-4xl md:text-5xl font-bold text-white/90">
                 Welcome <span className="text-[hsl(var(--dashboard-gold))]">back.</span>
               </h1>
+              {user?.user_metadata?.full_name && (
+                <p className="font-serif text-lg md:text-xl text-white/50 mt-2">
+                  {user.user_metadata.gender === "female" ? "Miss" : "Mr."}{" "}
+                  <span className="text-[hsl(var(--dashboard-gold))]">{user.user_metadata.full_name.split(" ")[0]}</span>
+                </p>
+              )}
             </div>
 
             {/* Stat Cards */}
