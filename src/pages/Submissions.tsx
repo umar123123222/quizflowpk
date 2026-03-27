@@ -232,9 +232,16 @@ const Submissions = () => {
                           ) : (
                             <ChevronRight className="h-4 w-4 text-white/30" />
                           )}
-                          <span className="font-serif text-base font-semibold text-white/85">
-                            {exam.title}
-                          </span>
+                          <div>
+                            <span className="font-serif text-base font-semibold text-white/85">
+                              {exam.title}
+                            </span>
+                            {exam.teacher_name && (
+                              <span className="ml-2 font-mono text-[10px] text-white/30">
+                                by {exam.teacher_name}
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <span className="font-mono text-[10px] tracking-wider uppercase text-white/30">
                           {exam.submissions.length} submission{exam.submissions.length !== 1 ? "s" : ""}
