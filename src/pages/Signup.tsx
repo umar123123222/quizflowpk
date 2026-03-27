@@ -16,9 +16,22 @@ const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [backupEmail, setBackupEmail] = useState("");
   const [role, setRole] = useState<"organization_owner" | "teacher">("teacher");
+  const [selectedOrgId, setSelectedOrgId] = useState("");
+  const [organizations, setOrganizations] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuth();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchOrgs = async () => {
+      const { data } = await supabase
+        .from("organizations")
+        .select("id, name")
+        .order("name");
+      if (data) setOrganizations(data);
+    };
+    fetchOrgs();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
