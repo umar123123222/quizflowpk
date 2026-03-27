@@ -15,6 +15,7 @@ import CreateExam from "./pages/CreateExam.tsx";
 import ExamsList from "./pages/ExamsList.tsx";
 import TakeExam from "./pages/TakeExam.tsx";
 import Submissions from "./pages/Submissions.tsx";
+import Settings from "./pages/Settings.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
