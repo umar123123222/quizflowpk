@@ -1,6 +1,7 @@
-import { Zap } from "lucide-react";
+import { Zap, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
   return (
