@@ -12,9 +12,16 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, role } = useAuth();
+  const { signIn, role, session } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (session && role) {
+      const path = role === "organization_owner" ? "/dashboard/owner" : "/dashboard/teacher";
+      navigate(path, { replace: true });
+    }
+  }, [session, role, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +29,6 @@ const Login = () => {
     try {
       await signIn(email, password);
       toast({ title: "Welcome back!", description: "Redirecting to your dashboard..." });
-      // Role-based redirect happens via useEffect below
     } catch (error: any) {
       toast({ title: "Login failed", description: error.message, variant: "destructive" });
     } finally {
