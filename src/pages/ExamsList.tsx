@@ -14,6 +14,7 @@ interface Exam {
   created_at: string | null;
   is_published: boolean | null;
   time_limit: number | null;
+  teacher_name?: string;
 }
 
 const ExamsList = () => {
@@ -32,18 +33,42 @@ const ExamsList = () => {
   useEffect(() => {
     const fetchExams = async () => {
       if (!user) return;
-      let query = supabase
-        .from("exams")
-        .select("id, title, description, created_at, is_published, time_limit")
-        .order("created_at", { ascending: false });
 
-      // Teachers only see their own exams
       if (role === "teacher") {
-        query = query.eq("created_by", user.id);
-      }
+        // Teachers only see their own exams
+        const { data, error } = await supabase
+          .from("exams")
+          .select("id, title, description, created_at, is_published, time_limit")
+          .eq("created_by", user.id)
+          .order("created_at", { ascending: false });
+        if (!error && data) setExams(data);
+      } else {
+        // Owner sees all exams in their org with teacher names
+        const { data: org } = await supabase
+          .from("organizations")
+          .select("id")
+          .eq("owner_id", user.id)
+          .single();
 
-      const { data, error } = await query;
-      if (!error && data) setExams(data);
+        if (org) {
+          const { data, error } = await supabase
+            .from("exams")
+            .select("id, title, description, created_at, is_published, time_limit, created_by")
+            .eq("organization_id", org.id)
+            .order("created_at", { ascending: false });
+
+          if (!error && data) {
+            // Fetch teacher names
+            const teacherIds = [...new Set(data.map((e) => e.created_by))];
+            const { data: profiles } = await supabase
+              .from("profiles")
+              .select("id, full_name")
+              .in("id", teacherIds);
+            const nameMap = new Map((profiles || []).map((p) => [p.id, p.full_name || "Unknown"]));
+            setExams(data.map((e) => ({ ...e, teacher_name: nameMap.get(e.created_by) || "Unknown" })));
+          }
+        }
+      }
       setLoading(false);
     };
     fetchExams();
@@ -125,6 +150,11 @@ const ExamsList = () => {
                           {exam.is_published ? "Published" : "Draft"}
                         </span>
                       </div>
+                      {exam.teacher_name && (
+                        <p className="font-mono text-[10px] text-white/30 mb-2">
+                          By: <span className="text-white/50">{exam.teacher_name}</span>
+                        </p>
+                      )}
                       {exam.description && (
                         <p className="text-xs text-white/35 mb-3 line-clamp-2">{exam.description}</p>
                       )}
@@ -145,18 +175,21 @@ const ExamsList = () => {
                         </span>
                       </div>
                       <div className="flex gap-2">
-                        <button
-                          onClick={() => navigate(`/dashboard/owner/create-exam?edit=${exam.id}`)}
-                          className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/40 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/60"
-                        >
-                          View / Edit
-                        </button>
+                        {role === "teacher" && (
+                          <button
+                            onClick={() => navigate(`/dashboard/owner/create-exam?edit=${exam.id}`)}
+                            className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/40 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/60"
+                          >
+                            View / Edit
+                          </button>
+                        )}
                         <button
                           onClick={() => copyExamLink(exam.id)}
                           title="Copy shareable link"
-                          className="flex items-center justify-center rounded-md border border-[hsl(var(--dashboard-border))] px-2.5 py-1.5 text-white/30 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-gold))]"
+                          className={`flex items-center justify-center rounded-md border border-[hsl(var(--dashboard-border))] px-2.5 py-1.5 text-white/30 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-gold))] ${role === "organization_owner" ? "flex-1" : ""}`}
                         >
                           <Copy className="h-3.5 w-3.5" />
+                          {role === "organization_owner" && <span className="ml-1.5 font-mono text-[10px] tracking-wider uppercase">Copy Link</span>}
                         </button>
                       </div>
                     </div>

@@ -17,6 +17,7 @@ import {
 interface ExamWithSubmissions {
   id: string;
   title: string;
+  teacher_name?: string;
   submissions: {
     id: string;
     score: number | null;
@@ -40,10 +41,9 @@ const Submissions = () => {
     const fetchData = async () => {
       if (!user) return;
 
-      let exams: { id: string; title: string }[] | null = null;
+      let exams: { id: string; title: string; created_by?: string }[] | null = null;
 
       if (role === "teacher") {
-        // Teachers only see their own exams
         const { data } = await supabase
           .from("exams")
           .select("id, title")
@@ -51,7 +51,6 @@ const Submissions = () => {
           .order("created_at", { ascending: false });
         exams = data;
       } else {
-        // Owners see all exams in their org
         const { data: org } = await supabase
           .from("organizations")
           .select("id")
@@ -62,10 +61,25 @@ const Submissions = () => {
 
         const { data } = await supabase
           .from("exams")
-          .select("id, title")
+          .select("id, title, created_by")
           .eq("organization_id", org.id)
           .order("created_at", { ascending: false });
         exams = data;
+      }
+
+      if (!exams || exams.length === 0) { setLoading(false); return; }
+
+      // For owners, fetch teacher names
+      let teacherMap = new Map<string, string>();
+      if (role === "organization_owner") {
+        const teacherIds = [...new Set(exams.map((e) => e.created_by).filter(Boolean))] as string[];
+        if (teacherIds.length > 0) {
+          const { data: profiles } = await supabase
+            .from("profiles")
+            .select("id, full_name")
+            .in("id", teacherIds);
+          teacherMap = new Map((profiles || []).map((p) => [p.id, p.full_name || "Unknown"]));
+        }
       }
 
       if (!exams || exams.length === 0) { setLoading(false); return; }
@@ -97,6 +111,7 @@ const Submissions = () => {
 
         results.push({
           ...exam,
+          teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
           submissions: subs.map((s) => ({
             id: s.id,
             score: s.score,
@@ -217,9 +232,16 @@ const Submissions = () => {
                           ) : (
                             <ChevronRight className="h-4 w-4 text-white/30" />
                           )}
-                          <span className="font-serif text-base font-semibold text-white/85">
-                            {exam.title}
-                          </span>
+                          <div>
+                            <span className="font-serif text-base font-semibold text-white/85">
+                              {exam.title}
+                            </span>
+                            {exam.teacher_name && (
+                              <span className="ml-2 font-mono text-[10px] text-white/30">
+                                by {exam.teacher_name}
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <span className="font-mono text-[10px] tracking-wider uppercase text-white/30">
                           {exam.submissions.length} submission{exam.submissions.length !== 1 ? "s" : ""}
