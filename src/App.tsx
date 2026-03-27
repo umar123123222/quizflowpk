@@ -35,6 +35,7 @@ const App = () => (
             <Route path="/dashboard/owner/exams" element={<ProtectedRoute allowedRole="organization_owner"><ExamsList /></ProtectedRoute>} />
             <Route path="/dashboard/owner/create-exam" element={<ProtectedRoute allowedRole="organization_owner"><CreateExam /></ProtectedRoute>} />
             <Route path="/dashboard/owner/submissions" element={<ProtectedRoute allowedRole="organization_owner"><Submissions /></ProtectedRoute>} />
+            <Route path="/dashboard/owner/settings" element={<ProtectedRoute allowedRole="organization_owner"><Settings /></ProtectedRoute>} />
             <Route path="/dashboard/teacher" element={<ProtectedRoute allowedRole="teacher"><TeacherDashboard /></ProtectedRoute>} />
             <Route path="/exam/:id" element={<TakeExam />} />
             <Route path="*" element={<NotFound />} />
