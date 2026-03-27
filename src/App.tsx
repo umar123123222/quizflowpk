@@ -17,6 +17,7 @@ import ExamsList from "./pages/ExamsList.tsx";
 import TakeExam from "./pages/TakeExam.tsx";
 import Submissions from "./pages/Submissions.tsx";
 import Settings from "./pages/Settings.tsx";
+import Users from "./pages/Users.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/dashboard/owner/create-exam" element={<ProtectedRoute><CreateExam /></ProtectedRoute>} />
             <Route path="/dashboard/owner/submissions" element={<ProtectedRoute><Submissions /></ProtectedRoute>} />
             <Route path="/dashboard/owner/settings" element={<ProtectedRoute allowedRole="organization_owner"><Settings /></ProtectedRoute>} />
+            <Route path="/dashboard/owner/users" element={<ProtectedRoute allowedRole="organization_owner"><Users /></ProtectedRoute>} />
             <Route path="/dashboard/teacher" element={<ProtectedRoute allowedRole="teacher"><TeacherDashboard /></ProtectedRoute>} />
             <Route path="/exam/:id" element={<TakeExam />} />
             <Route path="*" element={<NotFound />} />
