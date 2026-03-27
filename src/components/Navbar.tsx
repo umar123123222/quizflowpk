@@ -17,13 +17,16 @@ const Navbar = () => {
   const toggleTheme = () => setIsDark((prev) => !prev);
 
   return (
-    <nav className="fixed top-0 z-50 w-full backdrop-blur-md border-b border-[hsl(var(--homepage-nav-border))]" style={{ backgroundColor: 'transparent' }}>
+    <nav
+      className="fixed top-0 z-50 w-full backdrop-blur-md"
+      style={{ backgroundColor: 'transparent', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+    >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <div className="rounded-lg p-1.5 bg-[hsl(var(--homepage-gold))]">
-            <Zap className="h-5 w-5 text-[hsl(var(--homepage-bg))]" />
+          <div className="rounded-lg p-1.5" style={{ backgroundColor: '#e8c87a' }}>
+            <Zap className="h-5 w-5" style={{ color: '#0a0d14' }} />
           </div>
-          <span className="text-xl font-bold font-serif text-[hsl(var(--homepage-gold))]">QuizFlow</span>
+          <span className="text-xl font-bold font-serif" style={{ color: '#e8c87a' }}>QuizFlow</span>
         </div>
 
         <div className="hidden items-center gap-8 md:flex">
@@ -31,7 +34,10 @@ const Navbar = () => {
             <a
               key={item}
               href="#"
-              className="text-sm font-medium transition-colors text-[hsl(var(--homepage-nav-link))] hover:text-[hsl(var(--homepage-gold))]"
+              className="text-sm font-medium transition-colors"
+              style={{ color: 'rgba(232,227,213,0.6)' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#e8c87a')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(232,227,213,0.6)')}
             >
               {item}
             </a>
@@ -41,18 +47,26 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={toggleTheme}
-            className="flex items-center justify-center w-9 h-9 rounded-full border border-[hsl(var(--homepage-nav-border))] bg-transparent text-[hsl(var(--homepage-nav-link))] transition-colors"
+            className="flex items-center justify-center rounded-full transition-colors"
+            style={{
+              width: 36,
+              height: 36,
+              border: '1px solid rgba(255,255,255,0.12)',
+              background: 'transparent',
+              color: 'rgba(232,227,213,0.6)',
+            }}
             aria-label="Toggle theme"
           >
             {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
-          <Button variant="ghost" size="sm" asChild className="font-medium text-[hsl(var(--homepage-nav-link))]">
+          <Button variant="ghost" size="sm" asChild className="font-medium" style={{ color: 'rgba(232,227,213,0.5)' }}>
             <Link to="/login">Log in</Link>
           </Button>
           <Button
             size="sm"
             asChild
-            className="font-medium border-0 rounded-md bg-[hsl(var(--homepage-gold))] text-[hsl(var(--homepage-bg))] hover:opacity-90"
+            className="font-medium border-0"
+            style={{ backgroundColor: '#e8c87a', color: '#0a0d14', borderRadius: '6px' }}
           >
             <Link to="/signup">Sign up</Link>
           </Button>
