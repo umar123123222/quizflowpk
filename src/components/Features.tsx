@@ -41,7 +41,7 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="py-20 md:py-28">
+    <section style={{ paddingTop: '4rem', paddingBottom: '5rem' }}>
       <div className="container mx-auto px-4">
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <div
