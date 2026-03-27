@@ -20,7 +20,7 @@
 
   <body>
     <script>
-      (function(){var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');else if(t==='light')document.documentElement.classList.remove('dark');})();
+      (function(){var t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.remove('dark');else document.documentElement.classList.add('dark');})();
     </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
