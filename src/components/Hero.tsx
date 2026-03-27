@@ -17,18 +17,14 @@ const Hero = () => {
             The smartest way to create quizzes
           </div>
 
-          <h1
-            className="mb-6 font-serif tracking-tight opacity-0 animate-fade-up [animation-delay:100ms]"
-            style={{ fontSize: 'clamp(3rem, 6vw, 5.5rem)', fontWeight: 900, color: '#e8e3d5' }}
-          >
+          <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl opacity-0 animate-fade-up [animation-delay:100ms]">
             Build engaging quizzes{" "}
-            <span style={{ color: '#e8c87a' }}>in minutes</span>
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              in minutes
+            </span>
           </h1>
 
-          <p
-            className="mb-10 font-body opacity-0 animate-fade-up [animation-delay:200ms] mx-auto"
-            style={{ color: 'rgba(232,227,213,0.55)', fontWeight: 300, maxWidth: '520px', lineHeight: 1.75 }}
-          >
+          <p className="mb-10 text-lg text-muted-foreground md:text-xl opacity-0 animate-fade-up [animation-delay:200ms]">
             QuizFlow helps educators, trainers, and creators build beautiful,
             interactive quizzes with AI-powered question generation, real-time
             analytics, and seamless sharing.
