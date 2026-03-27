@@ -146,7 +146,8 @@ const CreateExam = () => {
       if (qError) throw qError;
 
       toast({ title: "Exam saved!", description: `"${title}" has been created successfully.` });
-      navigate("/dashboard/owner");
+      setSavedExamId(exam.id);
+      setShowLinkDialog(true);
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Something went wrong.", variant: "destructive" });
     } finally {
