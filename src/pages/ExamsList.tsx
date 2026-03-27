@@ -19,6 +19,13 @@ interface Exam {
 const ExamsList = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const copyExamLink = async (examId: string) => {
+    const link = `${window.location.origin}/exam/${examId}`;
+    await navigator.clipboard.writeText(link);
+    toast({ title: "Link copied!", description: "Shareable exam link copied to clipboard." });
+  };
   const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
 
