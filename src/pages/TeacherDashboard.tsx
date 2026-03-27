@@ -125,7 +125,7 @@ const TeacherDashboard = () => {
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(var(--dashboard-gold))] font-mono text-[12px] font-bold text-[hsl(var(--dashboard-bg))]">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(var(--dashboard-gold)/0.15)] font-mono text-[12px] font-bold text-[hsl(var(--dashboard-gold))]">
                 {user?.user_metadata?.full_name
                   ? user.user_metadata.full_name
                       .split(" ")
