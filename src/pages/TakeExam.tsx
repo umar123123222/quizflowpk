@@ -232,7 +232,40 @@ const TakeExam = () => {
     }
   };
 
-  // Fullscreen exit detection
+  // Anti-cheat: block right-click, copy, select, keyboard shortcuts
+  useEffect(() => {
+    if (!studentInfo || submitted) return;
+
+    const blockContextMenu = (e: MouseEvent) => e.preventDefault();
+    const blockCopy = (e: ClipboardEvent) => e.preventDefault();
+    const blockSelect = (e: Event) => {
+      if (window.getSelection) window.getSelection()?.removeAllRanges();
+    };
+    const blockKeys = (e: KeyboardEvent) => {
+      if (e.key === "F12") { e.preventDefault(); return; }
+      if (e.ctrlKey || e.metaKey) {
+        const blocked = ["a", "c", "u", "s", "p"];
+        if (blocked.includes(e.key.toLowerCase())) { e.preventDefault(); }
+      }
+    };
+
+    document.addEventListener("contextmenu", blockContextMenu);
+    document.addEventListener("copy", blockCopy);
+    document.addEventListener("selectstart", blockSelect);
+    document.addEventListener("keydown", blockKeys);
+    document.body.style.userSelect = "none";
+    document.body.style.webkitUserSelect = "none";
+
+    return () => {
+      document.removeEventListener("contextmenu", blockContextMenu);
+      document.removeEventListener("copy", blockCopy);
+      document.removeEventListener("selectstart", blockSelect);
+      document.removeEventListener("keydown", blockKeys);
+      document.body.style.userSelect = "";
+      document.body.style.webkitUserSelect = "";
+    };
+  }, [studentInfo, submitted]);
+
   useEffect(() => {
     if (!studentInfo || submitted) return;
 
