@@ -267,6 +267,7 @@ export type Database = {
           score: number | null
           student_id: string
           submitted_at: string | null
+          violations: Json | null
         }
         Insert: {
           answers?: Json | null
@@ -275,6 +276,7 @@ export type Database = {
           score?: number | null
           student_id: string
           submitted_at?: string | null
+          violations?: Json | null
         }
         Update: {
           answers?: Json | null
@@ -283,6 +285,7 @@ export type Database = {
           score?: number | null
           student_id?: string
           submitted_at?: string | null
+          violations?: Json | null
         }
         Relationships: [
           {

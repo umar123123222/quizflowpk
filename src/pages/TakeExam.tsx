@@ -71,6 +71,14 @@ const TakeExam = () => {
   const tabSwitchCount = useRef(0);
   const [showTabSwitchWarning, setShowTabSwitchWarning] = useState(false);
   const isSubmittingRef = useRef(false);
+  const violationsRef = useRef<Array<{ type: string; timestamp: string }>>([]); 
+
+  const addViolation = (type: string) => {
+    violationsRef.current.push({
+      type,
+      timestamp: new Date().toISOString(),
+    });
+  };
   const form = useForm<StudentInfo>({
     resolver: zodResolver(studentInfoSchema),
     defaultValues: { fullName: "", email: "", phone: "" },

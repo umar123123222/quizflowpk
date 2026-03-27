@@ -1,0 +1,1 @@
+ALTER TABLE public.submissions ADD COLUMN violations jsonb DEFAULT '[]'::jsonb;
