@@ -86,12 +86,12 @@ const OwnerDashboard = () => {
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-5">
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-white/40 hover:text-white/70" />
-              <span className="font-mono text-[11px] tracking-[0.15em] uppercase text-white/30">
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/40">
                 Org / Dashboard
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[hsl(var(--dashboard-gold)/0.15)] font-mono text-[10px] font-medium text-[hsl(var(--dashboard-gold))]">
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[hsl(var(--dashboard-gold)/0.18)] font-mono text-[11px] font-semibold text-[hsl(var(--dashboard-gold))]">
                 {user?.user_metadata?.full_name
                   ? user.user_metadata.full_name
                       .split(" ")
@@ -102,7 +102,7 @@ const OwnerDashboard = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 rounded-md border border-[hsl(var(--dashboard-border))] px-2.5 py-1 font-mono text-[10px] tracking-wider uppercase text-white/40 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/60"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/25 transition-colors hover:text-white/50"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
