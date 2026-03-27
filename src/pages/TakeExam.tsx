@@ -71,6 +71,14 @@ const TakeExam = () => {
   const tabSwitchCount = useRef(0);
   const [showTabSwitchWarning, setShowTabSwitchWarning] = useState(false);
   const isSubmittingRef = useRef(false);
+  const violationsRef = useRef<Array<{ type: string; timestamp: string }>>([]); 
+
+  const addViolation = (type: string) => {
+    violationsRef.current.push({
+      type,
+      timestamp: new Date().toISOString(),
+    });
+  };
   const form = useForm<StudentInfo>({
     resolver: zodResolver(studentInfoSchema),
     defaultValues: { fullName: "", email: "", phone: "" },
@@ -191,6 +199,7 @@ const TakeExam = () => {
       student_id: studentData.id,
       answers: answers,
       score: calculatedScore,
+      violations: violationsRef.current,
     });
 
     if (subError) {
@@ -272,13 +281,13 @@ const TakeExam = () => {
     const handleFullscreenChange = () => {
       if (!document.fullscreenElement && !isSubmittingRef.current && !hasAutoSubmitted.current) {
         fullscreenExitCount.current += 1;
+        addViolation("Full-screen exited");
         if (fullscreenExitCount.current >= 2) {
-          // Second exit — auto-submit immediately
+          addViolation("Auto-submitted: repeated full-screen exit");
           isSubmittingRef.current = true;
           toast({ title: "Exam Auto-Submitted", description: "You exited full-screen a second time. Your exam has been submitted.", variant: "destructive" });
           handleSubmitExam();
         } else {
-          // First exit — show warning
           setShowFullscreenWarning(true);
         }
       }
@@ -295,7 +304,9 @@ const TakeExam = () => {
     const handleVisibilityChange = () => {
       if (document.hidden && !isSubmittingRef.current && !hasAutoSubmitted.current) {
         tabSwitchCount.current += 1;
+        addViolation("Tab switched");
         if (tabSwitchCount.current >= 2) {
+          addViolation("Auto-submitted: repeated tab switching");
           isSubmittingRef.current = true;
           toast({ title: "Exam Auto-Submitted", description: "Your exam was submitted due to repeated tab switching.", variant: "destructive" });
           handleSubmitExam();

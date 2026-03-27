@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, ClipboardList, ChevronDown, ChevronRight } from "lucide-react";
+import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -22,6 +22,7 @@ interface ExamWithSubmissions {
     id: string;
     score: number | null;
     submitted_at: string | null;
+    violations: Array<{ type: string; timestamp: string }> | null;
     student: {
       full_name: string;
       email: string | null;
@@ -89,7 +90,7 @@ const Submissions = () => {
       for (const exam of exams) {
         const { data: subs } = await supabase
           .from("submissions")
-          .select("id, score, submitted_at, student_id")
+          .select("id, score, submitted_at, student_id, violations")
           .eq("exam_id", exam.id)
           .order("submitted_at", { ascending: false });
 
@@ -116,6 +117,7 @@ const Submissions = () => {
             id: s.id,
             score: s.score,
             submitted_at: s.submitted_at,
+            violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
             student: studentMap.get(s.student_id) || {
               full_name: "Unknown",
               email: null,
@@ -263,6 +265,7 @@ const Submissions = () => {
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Email</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Phone</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Score</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Violations</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Date</TableHead>
                                 </TableRow>
                               </TableHeader>
@@ -293,6 +296,27 @@ const Submissions = () => {
                                       >
                                         {sub.score !== null ? `${sub.score}%` : "—"}
                                       </span>
+                                    </TableCell>
+                                    <TableCell>
+                                      {sub.violations && sub.violations.length > 0 ? (
+                                        <div className="space-y-1">
+                                          {sub.violations.map((v, vi) => (
+                                            <div key={vi} className="flex items-center gap-1.5">
+                                              <ShieldAlert className="h-3 w-3 text-destructive shrink-0" />
+                                              <span className="font-mono text-[10px] text-destructive/80">
+                                                {v.type} at{" "}
+                                                {new Date(v.timestamp).toLocaleTimeString("en-US", {
+                                                  hour: "2-digit",
+                                                  minute: "2-digit",
+                                                  second: "2-digit",
+                                                })}
+                                              </span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      ) : (
+                                        <span className="font-mono text-[10px] text-white/20">No violations</span>
+                                      )}
                                     </TableCell>
                                     <TableCell className="font-mono text-[11px] text-white/40 text-right">
                                       {formatDate(sub.submitted_at)}
