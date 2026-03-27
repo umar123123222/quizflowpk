@@ -176,6 +176,7 @@ const CreateExam = () => {
             time_limit: timeLimit || null,
             organization_id: org.id,
             created_by: user!.id,
+            is_published: true,
           })
           .select("id")
           .single();
