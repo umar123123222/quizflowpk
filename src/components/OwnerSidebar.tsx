@@ -90,7 +90,7 @@ export function OwnerSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="px-4 py-4 border-t border-[hsl(var(--dashboard-border))]">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mb-3">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--dashboard-gold)/0.15)] font-mono text-xs font-medium text-[hsl(var(--dashboard-gold))]">
             {initials}
           </div>
@@ -105,6 +105,13 @@ export function OwnerSidebar() {
             </div>
           )}
         </div>
+        <button
+          onClick={handleSignOut}
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-[hsl(var(--dashboard-border))] px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/40 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/60"
+        >
+          <LogOut className="h-3 w-3" />
+          {!collapsed && <span>Sign out</span>}
+        </button>
       </SidebarFooter>
     </Sidebar>
   );
