@@ -60,13 +60,6 @@ const OwnerDashboard = () => {
 
   const quickActions = [
     {
-      title: "Create Exam",
-      subtitle: "Draft a new examination",
-      icon: Plus,
-      accent: "var(--dashboard-gold)",
-      onClick: () => navigate("/dashboard/owner/create-exam"),
-    },
-    {
       title: "Add Students",
       subtitle: "Import or add new students",
       icon: UserPlus,

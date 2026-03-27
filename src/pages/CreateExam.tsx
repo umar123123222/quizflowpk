@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,7 @@ const createEmptyQuestion = (): Question => ({
 });
 
 const CreateExam = () => {
-  const { user, signOut } = useAuth();
+  const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
@@ -96,6 +96,11 @@ const CreateExam = () => {
     };
     loadExam();
   }, [editId]);
+
+  // Owners cannot create exams — redirect to dashboard
+  if (role === "organization_owner") {
+    return <Navigate to="/dashboard/owner" replace />;
+  }
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(examLink);

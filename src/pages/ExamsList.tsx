@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { FileText, Plus, LogOut, Loader2, Copy } from "lucide-react";
+import { FileText, LogOut, Loader2, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Exam {
@@ -80,13 +80,6 @@ const ExamsList = () => {
           <main className="flex-1 p-6 md:p-10">
             <div className="flex items-center justify-between mb-8">
               <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/90">Exams</h1>
-              <button
-                onClick={() => navigate("/dashboard/owner/create-exam")}
-                className="flex items-center gap-2 rounded-lg border border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.1)] px-4 py-2 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] transition-colors hover:bg-[hsl(var(--dashboard-gold)/0.2)]"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                New Exam
-              </button>
             </div>
 
             {loading ? (
@@ -100,13 +93,7 @@ const ExamsList = () => {
                 </div>
                 <p className="text-sm text-white/50 mb-1">No exams yet</p>
                 <p className="font-mono text-[10px] text-white/25 mb-6">Create your first exam to get started</p>
-                <button
-                  onClick={() => navigate("/dashboard/owner/create-exam")}
-                  className="flex items-center gap-2 rounded-lg border border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.1)] px-4 py-2 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] transition-colors hover:bg-[hsl(var(--dashboard-gold)/0.2)]"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  Create Exam
-                </button>
+                <p className="font-mono text-[10px] text-white/25">Only teachers can create exams</p>
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
