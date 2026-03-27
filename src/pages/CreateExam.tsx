@@ -42,11 +42,6 @@ const createEmptyQuestion = (): Question => ({
 
 const CreateExam = () => {
   const { user, role, signOut } = useAuth();
-
-  // Owners cannot create exams — redirect to dashboard
-  if (role === "organization_owner") {
-    return <Navigate to="/dashboard/owner" replace />;
-  }
   const navigate = useNavigate();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
@@ -60,6 +55,11 @@ const CreateExam = () => {
   const [savedExamId, setSavedExamId] = useState<string | null>(null);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [loadingExam, setLoadingExam] = useState(false);
+
+  // Owners cannot create exams — redirect to dashboard
+  if (role === "organization_owner") {
+    return <Navigate to="/dashboard/owner" replace />;
+  }
 
   const examLink = (savedExamId || editId) ? `${window.location.origin}/exam/${savedExamId || editId}` : "";
 
