@@ -217,6 +217,44 @@ const TakeExam = () => {
 
   const onStudentSubmit = (data: StudentInfo) => {
     setStudentInfo(data);
+    // Request fullscreen when exam starts
+    try {
+      document.documentElement.requestFullscreen?.();
+    } catch (e) {
+      // Fullscreen may not be supported in all contexts (e.g., iframes)
+    }
+  };
+
+  // Fullscreen exit detection
+  useEffect(() => {
+    if (!studentInfo || submitted) return;
+
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && !isSubmittingRef.current && !hasAutoSubmitted.current) {
+        fullscreenExitCount.current += 1;
+        if (fullscreenExitCount.current >= 2) {
+          // Second exit — auto-submit immediately
+          isSubmittingRef.current = true;
+          toast({ title: "Exam Auto-Submitted", description: "You exited full-screen a second time. Your exam has been submitted.", variant: "destructive" });
+          handleSubmitExam();
+        } else {
+          // First exit — show warning
+          setShowFullscreenWarning(true);
+        }
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, [studentInfo, submitted, handleSubmitExam, toast]);
+
+  const handleReEnterFullscreen = () => {
+    setShowFullscreenWarning(false);
+    try {
+      document.documentElement.requestFullscreen?.();
+    } catch (e) {
+      // ignore
+    }
   };
 
   // Error state
