@@ -33,18 +33,42 @@ const ExamsList = () => {
   useEffect(() => {
     const fetchExams = async () => {
       if (!user) return;
-      let query = supabase
-        .from("exams")
-        .select("id, title, description, created_at, is_published, time_limit")
-        .order("created_at", { ascending: false });
 
-      // Teachers only see their own exams
       if (role === "teacher") {
-        query = query.eq("created_by", user.id);
-      }
+        // Teachers only see their own exams
+        const { data, error } = await supabase
+          .from("exams")
+          .select("id, title, description, created_at, is_published, time_limit")
+          .eq("created_by", user.id)
+          .order("created_at", { ascending: false });
+        if (!error && data) setExams(data);
+      } else {
+        // Owner sees all exams in their org with teacher names
+        const { data: org } = await supabase
+          .from("organizations")
+          .select("id")
+          .eq("owner_id", user.id)
+          .single();
 
-      const { data, error } = await query;
-      if (!error && data) setExams(data);
+        if (org) {
+          const { data, error } = await supabase
+            .from("exams")
+            .select("id, title, description, created_at, is_published, time_limit, created_by")
+            .eq("organization_id", org.id)
+            .order("created_at", { ascending: false });
+
+          if (!error && data) {
+            // Fetch teacher names
+            const teacherIds = [...new Set(data.map((e) => e.created_by))];
+            const { data: profiles } = await supabase
+              .from("profiles")
+              .select("id, full_name")
+              .in("id", teacherIds);
+            const nameMap = new Map((profiles || []).map((p) => [p.id, p.full_name || "Unknown"]));
+            setExams(data.map((e) => ({ ...e, teacher_name: nameMap.get(e.created_by) || "Unknown" })));
+          }
+        }
+      }
       setLoading(false);
     };
     fetchExams();
