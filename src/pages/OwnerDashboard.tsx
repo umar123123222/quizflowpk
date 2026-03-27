@@ -104,7 +104,7 @@ const OwnerDashboard = () => {
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-white/40 hover:text-white/70" />
               <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/40">
-                Org / Dashboard
+                Org / <span className="text-[hsl(var(--dashboard-gold))]">Dashboard</span>
               </span>
             </div>
             <div className="flex items-center gap-3">
