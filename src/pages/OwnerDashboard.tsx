@@ -2,6 +2,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import {
   FileText,
   Users,
@@ -12,27 +14,6 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
-
-const stats = [
-  {
-    label: "Total Exams",
-    value: 24,
-    icon: FileText,
-    accent: "var(--dashboard-gold)",
-  },
-  {
-    label: "Total Students",
-    value: 156,
-    icon: Users,
-    accent: "var(--dashboard-blue)",
-  },
-  {
-    label: "Total Submissions",
-    value: 482,
-    icon: ClipboardList,
-    accent: "var(--dashboard-green)",
-  },
-];
 
 const OwnerDashboard = () => {
   const { user, signOut } = useAuth();
