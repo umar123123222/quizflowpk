@@ -41,10 +41,9 @@ const Submissions = () => {
     const fetchData = async () => {
       if (!user) return;
 
-      let exams: { id: string; title: string }[] | null = null;
+      let exams: { id: string; title: string; created_by?: string }[] | null = null;
 
       if (role === "teacher") {
-        // Teachers only see their own exams
         const { data } = await supabase
           .from("exams")
           .select("id, title")
@@ -52,7 +51,6 @@ const Submissions = () => {
           .order("created_at", { ascending: false });
         exams = data;
       } else {
-        // Owners see all exams in their org
         const { data: org } = await supabase
           .from("organizations")
           .select("id")
@@ -63,10 +61,25 @@ const Submissions = () => {
 
         const { data } = await supabase
           .from("exams")
-          .select("id, title")
+          .select("id, title, created_by")
           .eq("organization_id", org.id)
           .order("created_at", { ascending: false });
         exams = data;
+      }
+
+      if (!exams || exams.length === 0) { setLoading(false); return; }
+
+      // For owners, fetch teacher names
+      let teacherMap = new Map<string, string>();
+      if (role === "organization_owner") {
+        const teacherIds = [...new Set(exams.map((e) => e.created_by).filter(Boolean))] as string[];
+        if (teacherIds.length > 0) {
+          const { data: profiles } = await supabase
+            .from("profiles")
+            .select("id, full_name")
+            .in("id", teacherIds);
+          teacherMap = new Map((profiles || []).map((p) => [p.id, p.full_name || "Unknown"]));
+        }
       }
 
       if (!exams || exams.length === 0) { setLoading(false); return; }
