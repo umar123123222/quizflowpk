@@ -68,6 +68,8 @@ const TakeExam = () => {
   const hasAutoSubmitted = useRef(false);
   const fullscreenExitCount = useRef(0);
   const [showFullscreenWarning, setShowFullscreenWarning] = useState(false);
+  const tabSwitchCount = useRef(0);
+  const [showTabSwitchWarning, setShowTabSwitchWarning] = useState(false);
   const isSubmittingRef = useRef(false);
   const form = useForm<StudentInfo>({
     resolver: zodResolver(studentInfoSchema),
@@ -251,6 +253,27 @@ const TakeExam = () => {
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, [studentInfo, submitted, handleSubmitExam, toast]);
+
+  // Tab switch / visibility detection
+  useEffect(() => {
+    if (!studentInfo || submitted) return;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && !isSubmittingRef.current && !hasAutoSubmitted.current) {
+        tabSwitchCount.current += 1;
+        if (tabSwitchCount.current >= 2) {
+          isSubmittingRef.current = true;
+          toast({ title: "Exam Auto-Submitted", description: "Your exam was submitted due to repeated tab switching.", variant: "destructive" });
+          handleSubmitExam();
+        } else {
+          setShowTabSwitchWarning(true);
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [studentInfo, submitted, handleSubmitExam, toast]);
 
   const handleReEnterFullscreen = () => {
@@ -524,6 +547,27 @@ const TakeExam = () => {
             <Button onClick={handleReEnterFullscreen} className="w-full gap-2">
               <Maximize className="h-4 w-4" />
               Return to Full-Screen
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Tab Switch Warning Dialog */}
+      <Dialog open={showTabSwitchWarning} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              Warning: Tab Switch Detected!
+            </DialogTitle>
+            <DialogDescription className="text-base pt-2">
+              You switched tabs. This has been recorded.
+              <span className="block mt-2 font-semibold text-destructive">If you switch tabs again, your exam will be auto-submitted immediately.</span>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setShowTabSwitchWarning(false)} className="w-full">
+              I Understand, Continue Exam
             </Button>
           </DialogFooter>
         </DialogContent>
