@@ -9,6 +9,7 @@ import AuthRedirect from "@/components/AuthRedirect";
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login.tsx";
 import Signup from "./pages/Signup.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
 import OwnerDashboard from "./pages/OwnerDashboard.tsx";
 import TeacherDashboard from "./pages/TeacherDashboard.tsx";
 import CreateExam from "./pages/CreateExam.tsx";
