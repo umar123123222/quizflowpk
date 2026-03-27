@@ -56,7 +56,7 @@ const OwnerDashboard = () => {
       subtitle: "Browse submission analytics",
       icon: BarChart3,
       accent: "var(--dashboard-green)",
-      onClick: () => {},
+      onClick: () => navigate("/dashboard/owner/submissions"),
     },
     {
       title: "Settings",
