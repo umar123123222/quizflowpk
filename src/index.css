@@ -100,6 +100,21 @@
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 213 32% 17%;
     --sidebar-ring: 38 92% 50%;
+
+    /* Homepage tokens – dark */
+    --homepage-bg: 225 33% 6%;
+    --homepage-text: 38 20% 88%;
+    --homepage-text-muted: 38 10% 40%;
+    --homepage-card-bg: 225 27% 7%;
+    --homepage-card-border: 0 0% 100% / 0.06;
+    --homepage-card-hover: 225 25% 9%;
+    --homepage-stat-text: 38 20% 88%;
+    --homepage-stat-label: 38 10% 35%;
+    --homepage-heading: 38 20% 88%;
+    --homepage-sub: 38 10% 40%;
+    --homepage-nav-link: 38 10% 55%;
+    --homepage-nav-border: 0 0% 100% / 0.06;
+    --homepage-gold: 38 72% 66%;
   }
 }
 
