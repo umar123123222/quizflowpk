@@ -1,55 +1,210 @@
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { TeacherSidebar } from "@/components/TeacherSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GraduationCap, FileText, Users, BarChart3, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  FileText,
+  ClipboardList,
+  Plus,
+  BarChart3,
+  Settings,
+  LogOut,
+} from "lucide-react";
 
 const TeacherDashboard = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+
+  const { data: examCount = 0 } = useQuery({
+    queryKey: ["teacherExamCount", user?.id],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("exams")
+        .select("*", { count: "exact", head: true })
+        .eq("created_by", user!.id);
+      if (error) throw error;
+      return count ?? 0;
+    },
+    enabled: !!user,
+  });
+
+  const { data: submissionCount = 0 } = useQuery({
+    queryKey: ["teacherSubmissionCount", user?.id],
+    queryFn: async () => {
+      // Get teacher's exam IDs first
+      const { data: exams } = await supabase
+        .from("exams")
+        .select("id")
+        .eq("created_by", user!.id);
+      if (!exams || exams.length === 0) return 0;
+      const examIds = exams.map((e) => e.id);
+      const { count, error } = await supabase
+        .from("submissions")
+        .select("*", { count: "exact", head: true })
+        .in("exam_id", examIds);
+      if (error) throw error;
+      return count ?? 0;
+    },
+    enabled: !!user,
+  });
+
+  const stats = [
+    { label: "My Exams", value: examCount, icon: FileText, accent: "var(--dashboard-gold)" },
+    { label: "Total Submissions", value: submissionCount, icon: ClipboardList, accent: "var(--dashboard-green)" },
+  ];
+
+  const quickActions = [
+    {
+      title: "Create Exam",
+      subtitle: "Build a new exam",
+      icon: Plus,
+      accent: "var(--dashboard-gold)",
+      onClick: () => navigate("/dashboard/owner/create-exam"),
+    },
+    {
+      title: "View Results",
+      subtitle: "Browse submission analytics",
+      icon: BarChart3,
+      accent: "var(--dashboard-green)",
+      onClick: () => navigate("/dashboard/owner/submissions"),
+    },
+    {
+      title: "My Exams",
+      subtitle: "Manage your exams",
+      icon: FileText,
+      accent: "var(--dashboard-blue)",
+      onClick: () => navigate("/dashboard/owner/exams"),
+    },
+    {
+      title: "Settings",
+      subtitle: "Account preferences",
+      icon: Settings,
+      accent: "var(--dashboard-gold)",
+      onClick: () => navigate("/dashboard/teacher/settings"),
+    },
+  ];
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
   };
 
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
-    <div className="min-h-screen bg-secondary/30">
-      <nav className="border-b bg-background">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <GraduationCap className="h-5 w-5 text-accent" />
-            <span className="text-xl font-bold font-display">Teacher Dashboard</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">{user?.email}</span>
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4 mr-1" /> Sign out
-            </Button>
-          </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-[hsl(var(--dashboard-bg))]">
+        <TeacherSidebar />
+        <div className="flex-1 flex flex-col">
+          {/* Topbar */}
+          <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-5">
+            <div className="flex items-center gap-3">
+              <SidebarTrigger className="text-white/40 hover:text-white/70" />
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/40">
+                Teacher / Dashboard
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(var(--dashboard-gold))] font-mono text-[12px] font-bold text-[hsl(var(--dashboard-bg))]">
+                {user?.user_metadata?.full_name
+                  ? user.user_metadata.full_name
+                      .split(" ")
+                      .map((n: string) => n[0])
+                      .join("")
+                      .toUpperCase()
+                  : "U"}
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/25 transition-colors hover:text-white/50"
+              >
+                <LogOut className="h-3 w-3" />
+                Sign out
+              </button>
+            </div>
+          </header>
+
+          {/* Main Content */}
+          <main className="flex-1 p-6 md:p-10">
+            {/* Welcome */}
+            <div className="mb-10">
+              <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-white/30 mb-2">
+                {today}
+              </p>
+              <h1 className="font-serif text-4xl md:text-5xl font-bold text-white/90">
+                Welcome <span className="text-[hsl(var(--dashboard-gold))]">back.</span>
+              </h1>
+            </div>
+
+            {/* Stat Cards */}
+            <div className="grid gap-4 sm:grid-cols-2 mb-10">
+              {stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] overflow-hidden"
+                >
+                  <div
+                    className="h-[2px]"
+                    style={{ backgroundColor: `hsl(${stat.accent})` }}
+                  />
+                  <div className="p-5">
+                    <p className="font-serif text-3xl font-bold text-white/90">
+                      {stat.value}
+                    </p>
+                    <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35 mt-1.5">
+                      {stat.label}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Quick Actions */}
+            <div className="mb-4">
+              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/30 mb-4">
+                Quick Actions
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {quickActions.map((action) => (
+                <button
+                  key={action.title}
+                  onClick={action.onClick}
+                  className="group flex items-center gap-4 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-4 text-left transition-all duration-200 hover:border-[hsl(var(--dashboard-gold))]"
+                >
+                  <div
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md"
+                    style={{
+                      backgroundColor: `hsl(${action.accent} / 0.12)`,
+                    }}
+                  >
+                    <action.icon
+                      className="h-4 w-4"
+                      style={{ color: `hsl(${action.accent})` }}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white/80 group-hover:text-[hsl(var(--dashboard-gold))] transition-colors">
+                      {action.title}
+                    </p>
+                    <p className="font-mono text-[10px] text-white/30 mt-0.5">
+                      {action.subtitle}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </main>
         </div>
-      </nav>
-      <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Welcome, Teacher</h1>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {[
-            { title: "My Quizzes", value: "0", icon: FileText },
-            { title: "Students", value: "0", icon: Users },
-            { title: "Avg. Score", value: "—", icon: BarChart3 },
-          ].map((stat) => (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
-                <stat.icon className="h-4 w-4 text-accent" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </main>
-    </div>
+      </div>
+    </SidebarProvider>
   );
 };
 
