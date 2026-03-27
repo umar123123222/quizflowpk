@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { TeacherSidebar } from "@/components/TeacherSidebar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +17,18 @@ import {
 const TeacherDashboard = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+
+  // One-time fix: set gender to female if not set
+  useEffect(() => {
+    const fixGender = async () => {
+      if (user && !user.user_metadata?.gender) {
+        await supabase.auth.updateUser({
+          data: { ...user.user_metadata, gender: "female" },
+        });
+      }
+    };
+    fixGender();
+  }, [user]);
 
   const { data: examCount = 0 } = useQuery({
     queryKey: ["teacherExamCount", user?.id],
