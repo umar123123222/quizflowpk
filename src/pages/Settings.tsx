@@ -144,6 +144,10 @@ const Settings = () => {
 
     setSavingBackup(true);
     try {
+      // Refresh session to avoid stale JWT errors
+      const { error: refreshError } = await supabase.auth.refreshSession();
+      if (refreshError) throw refreshError;
+
       const { error } = await supabase.auth.updateUser({
         data: { backup_email: backupEmail.trim() },
       });
