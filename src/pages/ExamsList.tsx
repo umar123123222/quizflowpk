@@ -17,7 +17,7 @@ interface Exam {
 }
 
 const ExamsList = () => {
-  const { user, signOut } = useAuth();
+  const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
