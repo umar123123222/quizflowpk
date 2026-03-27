@@ -1,4 +1,4 @@
-import { FileText, Users, BarChart3, Settings, GraduationCap, LogOut } from "lucide-react";
+import { FileText, Users, BarChart3, Settings, GraduationCap, LogOut, ClipboardList } from "lucide-react";
 import { NavLink as RouterNavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ import {
 
 const navItems = [
   { title: "Dashboard", url: "/dashboard/owner", icon: FileText },
+  { title: "Exams", url: "/dashboard/owner/exams", icon: ClipboardList },
   { title: "Users", url: "/dashboard/owner/users", icon: Users },
   { title: "Results", url: "/dashboard/owner/results", icon: BarChart3 },
   { title: "Settings", url: "/dashboard/owner/settings", icon: Settings },
