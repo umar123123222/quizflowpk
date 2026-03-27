@@ -501,6 +501,28 @@ const TakeExam = () => {
           </p>
         </div>
       </div>
+
+      {/* Fullscreen Warning Dialog */}
+      <Dialog open={showFullscreenWarning} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              Full-Screen Exited!
+            </DialogTitle>
+            <DialogDescription className="text-base pt-2">
+              You have exited full-screen. Please return to full-screen immediately or your exam will be submitted.
+              <span className="block mt-2 font-semibold text-destructive">There will be no second chance.</span>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={handleReEnterFullscreen} className="w-full gap-2">
+              <Maximize className="h-4 w-4" />
+              Return to Full-Screen
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
