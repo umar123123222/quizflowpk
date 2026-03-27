@@ -66,7 +66,9 @@ const TakeExam = () => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const hasAutoSubmitted = useRef(false);
-
+  const fullscreenExitCount = useRef(0);
+  const [showFullscreenWarning, setShowFullscreenWarning] = useState(false);
+  const isSubmittingRef = useRef(false);
   const form = useForm<StudentInfo>({
     resolver: zodResolver(studentInfoSchema),
     defaultValues: { fullName: "", email: "", phone: "" },
