@@ -111,6 +111,7 @@ const Submissions = () => {
 
         results.push({
           ...exam,
+          teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
           submissions: subs.map((s) => ({
             id: s.id,
             score: s.score,
