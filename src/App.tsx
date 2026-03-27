@@ -14,6 +14,7 @@ import TeacherDashboard from "./pages/TeacherDashboard.tsx";
 import CreateExam from "./pages/CreateExam.tsx";
 import ExamsList from "./pages/ExamsList.tsx";
 import TakeExam from "./pages/TakeExam.tsx";
+import Submissions from "./pages/Submissions.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
