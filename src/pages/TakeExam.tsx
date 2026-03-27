@@ -551,6 +551,27 @@ const TakeExam = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Tab Switch Warning Dialog */}
+      <Dialog open={showTabSwitchWarning} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              Warning: Tab Switch Detected!
+            </DialogTitle>
+            <DialogDescription className="text-base pt-2">
+              You switched tabs. This has been recorded.
+              <span className="block mt-2 font-semibold text-destructive">If you switch tabs again, your exam will be auto-submitted immediately.</span>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setShowTabSwitchWarning(false)} className="w-full">
+              I Understand, Continue Exam
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
