@@ -13,6 +13,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [backupEmail, setBackupEmail] = useState("");
   const [role, setRole] = useState<"organization_owner" | "teacher">("teacher");
   const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuth();
@@ -22,7 +23,7 @@ const Signup = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await signUp(email, password, role, fullName);
+      await signUp(email, password, role, fullName, backupEmail);
       toast({ title: "Account created!", description: "Check your email to verify your account." });
     } catch (error: any) {
       toast({ title: "Signup failed", description: error.message, variant: "destructive" });
@@ -57,6 +58,11 @@ const Signup = () => {
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="backupEmail">Recovery Email <span className="text-muted-foreground text-xs">(optional)</span></Label>
+              <Input id="backupEmail" type="email" placeholder="backup@email.com" value={backupEmail} onChange={(e) => setBackupEmail(e.target.value)} />
+              <p className="text-xs text-muted-foreground">Used for password recovery if you lose access to your primary email</p>
             </div>
             <div className="space-y-3">
               <Label>I am a...</Label>
