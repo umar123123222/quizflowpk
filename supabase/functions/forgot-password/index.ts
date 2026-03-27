@@ -97,10 +97,14 @@ Deno.serve(async (req) => {
       }
 
       // Mask backup email for display
-      const masked = backupEmail.replace(
-        /^(.{2})(.*)(@.*)$/,
-        (_: string, a: string, b: string, c: string) => a + '*'.repeat(Math.min(b.length, 5)) + c
-      )
+      const [localPart, domain] = backupEmail.split('@')
+      let maskedLocal: string
+      if (localPart.length <= 4) {
+        maskedLocal = localPart[0] + '*'.repeat(localPart.length - 1)
+      } else {
+        maskedLocal = localPart.slice(0, 2) + '*'.repeat(Math.min(localPart.length - 4, 5)) + localPart.slice(-2)
+      }
+      const masked = maskedLocal + '@' + domain
 
       return jsonResponse({ success: true, maskedEmail: masked })
 
