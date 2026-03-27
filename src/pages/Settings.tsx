@@ -2,17 +2,33 @@ import { useState } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, User, Shield, Mail, Save, Loader2, Eye, EyeOff } from "lucide-react";
+import { LogOut, User, Shield, Mail, Save, Loader2, Eye, EyeOff, BadgeCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const { data: userRole } = useQuery({
+    queryKey: ["user-role", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user!.id)
+        .single();
+      return data?.role ?? null;
+    },
+    enabled: !!user?.id,
+  });
+
+  const roleLabel = userRole === "organization_owner" ? "Organization Owner" : userRole === "teacher" ? "Teacher" : "—";
 
   // Profile
   const [displayName, setDisplayName] = useState(user?.user_metadata?.full_name || "");
@@ -335,8 +351,31 @@ const Settings = () => {
                     {savingBackup ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
                     {savingBackup ? "Saving..." : "Save Backup Email"}
                   </Button>
+              </div>
+
+              {/* User Role Section */}
+              <div className={sectionClass}>
+                <div className="h-[2px] bg-[hsl(var(--dashboard-gold))]" />
+                <div className={sectionHeaderClass}>
+                  <BadgeCheck className="h-4 w-4 text-[hsl(var(--dashboard-gold))]" />
+                  <span className="font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] font-semibold">
+                    User Role
+                  </span>
+                </div>
+                <div className="p-5 space-y-2">
+                  <label className={labelClass}>Your Role</label>
+                  <Input
+                    value={roleLabel}
+                    readOnly
+                    disabled
+                    className={`${inputClass} opacity-70 cursor-not-allowed`}
+                  />
+                  <p className="font-mono text-[9px] text-white/20">
+                    Your role is assigned by the system and cannot be changed here
+                  </p>
                 </div>
               </div>
+            </div>
             </div>
           </main>
         </div>
