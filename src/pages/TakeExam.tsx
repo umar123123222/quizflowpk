@@ -199,6 +199,7 @@ const TakeExam = () => {
       student_id: studentData.id,
       answers: answers,
       score: calculatedScore,
+      violations: violationsRef.current,
     });
 
     if (subError) {
