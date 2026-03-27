@@ -297,6 +297,27 @@ const Submissions = () => {
                                         {sub.score !== null ? `${sub.score}%` : "—"}
                                       </span>
                                     </TableCell>
+                                    <TableCell>
+                                      {sub.violations && sub.violations.length > 0 ? (
+                                        <div className="space-y-1">
+                                          {sub.violations.map((v, vi) => (
+                                            <div key={vi} className="flex items-center gap-1.5">
+                                              <ShieldAlert className="h-3 w-3 text-destructive shrink-0" />
+                                              <span className="font-mono text-[10px] text-destructive/80">
+                                                {v.type} at{" "}
+                                                {new Date(v.timestamp).toLocaleTimeString("en-US", {
+                                                  hour: "2-digit",
+                                                  minute: "2-digit",
+                                                  second: "2-digit",
+                                                })}
+                                              </span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      ) : (
+                                        <span className="font-mono text-[10px] text-white/20">No violations</span>
+                                      )}
+                                    </TableCell>
                                     <TableCell className="font-mono text-[11px] text-white/40 text-right">
                                       {formatDate(sub.submitted_at)}
                                     </TableCell>
