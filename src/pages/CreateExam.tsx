@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,9 @@ const CreateExam = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get("edit");
+  const isEditMode = Boolean(editId);
 
   const [title, setTitle] = useState("");
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
@@ -51,8 +54,48 @@ const CreateExam = () => {
   const [saving, setSaving] = useState(false);
   const [savedExamId, setSavedExamId] = useState<string | null>(null);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [loadingExam, setLoadingExam] = useState(false);
 
-  const examLink = savedExamId ? `${window.location.origin}/exam/${savedExamId}` : "";
+  const examLink = (savedExamId || editId) ? `${window.location.origin}/exam/${savedExamId || editId}` : "";
+
+  // Load existing exam data in edit mode
+  useEffect(() => {
+    if (!editId) return;
+    const loadExam = async () => {
+      setLoadingExam(true);
+      try {
+        const { data: exam } = await supabase
+          .from("exams")
+          .select("*")
+          .eq("id", editId)
+          .single();
+        if (exam) {
+          setTitle(exam.title);
+          setTimeLimit(exam.time_limit ?? 30);
+        }
+        const { data: qs } = await supabase
+          .from("questions")
+          .select("*")
+          .eq("exam_id", editId)
+          .order("order_index", { ascending: true });
+        if (qs && qs.length > 0) {
+          setQuestions(
+            qs.map((q) => ({
+              id: q.id,
+              text: q.question_text,
+              options: [q.option_a, q.option_b, q.option_c || "", q.option_d || ""] as [string, string, string, string],
+              correctAnswer: q.correct_answer,
+            }))
+          );
+        }
+      } catch (err) {
+        console.error("Failed to load exam", err);
+      } finally {
+        setLoadingExam(false);
+      }
+    };
+    loadExam();
+  }, [editId]);
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(examLink);
@@ -112,23 +155,38 @@ const CreateExam = () => {
 
       if (orgError || !org) throw new Error("Organization not found. Please create one first.");
 
-      // Insert exam
-      const { data: exam, error: examError } = await supabase
-        .from("exams")
-        .insert({
-          title: title.trim(),
-          time_limit: timeLimit || null,
-          organization_id: org.id,
-          created_by: user!.id,
-        })
-        .select("id")
-        .single();
+      let examId = editId;
 
-      if (examError || !exam) throw examError || new Error("Failed to create exam");
+      if (isEditMode && editId) {
+        // Update existing exam
+        const { error: examError } = await supabase
+          .from("exams")
+          .update({ title: title.trim(), time_limit: timeLimit || null })
+          .eq("id", editId);
+        if (examError) throw examError;
+
+        // Delete old questions and re-insert
+        await supabase.from("questions").delete().eq("exam_id", editId);
+      } else {
+        // Insert new exam
+        const { data: exam, error: examError } = await supabase
+          .from("exams")
+          .insert({
+            title: title.trim(),
+            time_limit: timeLimit || null,
+            organization_id: org.id,
+            created_by: user!.id,
+          })
+          .select("id")
+          .single();
+
+        if (examError || !exam) throw examError || new Error("Failed to create exam");
+        examId = exam.id;
+      }
 
       // Insert questions
       const questionRows = questions.map((q, i) => ({
-        exam_id: exam.id,
+        exam_id: examId!,
         question_text: q.text.trim(),
         option_a: q.options[0].trim(),
         option_b: q.options[1].trim(),
@@ -145,8 +203,8 @@ const CreateExam = () => {
       const { error: qError } = await supabase.from("questions").insert(questionRows);
       if (qError) throw qError;
 
-      toast({ title: "Exam saved!", description: `"${title}" has been created successfully.` });
-      setSavedExamId(exam.id);
+      toast({ title: isEditMode ? "Exam updated!" : "Exam saved!", description: `"${title}" has been ${isEditMode ? "updated" : "created"} successfully.` });
+      setSavedExamId(examId);
       setShowLinkDialog(true);
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Something went wrong.", variant: "destructive" });
@@ -156,6 +214,19 @@ const CreateExam = () => {
   };
 
   const optionLabels = ["A", "B", "C", "D"];
+
+  if (loadingExam) {
+    return (
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-[hsl(var(--dashboard-bg))]">
+          <OwnerSidebar />
+          <div className="flex-1 flex items-center justify-center">
+            <div className="animate-spin h-6 w-6 border-2 border-[hsl(var(--dashboard-gold))] border-t-transparent rounded-full" />
+          </div>
+        </div>
+      </SidebarProvider>
+    );
+  }
 
   return (
     <SidebarProvider>
@@ -167,7 +238,7 @@ const CreateExam = () => {
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-white/40 hover:text-white/70" />
               <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/40">
-                Org / Create Exam
+                Org / {isEditMode ? "Edit Exam" : "Create Exam"}
               </span>
             </div>
             <div className="flex items-center gap-3">
@@ -198,7 +269,7 @@ const CreateExam = () => {
                 Back to Dashboard
               </button>
               <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/90">
-                Create <span className="text-[hsl(var(--dashboard-gold))]">Exam</span>
+                {isEditMode ? "Edit" : "Create"} <span className="text-[hsl(var(--dashboard-gold))]">Exam</span>
               </h1>
             </div>
 
@@ -320,7 +391,7 @@ const CreateExam = () => {
                 className="flex items-center justify-center gap-2 rounded-lg bg-[hsl(var(--dashboard-gold))] px-6 py-3 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-bg))] font-bold transition-all hover:bg-[hsl(var(--dashboard-gold)/0.85)] disabled:opacity-50"
               >
                 <Save className="h-3.5 w-3.5" />
-                {saving ? "Saving..." : "Save Exam"}
+                {saving ? "Saving..." : isEditMode ? "Update Exam" : "Save Exam"}
               </Button>
             </div>
           </main>
