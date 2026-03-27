@@ -70,13 +70,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, role: AppRole, fullName: string, backupEmail?: string, organizationId?: string) => {
+  const signUp = async (email: string, password: string, role: AppRole, fullName: string, backupEmail?: string, organizationId?: string, gender?: string) => {
     const metadata: Record<string, string> = { role, full_name: fullName };
     if (backupEmail?.trim()) {
       metadata.backup_email = backupEmail.trim();
     }
     if (organizationId?.trim()) {
       metadata.organization_id = organizationId.trim();
+    }
+    if (gender) {
+      metadata.gender = gender;
     }
     const { error } = await supabase.auth.signUp({
       email,
