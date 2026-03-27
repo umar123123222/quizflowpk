@@ -103,6 +103,23 @@ const Signup = () => {
                 </Label>
               </RadioGroup>
             </div>
+            {role === "teacher" && organizations.length > 0 && (
+              <div className="space-y-2">
+                <Label htmlFor="organization">Join an Organization <span className="text-muted-foreground text-xs">(optional)</span></Label>
+                <select
+                  id="organization"
+                  value={selectedOrgId}
+                  onChange={(e) => setSelectedOrgId(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">No organization (independent)</option>
+                  {organizations.map((org) => (
+                    <option key={org.id} value={org.id}>{org.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-muted-foreground">Select an organization to join, or sign up independently</p>
+              </div>
+            )}
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
