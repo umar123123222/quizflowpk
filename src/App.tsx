@@ -12,6 +12,7 @@ import Signup from "./pages/Signup.tsx";
 import OwnerDashboard from "./pages/OwnerDashboard.tsx";
 import TeacherDashboard from "./pages/TeacherDashboard.tsx";
 import CreateExam from "./pages/CreateExam.tsx";
+import ExamsList from "./pages/ExamsList.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
