@@ -269,7 +269,7 @@ const CreateExam = () => {
                 Back to Dashboard
               </button>
               <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/90">
-                Create <span className="text-[hsl(var(--dashboard-gold))]">Exam</span>
+                {isEditMode ? "Edit" : "Create"} <span className="text-[hsl(var(--dashboard-gold))]">Exam</span>
               </h1>
             </div>
 
