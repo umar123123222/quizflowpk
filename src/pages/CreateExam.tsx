@@ -41,7 +41,12 @@ const createEmptyQuestion = (): Question => ({
 });
 
 const CreateExam = () => {
-  const { user, signOut } = useAuth();
+  const { user, role, signOut } = useAuth();
+
+  // Owners cannot create exams — redirect to dashboard
+  if (role === "organization_owner") {
+    return <Navigate to="/dashboard/owner" replace />;
+  }
   const navigate = useNavigate();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
