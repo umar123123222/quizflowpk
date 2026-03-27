@@ -14,6 +14,7 @@ interface Exam {
   created_at: string | null;
   is_published: boolean | null;
   time_limit: number | null;
+  teacher_name?: string;
 }
 
 const ExamsList = () => {
