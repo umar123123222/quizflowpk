@@ -118,7 +118,7 @@ const OwnerDashboard = () => {
                 {today}
               </p>
               <h1 className="font-serif text-4xl md:text-5xl font-bold text-white/90">
-                Welcome back.
+                Welcome <span className="text-[hsl(var(--dashboard-gold))]">back.</span>
               </h1>
             </div>
 
