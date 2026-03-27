@@ -391,7 +391,7 @@ const CreateExam = () => {
                 className="flex items-center justify-center gap-2 rounded-lg bg-[hsl(var(--dashboard-gold))] px-6 py-3 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-bg))] font-bold transition-all hover:bg-[hsl(var(--dashboard-gold)/0.85)] disabled:opacity-50"
               >
                 <Save className="h-3.5 w-3.5" />
-                {saving ? "Saving..." : "Save Exam"}
+                {saving ? "Saving..." : isEditMode ? "Update Exam" : "Save Exam"}
               </Button>
             </div>
           </main>
