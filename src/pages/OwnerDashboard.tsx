@@ -30,10 +30,32 @@ const OwnerDashboard = () => {
     },
   });
 
+  const { data: studentCount = 0 } = useQuery({
+    queryKey: ["studentCount"],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("students")
+        .select("*", { count: "exact", head: true });
+      if (error) throw error;
+      return count ?? 0;
+    },
+  });
+
+  const { data: submissionCount = 0 } = useQuery({
+    queryKey: ["submissionCount"],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("submissions")
+        .select("*", { count: "exact", head: true });
+      if (error) throw error;
+      return count ?? 0;
+    },
+  });
+
   const stats = [
     { label: "Total Exams", value: examCount, icon: FileText, accent: "var(--dashboard-gold)" },
-    { label: "Total Students", value: 156, icon: Users, accent: "var(--dashboard-blue)" },
-    { label: "Total Submissions", value: 482, icon: ClipboardList, accent: "var(--dashboard-green)" },
+    { label: "Total Students", value: studentCount, icon: Users, accent: "var(--dashboard-blue)" },
+    { label: "Total Submissions", value: submissionCount, icon: ClipboardList, accent: "var(--dashboard-green)" },
   ];
 
   const quickActions = [
