@@ -1,21 +1,8 @@
-import { Zap, Sun, Moon } from "lucide-react";
+import { Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 
 const Navbar = () => {
-  const [isDark, setIsDark] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    return saved ? saved === 'dark' : true;
-  });
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDark);
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  }, [isDark]);
-
-  const toggleTheme = () => setIsDark((prev) => !prev);
-
   return (
     <nav
       className="fixed top-0 z-50 w-full backdrop-blur-md"
@@ -45,20 +32,6 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={toggleTheme}
-            className="flex items-center justify-center rounded-full transition-colors"
-            style={{
-              width: 36,
-              height: 36,
-              border: '1px solid rgba(255,255,255,0.12)',
-              background: 'transparent',
-              color: 'rgba(232,227,213,0.6)',
-            }}
-            aria-label="Toggle theme"
-          >
-            {isDark ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-          </button>
           <Button variant="ghost" size="sm" asChild className="font-medium" style={{ color: 'rgba(232,227,213,0.5)' }}>
             <Link to="/login">Log in</Link>
           </Button>
