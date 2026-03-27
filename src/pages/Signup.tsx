@@ -63,6 +63,7 @@ const Signup = () => {
               <Label htmlFor="backupEmail">Recovery Email <span className="text-muted-foreground text-xs">(optional)</span></Label>
               <Input id="backupEmail" type="email" placeholder="backup@email.com" value={backupEmail} onChange={(e) => setBackupEmail(e.target.value)} />
               <p className="text-xs text-muted-foreground">Used for password recovery if you lose access to your primary email</p>
+            </div>
             <div className="space-y-3">
               <Label>I am a...</Label>
               <RadioGroup value={role} onValueChange={(v) => setRole(v as "organization_owner" | "teacher")} className="grid grid-cols-2 gap-3">
