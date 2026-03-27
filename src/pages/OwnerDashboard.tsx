@@ -63,7 +63,7 @@ const OwnerDashboard = () => {
       subtitle: "Organization preferences",
       icon: Settings,
       accent: "var(--dashboard-gold)",
-      onClick: () => {},
+      onClick: () => navigate("/dashboard/owner/settings"),
     },
   ];
 
