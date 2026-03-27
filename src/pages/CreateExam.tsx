@@ -225,7 +225,7 @@ const CreateExam = () => {
     return (
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-[hsl(var(--dashboard-bg))]">
-          <OwnerSidebar />
+          <RoleSidebar />
           <div className="flex-1 flex items-center justify-center">
             <div className="animate-spin h-6 w-6 border-2 border-[hsl(var(--dashboard-gold))] border-t-transparent rounded-full" />
           </div>
