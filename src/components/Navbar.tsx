@@ -41,6 +41,20 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center justify-center rounded-full transition-colors"
+            style={{
+              width: 36,
+              height: 36,
+              border: '1px solid rgba(255,255,255,0.12)',
+              background: 'transparent',
+              color: 'rgba(232,227,213,0.6)',
+            }}
+            aria-label="Toggle theme"
+          >
+            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
           <Button variant="ghost" size="sm" asChild className="font-medium" style={{ color: 'rgba(232,227,213,0.5)' }}>
             <Link to="/login">Log in</Link>
           </Button>
