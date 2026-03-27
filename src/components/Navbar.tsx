@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 const Navbar = () => {
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem('theme');
-    return saved ? saved === 'dark' : document.documentElement.classList.contains('dark');
+    return saved ? saved === 'dark' : true;
   });
 
   useEffect(() => {
