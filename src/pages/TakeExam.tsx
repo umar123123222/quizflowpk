@@ -50,6 +50,18 @@ const TakeExam = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState<number | null>(null);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [questionResults, setQuestionResults] = useState<Array<{
+    question_text: string;
+    student_answer: string | null;
+    correct_answer: string;
+    is_correct: boolean;
+    option_a: string;
+    option_b: string;
+    option_c: string | null;
+    option_d: string | null;
+  }>>([]);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const hasAutoSubmitted = useRef(false);
