@@ -40,21 +40,33 @@ const Submissions = () => {
     const fetchData = async () => {
       if (!user) return;
 
-      // Get org
-      const { data: org } = await supabase
-        .from("organizations")
-        .select("id")
-        .eq("owner_id", user.id)
-        .single();
+      let exams: { id: string; title: string }[] | null = null;
 
-      if (!org) { setLoading(false); return; }
+      if (role === "teacher") {
+        // Teachers only see their own exams
+        const { data } = await supabase
+          .from("exams")
+          .select("id, title")
+          .eq("created_by", user.id)
+          .order("created_at", { ascending: false });
+        exams = data;
+      } else {
+        // Owners see all exams in their org
+        const { data: org } = await supabase
+          .from("organizations")
+          .select("id")
+          .eq("owner_id", user.id)
+          .single();
 
-      // Get exams
-      const { data: exams } = await supabase
-        .from("exams")
-        .select("id, title")
-        .eq("organization_id", org.id)
-        .order("created_at", { ascending: false });
+        if (!org) { setLoading(false); return; }
+
+        const { data } = await supabase
+          .from("exams")
+          .select("id, title")
+          .eq("organization_id", org.id)
+          .order("created_at", { ascending: false });
+        exams = data;
+      }
 
       if (!exams || exams.length === 0) { setLoading(false); return; }
 
