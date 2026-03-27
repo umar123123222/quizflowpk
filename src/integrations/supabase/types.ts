@@ -22,7 +22,7 @@ export type Database = {
           duration_minutes: number | null
           id: string
           is_published: boolean | null
-          organization_id: string
+          organization_id: string | null
           time_limit: number | null
           title: string
         }
@@ -33,7 +33,7 @@ export type Database = {
           duration_minutes?: number | null
           id?: string
           is_published?: boolean | null
-          organization_id: string
+          organization_id?: string | null
           time_limit?: number | null
           title: string
         }
@@ -44,7 +44,7 @@ export type Database = {
           duration_minutes?: number | null
           id?: string
           is_published?: boolean | null
-          organization_id?: string
+          organization_id?: string | null
           time_limit?: number | null
           title?: string
         }
