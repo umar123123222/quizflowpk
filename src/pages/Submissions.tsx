@@ -22,6 +22,7 @@ interface ExamWithSubmissions {
     id: string;
     score: number | null;
     submitted_at: string | null;
+    violations: Array<{ type: string; timestamp: string }> | null;
     student: {
       full_name: string;
       email: string | null;
