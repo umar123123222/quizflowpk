@@ -44,6 +44,9 @@ const CreateExam = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get("edit");
+  const isEditMode = Boolean(editId);
 
   const [title, setTitle] = useState("");
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
@@ -51,8 +54,48 @@ const CreateExam = () => {
   const [saving, setSaving] = useState(false);
   const [savedExamId, setSavedExamId] = useState<string | null>(null);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [loadingExam, setLoadingExam] = useState(false);
 
-  const examLink = savedExamId ? `${window.location.origin}/exam/${savedExamId}` : "";
+  const examLink = (savedExamId || editId) ? `${window.location.origin}/exam/${savedExamId || editId}` : "";
+
+  // Load existing exam data in edit mode
+  useEffect(() => {
+    if (!editId) return;
+    const loadExam = async () => {
+      setLoadingExam(true);
+      try {
+        const { data: exam } = await supabase
+          .from("exams")
+          .select("*")
+          .eq("id", editId)
+          .single();
+        if (exam) {
+          setTitle(exam.title);
+          setTimeLimit(exam.time_limit ?? 30);
+        }
+        const { data: qs } = await supabase
+          .from("questions")
+          .select("*")
+          .eq("exam_id", editId)
+          .order("order_index", { ascending: true });
+        if (qs && qs.length > 0) {
+          setQuestions(
+            qs.map((q) => ({
+              id: q.id,
+              text: q.question_text,
+              options: [q.option_a, q.option_b, q.option_c || "", q.option_d || ""] as [string, string, string, string],
+              correctAnswer: q.correct_answer,
+            }))
+          );
+        }
+      } catch (err) {
+        console.error("Failed to load exam", err);
+      } finally {
+        setLoadingExam(false);
+      }
+    };
+    loadExam();
+  }, [editId]);
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(examLink);
