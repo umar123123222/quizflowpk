@@ -34,32 +34,7 @@ const stats = [
   },
 ];
 
-const quickActions = [
-  {
-    title: "Create Exam",
-    subtitle: "Draft a new examination",
-    icon: Plus,
-    accent: "var(--dashboard-gold)",
-  },
-  {
-    title: "Add Students",
-    subtitle: "Import or add new students",
-    icon: UserPlus,
-    accent: "var(--dashboard-blue)",
-  },
-  {
-    title: "View Results",
-    subtitle: "Browse submission analytics",
-    icon: BarChart3,
-    accent: "var(--dashboard-green)",
-  },
-  {
-    title: "Settings",
-    subtitle: "Organization preferences",
-    icon: Settings,
-    accent: "var(--dashboard-gold)",
-  },
-];
+// quickActions moved inside component for navigate access
 
 const OwnerDashboard = () => {
   const { user, signOut } = useAuth();
