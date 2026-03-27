@@ -16,6 +16,7 @@ const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [backupEmail, setBackupEmail] = useState("");
   const [role, setRole] = useState<"organization_owner" | "teacher">("teacher");
+  const [gender, setGender] = useState<"male" | "female">("male");
   const [selectedOrgId, setSelectedOrgId] = useState("");
   const [organizations, setOrganizations] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
