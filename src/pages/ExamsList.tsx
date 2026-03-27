@@ -80,13 +80,6 @@ const ExamsList = () => {
           <main className="flex-1 p-6 md:p-10">
             <div className="flex items-center justify-between mb-8">
               <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/90">Exams</h1>
-              <button
-                onClick={() => navigate("/dashboard/owner/create-exam")}
-                className="flex items-center gap-2 rounded-lg border border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.1)] px-4 py-2 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] transition-colors hover:bg-[hsl(var(--dashboard-gold)/0.2)]"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                New Exam
-              </button>
             </div>
 
             {loading ? (
