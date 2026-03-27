@@ -155,23 +155,38 @@ const CreateExam = () => {
 
       if (orgError || !org) throw new Error("Organization not found. Please create one first.");
 
-      // Insert exam
-      const { data: exam, error: examError } = await supabase
-        .from("exams")
-        .insert({
-          title: title.trim(),
-          time_limit: timeLimit || null,
-          organization_id: org.id,
-          created_by: user!.id,
-        })
-        .select("id")
-        .single();
+      let examId = editId;
 
-      if (examError || !exam) throw examError || new Error("Failed to create exam");
+      if (isEditMode && editId) {
+        // Update existing exam
+        const { error: examError } = await supabase
+          .from("exams")
+          .update({ title: title.trim(), time_limit: timeLimit || null })
+          .eq("id", editId);
+        if (examError) throw examError;
+
+        // Delete old questions and re-insert
+        await supabase.from("questions").delete().eq("exam_id", editId);
+      } else {
+        // Insert new exam
+        const { data: exam, error: examError } = await supabase
+          .from("exams")
+          .insert({
+            title: title.trim(),
+            time_limit: timeLimit || null,
+            organization_id: org.id,
+            created_by: user!.id,
+          })
+          .select("id")
+          .single();
+
+        if (examError || !exam) throw examError || new Error("Failed to create exam");
+        examId = exam.id;
+      }
 
       // Insert questions
       const questionRows = questions.map((q, i) => ({
-        exam_id: exam.id,
+        exam_id: examId!,
         question_text: q.text.trim(),
         option_a: q.options[0].trim(),
         option_b: q.options[1].trim(),
@@ -188,8 +203,8 @@ const CreateExam = () => {
       const { error: qError } = await supabase.from("questions").insert(questionRows);
       if (qError) throw qError;
 
-      toast({ title: "Exam saved!", description: `"${title}" has been created successfully.` });
-      setSavedExamId(exam.id);
+      toast({ title: isEditMode ? "Exam updated!" : "Exam saved!", description: `"${title}" has been ${isEditMode ? "updated" : "created"} successfully.` });
+      setSavedExamId(examId);
       setShowLinkDialog(true);
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Something went wrong.", variant: "destructive" });
@@ -199,6 +214,19 @@ const CreateExam = () => {
   };
 
   const optionLabels = ["A", "B", "C", "D"];
+
+  if (loadingExam) {
+    return (
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-[hsl(var(--dashboard-bg))]">
+          <OwnerSidebar />
+          <div className="flex-1 flex items-center justify-center">
+            <div className="animate-spin h-6 w-6 border-2 border-[hsl(var(--dashboard-gold))] border-t-transparent rounded-full" />
+          </div>
+        </div>
+      </SidebarProvider>
+    );
+  }
 
   return (
     <SidebarProvider>
