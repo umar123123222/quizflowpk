@@ -4,6 +4,14 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    document.documentElement.classList.toggle('dark', next);
+  };
+
   return (
     <nav
       className="fixed top-0 z-50 w-full backdrop-blur-md"
