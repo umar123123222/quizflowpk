@@ -17,7 +17,7 @@ const Hero = () => {
             The smartest way to create quizzes
           </div>
 
-          <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl opacity-0 animate-fade-up [animation-delay:100ms]">
+          <h1 className="mb-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl opacity-0 animate-fade-up [animation-delay:100ms]">
             Build engaging quizzes{" "}
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               in minutes
@@ -42,13 +42,7 @@ const Hero = () => {
 
           {/* Stats Row */}
           <div
-            className="mt-14 mx-auto max-w-2xl opacity-0 animate-fade-up [animation-delay:400ms]"
-            style={{
-              border: '1px solid rgba(255,255,255,0.07)',
-              borderRadius: '12px',
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr 1fr',
-            }}
+            className="mt-14 mx-auto max-w-2xl opacity-0 animate-fade-up [animation-delay:400ms] border border-border dark:border-white/[0.07] rounded-xl grid grid-cols-3"
           >
             {[
               { number: '50K+', label: 'Quizzes Created', color: '#e8c87a' },
@@ -57,36 +51,22 @@ const Hero = () => {
             ].map((stat, i) => (
               <div
                 key={i}
-                className="relative px-6 py-5 text-center"
-                style={{
-                  borderRight: i < 2 ? '1px solid rgba(255,255,255,0.07)' : 'none',
-                }}
+                className={`relative px-6 py-5 text-center ${i < 2 ? 'border-r border-border dark:border-white/[0.07]' : ''}`}
               >
                 <div
                   className="absolute top-0 left-1/2 -translate-x-1/2"
-                  style={{
-                    width: '40px',
-                    height: '2px',
-                    backgroundColor: stat.color,
-                  }}
+                  style={{ width: '40px', height: '2px', backgroundColor: stat.color }}
                 />
-                <div
-                  className="text-2xl font-bold"
-                  style={{ fontFamily: "'Playfair Display', serif", color: '#e8e3d5' }}
-                >
+                <div className="text-2xl font-bold font-serif text-foreground">
                   {stat.number}
                 </div>
-                <div
-                  className="mt-1 text-[10px] font-medium tracking-widest uppercase"
-                  style={{ color: 'rgba(232,227,213,0.4)' }}
-                >
+                <div className="mt-1 text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
                   {stat.label}
                 </div>
               </div>
             ))}
           </div>
         </div>
-
       </div>
     </section>
   );
