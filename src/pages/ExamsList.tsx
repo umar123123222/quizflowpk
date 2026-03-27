@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { FileText, Plus, LogOut, Loader2 } from "lucide-react";
+import { FileText, Plus, LogOut, Loader2, Copy } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Exam {
   id: string;
