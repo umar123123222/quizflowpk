@@ -17,6 +17,7 @@ import {
 interface ExamWithSubmissions {
   id: string;
   title: string;
+  teacher_name?: string;
   submissions: {
     id: string;
     score: number | null;
