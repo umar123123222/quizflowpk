@@ -58,6 +58,41 @@ export type Database = {
           },
         ]
       }
+      organization_teachers: {
+        Row: {
+          contact_number: string | null
+          created_at: string | null
+          id: string
+          organization_id: string
+          subject: string | null
+          teacher_id: string
+        }
+        Insert: {
+          contact_number?: string | null
+          created_at?: string | null
+          id?: string
+          organization_id: string
+          subject?: string | null
+          teacher_id: string
+        }
+        Update: {
+          contact_number?: string | null
+          created_at?: string | null
+          id?: string
+          organization_id?: string
+          subject?: string | null
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_teachers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           created_at: string | null
