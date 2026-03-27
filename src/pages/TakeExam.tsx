@@ -147,18 +147,33 @@ const TakeExam = () => {
       return;
     }
 
-    // Calculate score
+    // Calculate score & build results
     const { data: fullQuestions } = await supabase
       .from("questions")
-      .select("id, correct_answer")
-      .eq("exam_id", id);
+      .select("id, question_text, option_a, option_b, option_c, option_d, correct_answer, order_index")
+      .eq("exam_id", id)
+      .order("order_index", { ascending: true });
 
-    let correctCount = 0;
-    (fullQuestions || []).forEach((q) => {
-      if (answers[q.id] === q.correct_answer) correctCount++;
+    const sorted = fullQuestions || [];
+    let correct = 0;
+    const results = sorted.map((q) => {
+      const studentAnswer = answers[q.id] || null;
+      const isCorrect = studentAnswer === q.correct_answer;
+      if (isCorrect) correct++;
+      return {
+        question_text: q.question_text,
+        student_answer: studentAnswer,
+        correct_answer: q.correct_answer,
+        is_correct: isCorrect,
+        option_a: q.option_a,
+        option_b: q.option_b,
+        option_c: q.option_c,
+        option_d: q.option_d,
+      };
     });
-    const totalQuestions = fullQuestions?.length || 1;
-    const calculatedScore = Math.round((correctCount / totalQuestions) * 100);
+
+    const total = sorted.length;
+    const calculatedScore = total > 0 ? Math.round((correct / total) * 100) : 0;
 
     // Submit
     const { error: subError } = await supabase.from("submissions").insert({
@@ -175,6 +190,9 @@ const TakeExam = () => {
     }
 
     setScore(calculatedScore);
+    setCorrectCount(correct);
+    setTotalCount(total);
+    setQuestionResults(results);
     setSubmitted(true);
     setSubmitting(false);
   }, [studentInfo, exam, id, answers, submitting, submitted, toast]);
