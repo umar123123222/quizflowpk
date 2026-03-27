@@ -265,6 +265,7 @@ const Submissions = () => {
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Email</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Phone</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Score</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Violations</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Date</TableHead>
                                 </TableRow>
                               </TableHeader>
