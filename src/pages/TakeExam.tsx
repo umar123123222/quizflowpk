@@ -255,6 +255,27 @@ const TakeExam = () => {
     return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, [studentInfo, submitted, handleSubmitExam, toast]);
 
+  // Tab switch / visibility detection
+  useEffect(() => {
+    if (!studentInfo || submitted) return;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && !isSubmittingRef.current && !hasAutoSubmitted.current) {
+        tabSwitchCount.current += 1;
+        if (tabSwitchCount.current >= 2) {
+          isSubmittingRef.current = true;
+          toast({ title: "Exam Auto-Submitted", description: "Your exam was submitted due to repeated tab switching.", variant: "destructive" });
+          handleSubmitExam();
+        } else {
+          setShowTabSwitchWarning(true);
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [studentInfo, submitted, handleSubmitExam, toast]);
+
   const handleReEnterFullscreen = () => {
     setShowFullscreenWarning(false);
     try {
