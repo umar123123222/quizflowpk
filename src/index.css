@@ -6,23 +6,23 @@
 
 @layer base {
   :root {
-    --background: 228 25% 97%;
-    --foreground: 226 45% 17%;
+    --background: 0 0% 100%;
+    --foreground: 213 53% 24%;
 
     --card: 0 0% 100%;
-    --card-foreground: 226 45% 17%;
+    --card-foreground: 215 53% 24%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 226 45% 17%;
+    --popover-foreground: 215 53% 24%;
 
-    --primary: 226 45% 17%;
+    --primary: 213 53% 24%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 225 20% 93%;
-    --secondary-foreground: 226 45% 17%;
+    --secondary: 213 30% 92%;
+    --secondary-foreground: 213 53% 24%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 15% 35%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 215 16% 46%;
 
     --accent: 38 92% 50%;
     --accent-foreground: 0 0% 100%;
@@ -30,15 +30,15 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 225 18% 91%;
-    --input: 225 18% 91%;
-    --ring: 226 45% 17%;
+    --border: 214 25% 90%;
+    --input: 214 25% 90%;
+    --ring: 213 53% 24%;
 
     --radius: 0.75rem;
 
-    --hero-gradient: linear-gradient(135deg, hsl(226 45% 17%), hsl(38 92% 50%));
-    --card-shadow: 0 4px 24px -4px hsl(226 45% 17% / 0.08);
-    --card-shadow-hover: 0 8px 32px -4px hsl(226 45% 17% / 0.14);
+    --hero-gradient: linear-gradient(135deg, hsl(213 53% 24%), hsl(38 92% 50%));
+    --card-shadow: 0 4px 24px -4px hsl(213 53% 24% / 0.1);
+    --card-shadow-hover: 0 8px 32px -4px hsl(213 53% 24% / 0.18);
 
     --sidebar-background: 240 33% 4%;
     --sidebar-foreground: 240 5% 55%;
