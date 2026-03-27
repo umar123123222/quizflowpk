@@ -39,6 +39,52 @@ const Hero = () => {
               See How It Works
             </Button>
           </div>
+
+          {/* Stats Row */}
+          <div
+            className="mt-14 mx-auto max-w-2xl opacity-0 animate-fade-up [animation-delay:400ms]"
+            style={{
+              border: '1px solid rgba(255,255,255,0.07)',
+              borderRadius: '12px',
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr 1fr',
+            }}
+          >
+            {[
+              { number: '50K+', label: 'Quizzes Created', color: '#e8c87a' },
+              { number: '2M+', label: 'Students Reached', color: '#4a9eff' },
+              { number: '98%', label: 'Satisfaction Rate', color: '#4acf8e' },
+            ].map((stat, i) => (
+              <div
+                key={i}
+                className="relative px-6 py-5 text-center"
+                style={{
+                  borderRight: i < 2 ? '1px solid rgba(255,255,255,0.07)' : 'none',
+                }}
+              >
+                <div
+                  className="absolute top-0 left-1/2 -translate-x-1/2"
+                  style={{
+                    width: '40px',
+                    height: '2px',
+                    backgroundColor: stat.color,
+                  }}
+                />
+                <div
+                  className="text-2xl font-bold"
+                  style={{ fontFamily: "'Playfair Display', serif", color: '#e8e3d5' }}
+                >
+                  {stat.number}
+                </div>
+                <div
+                  className="mt-1 text-[10px] font-medium tracking-widest uppercase"
+                  style={{ color: 'rgba(232,227,213,0.4)' }}
+                >
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Floating preview card */}
