@@ -32,6 +32,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<AuthRedirect><Login /></AuthRedirect>} />
             <Route path="/signup" element={<AuthRedirect><Signup /></AuthRedirect>} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/dashboard/owner" element={<ProtectedRoute allowedRole="organization_owner"><OwnerDashboard /></ProtectedRoute>} />
             <Route path="/dashboard/owner/exams" element={<ProtectedRoute allowedRole="organization_owner"><ExamsList /></ProtectedRoute>} />
             <Route path="/dashboard/owner/create-exam" element={<ProtectedRoute allowedRole="organization_owner"><CreateExam /></ProtectedRoute>} />

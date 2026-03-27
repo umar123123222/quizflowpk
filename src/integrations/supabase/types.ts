@@ -79,6 +79,36 @@ export type Database = {
         }
         Relationships: []
       }
+      password_reset_pins: {
+        Row: {
+          backup_email: string
+          created_at: string | null
+          expires_at: string
+          id: string
+          pin: string
+          used: boolean | null
+          user_id: string
+        }
+        Insert: {
+          backup_email: string
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          pin: string
+          used?: boolean | null
+          user_id: string
+        }
+        Update: {
+          backup_email?: string
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          pin?: string
+          used?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
