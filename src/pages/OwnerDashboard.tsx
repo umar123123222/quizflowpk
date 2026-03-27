@@ -34,36 +34,40 @@ const stats = [
   },
 ];
 
-const quickActions = [
-  {
-    title: "Create Exam",
-    subtitle: "Draft a new examination",
-    icon: Plus,
-    accent: "var(--dashboard-gold)",
-  },
-  {
-    title: "Add Students",
-    subtitle: "Import or add new students",
-    icon: UserPlus,
-    accent: "var(--dashboard-blue)",
-  },
-  {
-    title: "View Results",
-    subtitle: "Browse submission analytics",
-    icon: BarChart3,
-    accent: "var(--dashboard-green)",
-  },
-  {
-    title: "Settings",
-    subtitle: "Organization preferences",
-    icon: Settings,
-    accent: "var(--dashboard-gold)",
-  },
-];
-
 const OwnerDashboard = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+
+  const quickActions = [
+    {
+      title: "Create Exam",
+      subtitle: "Draft a new examination",
+      icon: Plus,
+      accent: "var(--dashboard-gold)",
+      onClick: () => navigate("/dashboard/owner/create-exam"),
+    },
+    {
+      title: "Add Students",
+      subtitle: "Import or add new students",
+      icon: UserPlus,
+      accent: "var(--dashboard-blue)",
+      onClick: () => {},
+    },
+    {
+      title: "View Results",
+      subtitle: "Browse submission analytics",
+      icon: BarChart3,
+      accent: "var(--dashboard-green)",
+      onClick: () => {},
+    },
+    {
+      title: "Settings",
+      subtitle: "Organization preferences",
+      icon: Settings,
+      accent: "var(--dashboard-gold)",
+      onClick: () => {},
+    },
+  ];
 
   const handleSignOut = async () => {
     await signOut();
@@ -155,6 +159,7 @@ const OwnerDashboard = () => {
               {quickActions.map((action) => (
                 <button
                   key={action.title}
+                  onClick={action.onClick}
                   className="group flex items-center gap-4 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-4 text-left transition-all duration-200 hover:border-[hsl(var(--dashboard-gold))]"
                 >
                   <div
