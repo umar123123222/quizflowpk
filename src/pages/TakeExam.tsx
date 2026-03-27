@@ -129,7 +129,12 @@ const TakeExam = () => {
 
   const handleSubmitExam = useCallback(async () => {
     if (!studentInfo || !exam || !id || submitting || submitted) return;
+    isSubmittingRef.current = true;
     setSubmitting(true);
+    // Exit fullscreen on submit
+    if (document.fullscreenElement) {
+      try { document.exitFullscreen(); } catch (e) {}
+    }
 
     // Register student
     const { data: studentData, error: studentError } = await supabase
