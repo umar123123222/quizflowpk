@@ -15,7 +15,16 @@ import {
   Trash2,
   Save,
   LogOut,
+  Link,
+  Copy,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 interface Question {
   id: string;
@@ -40,6 +49,15 @@ const CreateExam = () => {
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
   const [saving, setSaving] = useState(false);
+  const [savedExamId, setSavedExamId] = useState<string | null>(null);
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+
+  const examLink = savedExamId ? `${window.location.origin}/exam/${savedExamId}` : "";
+
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(examLink);
+    toast({ title: "Link copied!", description: "Shareable exam link copied to clipboard." });
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -128,7 +146,8 @@ const CreateExam = () => {
       if (qError) throw qError;
 
       toast({ title: "Exam saved!", description: `"${title}" has been created successfully.` });
-      navigate("/dashboard/owner");
+      setSavedExamId(exam.id);
+      setShowLinkDialog(true);
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Something went wrong.", variant: "destructive" });
     } finally {
@@ -307,6 +326,43 @@ const CreateExam = () => {
           </main>
         </div>
       </div>
+
+      {/* Shareable Link Dialog */}
+      <Dialog open={showLinkDialog} onOpenChange={setShowLinkDialog}>
+        <DialogContent className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl text-white/90 flex items-center gap-2">
+              <Link className="h-5 w-5 text-[hsl(var(--dashboard-gold))]" />
+              Exam Created!
+            </DialogTitle>
+            <DialogDescription className="text-white/40">
+              Share this link with students to take the exam.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center gap-2 mt-2">
+            <input
+              readOnly
+              value={examLink}
+              className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 font-mono text-xs text-white/70 outline-none"
+            />
+            <button
+              onClick={copyLink}
+              className="flex items-center gap-1.5 rounded-md border border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.1)] px-3 py-2 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] transition-colors hover:bg-[hsl(var(--dashboard-gold)/0.2)]"
+            >
+              <Copy className="h-3.5 w-3.5" />
+              Copy
+            </button>
+          </div>
+          <div className="flex justify-end mt-4">
+            <button
+              onClick={() => navigate("/dashboard/owner/exams")}
+              className="rounded-md bg-[hsl(var(--dashboard-gold))] px-4 py-2 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-bg))] font-bold transition-colors hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
+            >
+              Go to Exams
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 };

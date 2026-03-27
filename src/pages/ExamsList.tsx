@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { FileText, Plus, LogOut, Loader2 } from "lucide-react";
+import { FileText, Plus, LogOut, Loader2, Copy } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Exam {
   id: string;
@@ -18,6 +19,13 @@ interface Exam {
 const ExamsList = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const copyExamLink = async (examId: string) => {
+    const link = `${window.location.origin}/exam/${examId}`;
+    await navigator.clipboard.writeText(link);
+    toast({ title: "Link copied!", description: "Shareable exam link copied to clipboard." });
+  };
   const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -142,12 +150,21 @@ const ExamsList = () => {
                             : "—"}
                         </span>
                       </div>
-                      <button
-                        onClick={() => navigate(`/dashboard/owner/create-exam?edit=${exam.id}`)}
-                        className="w-full rounded-md border border-[hsl(var(--dashboard-border))] py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/40 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/60"
-                      >
-                        View / Edit
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => navigate(`/dashboard/owner/create-exam?edit=${exam.id}`)}
+                          className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/40 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/60"
+                        >
+                          View / Edit
+                        </button>
+                        <button
+                          onClick={() => copyExamLink(exam.id)}
+                          title="Copy shareable link"
+                          className="flex items-center justify-center rounded-md border border-[hsl(var(--dashboard-border))] px-2.5 py-1.5 text-white/30 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-gold))]"
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}

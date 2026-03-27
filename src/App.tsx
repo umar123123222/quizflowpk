@@ -13,6 +13,7 @@ import OwnerDashboard from "./pages/OwnerDashboard.tsx";
 import TeacherDashboard from "./pages/TeacherDashboard.tsx";
 import CreateExam from "./pages/CreateExam.tsx";
 import ExamsList from "./pages/ExamsList.tsx";
+import TakeExam from "./pages/TakeExam.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/dashboard/owner/exams" element={<ProtectedRoute allowedRole="organization_owner"><ExamsList /></ProtectedRoute>} />
             <Route path="/dashboard/owner/create-exam" element={<ProtectedRoute allowedRole="organization_owner"><CreateExam /></ProtectedRoute>} />
             <Route path="/dashboard/teacher" element={<ProtectedRoute allowedRole="teacher"><TeacherDashboard /></ProtectedRoute>} />
+            <Route path="/exam/:id" element={<TakeExam />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
