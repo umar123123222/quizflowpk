@@ -111,8 +111,12 @@ const ExamBuilder = () => {
       const questionsToInsert = questions.map((q, index) => ({
         exam_id: exam.id,
         question_text: q.text.trim(),
-        options: q.options,
-        correct_answer: q.correctOption,
+        option_a: q.options[0] || "",
+        option_b: q.options[1] || "",
+        option_c: q.options[2] || null,
+        option_d: q.options[3] || null,
+        options: q.options as unknown as import("@/integrations/supabase/types").Json,
+        correct_answer: String(q.correctOption),
         order_index: index,
       }));
 
