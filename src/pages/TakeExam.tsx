@@ -281,13 +281,13 @@ const TakeExam = () => {
     const handleFullscreenChange = () => {
       if (!document.fullscreenElement && !isSubmittingRef.current && !hasAutoSubmitted.current) {
         fullscreenExitCount.current += 1;
+        addViolation("Full-screen exited");
         if (fullscreenExitCount.current >= 2) {
-          // Second exit — auto-submit immediately
+          addViolation("Auto-submitted: repeated full-screen exit");
           isSubmittingRef.current = true;
           toast({ title: "Exam Auto-Submitted", description: "You exited full-screen a second time. Your exam has been submitted.", variant: "destructive" });
           handleSubmitExam();
         } else {
-          // First exit — show warning
           setShowFullscreenWarning(true);
         }
       }
