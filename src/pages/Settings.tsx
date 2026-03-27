@@ -231,14 +231,6 @@ const Settings = () => {
                       Changing email requires confirmation via the new address
                     </p>
                   </div>
-                  <Button
-                    onClick={handleSaveProfile}
-                    disabled={savingProfile}
-                    className="flex items-center gap-2 bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-mono text-[11px] tracking-wider uppercase font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
-                  >
-                    {savingProfile ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-                    {savingProfile ? "Saving..." : "Save Profile"}
-                  </Button>
                   <div className="space-y-2 pt-2 border-t border-[hsl(var(--dashboard-border))]">
                     <label className={labelClass}>User Role</label>
                     <Input
@@ -251,6 +243,14 @@ const Settings = () => {
                       Your role is assigned by the system and cannot be changed here
                     </p>
                   </div>
+                  <Button
+                    onClick={handleSaveProfile}
+                    disabled={savingProfile}
+                    className="flex items-center gap-2 bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-mono text-[11px] tracking-wider uppercase font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
+                  >
+                    {savingProfile ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+                    {savingProfile ? "Saving..." : "Save Profile"}
+                  </Button>
                 </div>
               </div>
 
