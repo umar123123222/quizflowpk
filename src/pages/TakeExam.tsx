@@ -304,7 +304,9 @@ const TakeExam = () => {
     const handleVisibilityChange = () => {
       if (document.hidden && !isSubmittingRef.current && !hasAutoSubmitted.current) {
         tabSwitchCount.current += 1;
+        addViolation("Tab switched");
         if (tabSwitchCount.current >= 2) {
+          addViolation("Auto-submitted: repeated tab switching");
           isSubmittingRef.current = true;
           toast({ title: "Exam Auto-Submitted", description: "Your exam was submitted due to repeated tab switching.", variant: "destructive" });
           handleSubmitExam();
