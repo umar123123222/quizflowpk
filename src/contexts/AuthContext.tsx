@@ -10,7 +10,7 @@ interface AuthContextType {
   user: User | null;
   role: AppRole | null;
   loading: boolean;
-  signUp: (email: string, password: string, role: AppRole, fullName: string, backupEmail?: string) => Promise<void>;
+  signUp: (email: string, password: string, role: AppRole, fullName: string, backupEmail?: string, organizationId?: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -70,10 +70,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, role: AppRole, fullName: string, backupEmail?: string) => {
+  const signUp = async (email: string, password: string, role: AppRole, fullName: string, backupEmail?: string, organizationId?: string) => {
     const metadata: Record<string, string> = { role, full_name: fullName };
     if (backupEmail?.trim()) {
       metadata.backup_email = backupEmail.trim();
+    }
+    if (organizationId?.trim()) {
+      metadata.organization_id = organizationId.trim();
     }
     const { error } = await supabase.auth.signUp({
       email,

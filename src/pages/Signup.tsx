@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Zap, Building2, GraduationCap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -15,15 +16,28 @@ const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [backupEmail, setBackupEmail] = useState("");
   const [role, setRole] = useState<"organization_owner" | "teacher">("teacher");
+  const [selectedOrgId, setSelectedOrgId] = useState("");
+  const [organizations, setOrganizations] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuth();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchOrgs = async () => {
+      const { data } = await supabase
+        .from("organizations")
+        .select("id, name")
+        .order("name");
+      if (data) setOrganizations(data);
+    };
+    fetchOrgs();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await signUp(email, password, role, fullName, backupEmail);
+      await signUp(email, password, role, fullName, backupEmail, role === "teacher" ? selectedOrgId : undefined);
       toast({ title: "Account created!", description: "Check your email to verify your account." });
     } catch (error: any) {
       toast({ title: "Signup failed", description: error.message, variant: "destructive" });
@@ -89,6 +103,23 @@ const Signup = () => {
                 </Label>
               </RadioGroup>
             </div>
+            {role === "teacher" && organizations.length > 0 && (
+              <div className="space-y-2">
+                <Label htmlFor="organization">Join an Organization <span className="text-muted-foreground text-xs">(optional)</span></Label>
+                <select
+                  id="organization"
+                  value={selectedOrgId}
+                  onChange={(e) => setSelectedOrgId(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">No organization (independent)</option>
+                  {organizations.map((org) => (
+                    <option key={org.id} value={org.id}>{org.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-muted-foreground">Select an organization to join, or sign up independently</p>
+              </div>
+            )}
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
