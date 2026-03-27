@@ -1,15 +1,13 @@
 import { FileText, Users, BarChart3, Settings, GraduationCap, LogOut } from "lucide-react";
-import { NavLink } from "@/components/NavLink";
+import { NavLink as RouterNavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -18,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const navItems = [
-  { title: "Exams", url: "/dashboard/owner", icon: FileText },
+  { title: "Dashboard", url: "/dashboard/owner", icon: FileText },
   { title: "Users", url: "/dashboard/owner/users", icon: Users },
   { title: "Results", url: "/dashboard/owner/results", icon: BarChart3 },
   { title: "Settings", url: "/dashboard/owner/settings", icon: Settings },
@@ -27,6 +25,7 @@ const navItems = [
 export function OwnerSidebar() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
 
@@ -44,70 +43,66 @@ export function OwnerSidebar() {
     : "U";
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader className="p-4">
-        <div className="flex items-center gap-2">
-          <GraduationCap className="h-7 w-7 text-sidebar-primary" />
+    <Sidebar collapsible="icon" className="border-r border-[hsl(var(--dashboard-border))]">
+      <SidebarHeader className="px-5 py-6">
+        <div className="flex items-center gap-2.5">
+          <GraduationCap className="h-6 w-6 text-sidebar-primary" />
           {!collapsed && (
-            <span className="text-lg font-bold font-display text-sidebar-primary-foreground">
+            <span className="font-serif text-base font-bold tracking-wide text-sidebar-primary">
               QuizFlow
             </span>
           )}
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="px-3">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-sidebar-foreground/50 uppercase text-xs tracking-wider">
-            Menu
-          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to={item.url}
-                      end
-                      className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
-                      activeClassName="bg-sidebar-accent text-sidebar-primary font-semibold"
-                    >
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {!collapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+            <SidebarMenu className="space-y-0.5">
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.url;
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <RouterNavLink
+                        to={item.url}
+                        end
+                        className={`group relative flex items-center gap-3 rounded-md px-3 py-2 font-mono text-xs tracking-wider uppercase transition-all duration-200 ${
+                          isActive
+                            ? "border-l-2 border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.08)] text-[hsl(var(--dashboard-gold))]"
+                            : "border-l-2 border-transparent text-sidebar-foreground hover:text-[hsl(var(--dashboard-gold))] hover:bg-[hsl(var(--dashboard-gold)/0.04)]"
+                        }`}
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full shrink-0 ${
+                            isActive ? "bg-[hsl(var(--dashboard-gold))]" : "bg-sidebar-foreground/30 group-hover:bg-[hsl(var(--dashboard-gold)/0.5)]"
+                          }`}
+                        />
+                        {!collapsed && <span>{item.title}</span>}
+                      </RouterNavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-3 border-t border-sidebar-border">
+      <SidebarFooter className="px-4 py-4 border-t border-[hsl(var(--dashboard-border))]">
         <div className="flex items-center gap-3">
-          <Avatar className="h-8 w-8 bg-sidebar-accent">
-            <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-xs font-semibold">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--dashboard-gold)/0.15)] font-mono text-xs font-medium text-[hsl(var(--dashboard-gold))]">
+            {initials}
+          </div>
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-sidebar-primary-foreground truncate">
+              <p className="text-xs font-medium text-white/80 truncate">
                 {user?.user_metadata?.full_name || "Owner"}
               </p>
-              <p className="text-xs text-sidebar-foreground/60 truncate">
+              <p className="font-mono text-[10px] text-sidebar-foreground/50 truncate">
                 {user?.email}
               </p>
             </div>
-          )}
-          {!collapsed && (
-            <button
-              onClick={handleSignOut}
-              className="text-sidebar-foreground/60 hover:text-sidebar-primary transition-colors"
-              title="Sign out"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
           )}
         </div>
       </SidebarFooter>

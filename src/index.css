@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -40,14 +40,21 @@
     --card-shadow: 0 4px 24px -4px hsl(213 53% 24% / 0.1);
     --card-shadow-hover: 0 8px 32px -4px hsl(213 53% 24% / 0.18);
 
-    --sidebar-background: 213 53% 12%;
-    --sidebar-foreground: 210 20% 80%;
-    --sidebar-primary: 38 92% 50%;
+    --sidebar-background: 240 33% 4%;
+    --sidebar-foreground: 240 5% 55%;
+    --sidebar-primary: 43 49% 54%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 213 40% 18%;
+    --sidebar-accent: 240 20% 10%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 213 40% 18%;
-    --sidebar-ring: 38 92% 50%;
+    --sidebar-border: 240 10% 14%;
+    --sidebar-ring: 43 49% 54%;
+
+    --dashboard-bg: 240 33% 5%;
+    --dashboard-card: 240 27% 7%;
+    --dashboard-border: 240 10% 14%;
+    --dashboard-gold: 43 49% 54%;
+    --dashboard-blue: 217 91% 60%;
+    --dashboard-green: 142 71% 45%;
   }
 
   .dark {
