@@ -93,13 +93,7 @@ const ExamsList = () => {
                 </div>
                 <p className="text-sm text-white/50 mb-1">No exams yet</p>
                 <p className="font-mono text-[10px] text-white/25 mb-6">Create your first exam to get started</p>
-                <button
-                  onClick={() => navigate("/dashboard/owner/create-exam")}
-                  className="flex items-center gap-2 rounded-lg border border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.1)] px-4 py-2 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] transition-colors hover:bg-[hsl(var(--dashboard-gold)/0.2)]"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  Create Exam
-                </button>
+                <p className="font-mono text-[10px] text-white/25">Only teachers can create exams</p>
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
