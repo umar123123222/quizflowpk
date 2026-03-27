@@ -375,30 +375,7 @@ const Settings = () => {
                     {savingBackup ? "Saving..." : "Save Backup Email"}
                   </Button>
               </div>
-
-              {/* User Role Section */}
-              <div className={sectionClass}>
-                <div className="h-[2px] bg-[hsl(var(--dashboard-gold))]" />
-                <div className={sectionHeaderClass}>
-                  <BadgeCheck className="h-4 w-4 text-[hsl(var(--dashboard-gold))]" />
-                  <span className="font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] font-semibold">
-                    User Role
-                  </span>
-                </div>
-                <div className="p-5 space-y-2">
-                  <label className={labelClass}>Your Role</label>
-                  <Input
-                    value={roleLabel}
-                    readOnly
-                    disabled
-                    className={`${inputClass} opacity-70 cursor-not-allowed`}
-                  />
-                  <p className="font-mono text-[9px] text-white/20">
-                    Your role is assigned by the system and cannot be changed here
-                  </p>
-                </div>
               </div>
-            </div>
             </div>
           </main>
         </div>
