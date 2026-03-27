@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 
 type AppRole = "organization_owner" | "teacher";
@@ -24,15 +24,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchRole = async (userId: string) => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", userId)
       .single();
-    if (error) {
-      console.error("fetchRole error:", error.message);
-    }
-    console.log("fetchRole result:", data);
     return data?.role as AppRole | null;
   };
 
