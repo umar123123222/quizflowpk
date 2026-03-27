@@ -60,11 +60,11 @@ const OwnerDashboard = () => {
 
   const quickActions = [
     {
-      title: "Add Students",
-      subtitle: "Import or add new students",
+      title: "Add Teachers",
+      subtitle: "Manage your organization teachers",
       icon: UserPlus,
       accent: "var(--dashboard-blue)",
-      onClick: () => {},
+      onClick: () => navigate("/dashboard/owner/users"),
     },
     {
       title: "View Results",
