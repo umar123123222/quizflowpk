@@ -16,6 +16,7 @@ const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [backupEmail, setBackupEmail] = useState("");
   const [role, setRole] = useState<"organization_owner" | "teacher">("teacher");
+  const [gender, setGender] = useState<"male" | "female">("male");
   const [selectedOrgId, setSelectedOrgId] = useState("");
   const [organizations, setOrganizations] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +38,7 @@ const Signup = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await signUp(email, password, role, fullName, backupEmail, role === "teacher" ? selectedOrgId : undefined);
+      await signUp(email, password, role, fullName, backupEmail, role === "teacher" ? selectedOrgId : undefined, gender);
       toast({ title: "Account created!", description: "Check your email to verify your account." });
     } catch (error: any) {
       toast({ title: "Signup failed", description: error.message, variant: "destructive" });
@@ -64,6 +65,19 @@ const Signup = () => {
             <div className="space-y-2">
               <Label htmlFor="fullName">Full Name</Label>
               <Input id="fullName" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+            </div>
+            <div className="space-y-2">
+              <Label>Gender</Label>
+              <RadioGroup value={gender} onValueChange={(v) => setGender(v as "male" | "female")} className="flex gap-4">
+                <Label htmlFor="gender-male" className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2.5 cursor-pointer transition-all ${gender === "male" ? "border-accent bg-accent/10" : "border-border hover:border-accent/50"}`}>
+                  <RadioGroupItem value="male" id="gender-male" className="sr-only" />
+                  <span className="text-sm font-medium">Male</span>
+                </Label>
+                <Label htmlFor="gender-female" className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2.5 cursor-pointer transition-all ${gender === "female" ? "border-accent bg-accent/10" : "border-border hover:border-accent/50"}`}>
+                  <RadioGroupItem value="female" id="gender-female" className="sr-only" />
+                  <span className="text-sm font-medium">Female</span>
+                </Label>
+              </RadioGroup>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
