@@ -68,6 +68,8 @@ const TakeExam = () => {
   const hasAutoSubmitted = useRef(false);
   const fullscreenExitCount = useRef(0);
   const [showFullscreenWarning, setShowFullscreenWarning] = useState(false);
+  const tabSwitchCount = useRef(0);
+  const [showTabSwitchWarning, setShowTabSwitchWarning] = useState(false);
   const isSubmittingRef = useRef(false);
   const form = useForm<StudentInfo>({
     resolver: zodResolver(studentInfoSchema),
