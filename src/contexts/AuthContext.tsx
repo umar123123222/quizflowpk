@@ -32,69 +32,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return data?.role as AppRole | null;
   };
 
-  const ensureOrganization = async (userId: string, fullName: string) => {
-    const { data: existing } = await supabase
-      .from("organizations")
-      .select("id")
-      .eq("owner_id", userId)
-      .maybeSingle();
-    if (!existing) {
-      await supabase.from("organizations").insert({
-        name: `${fullName || "My"}'s Organization`,
-        owner_id: userId,
-      });
-    }
-  };
-
   useEffect(() => {
-    let mounted = true;
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        if (!mounted) return;
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          try {
-            const userRole = await fetchRole(session.user.id);
-            if (mounted) setRole(userRole);
-            if (userRole === "organization_owner") {
-              await ensureOrganization(session.user.id, session.user.user_metadata?.full_name || "");
-            }
-          } catch {
-            if (mounted) setRole(null);
-          }
+          const userRole = await fetchRole(session.user.id);
+          setRole(userRole);
         } else {
           setRole(null);
         }
-        if (mounted) setLoading(false);
+        setLoading(false);
       }
     );
 
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (!mounted) return;
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        try {
-          const userRole = await fetchRole(session.user.id);
-          if (mounted) setRole(userRole);
-          if (userRole === "organization_owner") {
-            await ensureOrganization(session.user.id, session.user.user_metadata?.full_name || "");
-          }
-        } catch {
-          if (mounted) setRole(null);
-        }
+        const userRole = await fetchRole(session.user.id);
+        setRole(userRole);
       }
-      if (mounted) setLoading(false);
-    }).catch(() => {
-      if (mounted) setLoading(false);
+      setLoading(false);
     });
 
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
   const signUp = async (email: string, password: string, role: AppRole, fullName: string) => {
