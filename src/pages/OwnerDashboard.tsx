@@ -19,6 +19,23 @@ const OwnerDashboard = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
+  const { data: examCount = 0 } = useQuery({
+    queryKey: ["examCount"],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("exams")
+        .select("*", { count: "exact", head: true });
+      if (error) throw error;
+      return count ?? 0;
+    },
+  });
+
+  const stats = [
+    { label: "Total Exams", value: examCount, icon: FileText, accent: "var(--dashboard-gold)" },
+    { label: "Total Students", value: 156, icon: Users, accent: "var(--dashboard-blue)" },
+    { label: "Total Submissions", value: 482, icon: ClipboardList, accent: "var(--dashboard-green)" },
+  ];
+
   const quickActions = [
     {
       title: "Create Exam",
