@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { OwnerSidebar } from "@/components/OwnerSidebar";
+import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert } from "lucide-react";
@@ -166,7 +166,7 @@ const Submissions = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-[hsl(var(--dashboard-bg))]">
-        <OwnerSidebar />
+        <RoleSidebar />
         <div className="flex-1 flex flex-col">
           {/* Topbar */}
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-5">
