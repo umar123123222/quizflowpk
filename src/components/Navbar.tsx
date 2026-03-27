@@ -57,7 +57,7 @@ const Navbar = () => {
             }}
             aria-label="Toggle theme"
           >
-            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {isDark ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
           <Button variant="ghost" size="sm" asChild className="font-medium" style={{ color: 'rgba(232,227,213,0.5)' }}>
             <Link to="/login">Log in</Link>
