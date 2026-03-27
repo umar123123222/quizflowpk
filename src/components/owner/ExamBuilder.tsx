@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Plus, Trash2, Save, GripVertical, Link, Copy, Check } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -111,8 +111,12 @@ const ExamBuilder = () => {
       const questionsToInsert = questions.map((q, index) => ({
         exam_id: exam.id,
         question_text: q.text.trim(),
-        options: q.options,
-        correct_answer: q.correctOption,
+        option_a: q.options[0] || "",
+        option_b: q.options[1] || "",
+        option_c: q.options[2] || null,
+        option_d: q.options[3] || null,
+        options: q.options as unknown as import("@/integrations/supabase/types").Json,
+        correct_answer: String(q.correctOption),
         order_index: index,
       }));
 
