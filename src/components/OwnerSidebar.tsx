@@ -45,12 +45,10 @@ export function OwnerSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r border-[hsl(var(--dashboard-border))]">
       <SidebarHeader className="px-5 py-6">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[hsl(var(--dashboard-gold))] font-mono text-[11px] font-bold text-[hsl(var(--dashboard-bg))]">
-            QF
-          </div>
+        <div className="flex items-center gap-2.5">
+          <GraduationCap className="h-6 w-6 text-sidebar-primary" />
           {!collapsed && (
-            <span className="font-serif text-lg font-bold tracking-wide text-[hsl(var(--dashboard-gold))]">
+            <span className="font-serif text-base font-bold tracking-wide text-sidebar-primary">
               QuizFlow
             </span>
           )}
