@@ -50,6 +50,18 @@ const TakeExam = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState<number | null>(null);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [questionResults, setQuestionResults] = useState<Array<{
+    question_text: string;
+    student_answer: string | null;
+    correct_answer: string;
+    is_correct: boolean;
+    option_a: string;
+    option_b: string;
+    option_c: string | null;
+    option_d: string | null;
+  }>>([]);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const hasAutoSubmitted = useRef(false);
@@ -135,18 +147,33 @@ const TakeExam = () => {
       return;
     }
 
-    // Calculate score
+    // Calculate score & build results
     const { data: fullQuestions } = await supabase
       .from("questions")
-      .select("id, correct_answer")
-      .eq("exam_id", id);
+      .select("id, question_text, option_a, option_b, option_c, option_d, correct_answer, order_index")
+      .eq("exam_id", id)
+      .order("order_index", { ascending: true });
 
-    let correctCount = 0;
-    (fullQuestions || []).forEach((q) => {
-      if (answers[q.id] === q.correct_answer) correctCount++;
+    const sorted = fullQuestions || [];
+    let correct = 0;
+    const results = sorted.map((q) => {
+      const studentAnswer = answers[q.id] || null;
+      const isCorrect = studentAnswer === q.correct_answer;
+      if (isCorrect) correct++;
+      return {
+        question_text: q.question_text,
+        student_answer: studentAnswer,
+        correct_answer: q.correct_answer,
+        is_correct: isCorrect,
+        option_a: q.option_a,
+        option_b: q.option_b,
+        option_c: q.option_c,
+        option_d: q.option_d,
+      };
     });
-    const totalQuestions = fullQuestions?.length || 1;
-    const calculatedScore = Math.round((correctCount / totalQuestions) * 100);
+
+    const total = sorted.length;
+    const calculatedScore = total > 0 ? Math.round((correct / total) * 100) : 0;
 
     // Submit
     const { error: subError } = await supabase.from("submissions").insert({
@@ -163,6 +190,9 @@ const TakeExam = () => {
     }
 
     setScore(calculatedScore);
+    setCorrectCount(correct);
+    setTotalCount(total);
+    setQuestionResults(results);
     setSubmitted(true);
     setSubmitting(false);
   }, [studentInfo, exam, id, answers, submitting, submitted, toast]);
@@ -209,23 +239,91 @@ const TakeExam = () => {
     );
   }
 
-  // Submitted state
+  // Submitted — detailed results
   if (submitted) {
+    const getOptionText = (q: typeof questionResults[0], key: string) => {
+      if (key === "A") return q.option_a;
+      if (key === "B") return q.option_b;
+      if (key === "C") return q.option_c || "";
+      if (key === "D") return q.option_d || "";
+      return "";
+    };
+
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-4">
-        <Card className="w-full max-w-md text-center">
-          <CardContent className="pt-8 pb-8 space-y-4">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
+      <div className="min-h-screen bg-background text-foreground">
+        {/* Score header */}
+        <div className="bg-card border-b border-border">
+          <div className="max-w-3xl mx-auto px-4 py-8 text-center space-y-3">
+            <CheckCircle className="h-14 w-14 text-primary mx-auto" />
             <h2 className="font-serif text-2xl font-bold">Exam Submitted!</h2>
             <p className="text-muted-foreground">
               Thank you, <span className="font-semibold text-foreground">{studentInfo?.fullName}</span>.
             </p>
-            {score !== null && (
-              <div className="text-4xl font-bold text-primary">{score}%</div>
-            )}
-            <p className="text-sm text-muted-foreground">Your answers have been recorded.</p>
-          </CardContent>
-        </Card>
+            <div className="flex items-center justify-center gap-6 mt-4">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
+                <p className="text-xs text-muted-foreground mt-1">Correct Answers</p>
+              </div>
+              <div className="w-px h-12 bg-border" />
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary">{score}%</div>
+                <p className="text-xs text-muted-foreground mt-1">Score</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Question-by-question results */}
+        <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
+          <h3 className="font-serif text-lg font-semibold">Review Your Answers</h3>
+          {questionResults.map((q, index) => (
+            <Card key={index} className={`overflow-hidden border-l-4 ${q.is_correct ? "border-l-primary" : "border-l-destructive"}`}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  {q.is_correct ? (
+                    <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                  ) : (
+                    <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                  )}
+                  <span className="text-primary font-bold">Q{index + 1}.</span>
+                  {q.question_text}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 pt-0">
+                {[
+                  { key: "A", value: q.option_a },
+                  { key: "B", value: q.option_b },
+                  { key: "C", value: q.option_c },
+                  { key: "D", value: q.option_d },
+                ]
+                  .filter((opt) => opt.value)
+                  .map((opt) => {
+                    const isStudentAnswer = q.student_answer === opt.key;
+                    const isCorrectAnswer = q.correct_answer === opt.key;
+                    let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2";
+                    if (isCorrectAnswer) {
+                      classes += " border-primary bg-primary/10 text-foreground";
+                    } else if (isStudentAnswer && !q.is_correct) {
+                      classes += " border-destructive bg-destructive/10 text-foreground";
+                    } else {
+                      classes += " border-border text-muted-foreground";
+                    }
+                    return (
+                      <div key={opt.key} className={classes}>
+                        <span className="font-semibold">{opt.key}.</span>
+                        <span className="flex-1">{opt.value}</span>
+                        {isCorrectAnswer && <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0" />}
+                        {isStudentAnswer && !q.is_correct && <span className="text-xs text-destructive font-medium">Your answer</span>}
+                      </div>
+                    );
+                  })}
+                {!q.student_answer && (
+                  <p className="text-xs text-muted-foreground italic">Not answered</p>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
