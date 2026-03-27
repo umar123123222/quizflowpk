@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, ClipboardList, ChevronDown, ChevronRight } from "lucide-react";
+import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
   Table,
