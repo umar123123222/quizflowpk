@@ -9,7 +9,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { User, Mail, Phone, Clock, CheckCircle, AlertTriangle } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { User, Mail, Phone, Clock, CheckCircle, AlertTriangle, Maximize } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -65,7 +66,9 @@ const TakeExam = () => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const hasAutoSubmitted = useRef(false);
-
+  const fullscreenExitCount = useRef(0);
+  const [showFullscreenWarning, setShowFullscreenWarning] = useState(false);
+  const isSubmittingRef = useRef(false);
   const form = useForm<StudentInfo>({
     resolver: zodResolver(studentInfoSchema),
     defaultValues: { fullName: "", email: "", phone: "" },
@@ -126,7 +129,12 @@ const TakeExam = () => {
 
   const handleSubmitExam = useCallback(async () => {
     if (!studentInfo || !exam || !id || submitting || submitted) return;
+    isSubmittingRef.current = true;
     setSubmitting(true);
+    // Exit fullscreen on submit
+    if (document.fullscreenElement) {
+      try { document.exitFullscreen(); } catch (e) {}
+    }
 
     // Register student
     const { data: studentData, error: studentError } = await supabase
@@ -214,6 +222,44 @@ const TakeExam = () => {
 
   const onStudentSubmit = (data: StudentInfo) => {
     setStudentInfo(data);
+    // Request fullscreen when exam starts
+    try {
+      document.documentElement.requestFullscreen?.();
+    } catch (e) {
+      // Fullscreen may not be supported in all contexts (e.g., iframes)
+    }
+  };
+
+  // Fullscreen exit detection
+  useEffect(() => {
+    if (!studentInfo || submitted) return;
+
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && !isSubmittingRef.current && !hasAutoSubmitted.current) {
+        fullscreenExitCount.current += 1;
+        if (fullscreenExitCount.current >= 2) {
+          // Second exit — auto-submit immediately
+          isSubmittingRef.current = true;
+          toast({ title: "Exam Auto-Submitted", description: "You exited full-screen a second time. Your exam has been submitted.", variant: "destructive" });
+          handleSubmitExam();
+        } else {
+          // First exit — show warning
+          setShowFullscreenWarning(true);
+        }
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, [studentInfo, submitted, handleSubmitExam, toast]);
+
+  const handleReEnterFullscreen = () => {
+    setShowFullscreenWarning(false);
+    try {
+      document.documentElement.requestFullscreen?.();
+    } catch (e) {
+      // ignore
+    }
   };
 
   // Error state
@@ -460,6 +506,28 @@ const TakeExam = () => {
           </p>
         </div>
       </div>
+
+      {/* Fullscreen Warning Dialog */}
+      <Dialog open={showFullscreenWarning} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              Full-Screen Exited!
+            </DialogTitle>
+            <DialogDescription className="text-base pt-2">
+              You have exited full-screen. Please return to full-screen immediately or your exam will be submitted.
+              <span className="block mt-2 font-semibold text-destructive">There will be no second chance.</span>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={handleReEnterFullscreen} className="w-full gap-2">
+              <Maximize className="h-4 w-4" />
+              Return to Full-Screen
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
