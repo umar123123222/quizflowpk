@@ -186,15 +186,17 @@ const CreateExam = () => {
         await supabase.from("questions").delete().eq("exam_id", editId);
       } else {
         // Insert new exam
-        const { data: exam, error: examError } = await supabase
-          .from("exams")
-          .insert({
+        const insertData: any = {
             title: title.trim(),
             time_limit: timeLimit || null,
-            organization_id: org.id,
             created_by: user!.id,
             is_published: true,
-          })
+          };
+        if (orgId) insertData.organization_id = orgId;
+
+        const { data: exam, error: examError } = await supabase
+          .from("exams")
+          .insert(insertData)
           .select("id")
           .single();
 
