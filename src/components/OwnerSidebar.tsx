@@ -68,11 +68,13 @@ export function OwnerSidebar() {
                       <RouterNavLink
                         to={item.url}
                         end
-                        className={`group relative flex items-center gap-3 rounded-md px-3 py-2 font-mono text-xs tracking-wider uppercase transition-all duration-200 ${
-                          isActive
-                            ? "border-l-2 border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.08)] text-[hsl(var(--dashboard-gold))]"
-                            : "border-l-2 border-transparent text-sidebar-foreground hover:text-[hsl(var(--dashboard-gold))] hover:bg-[hsl(var(--dashboard-gold)/0.04)]"
-                        }`}
+                        className={() =>
+                          `group relative flex items-center gap-3 rounded-md px-3 py-2 font-mono text-xs tracking-wider uppercase transition-all duration-200 ${
+                            isActive
+                              ? "border-l-2 border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.08)] text-[hsl(var(--dashboard-gold))]"
+                              : "border-l-2 border-transparent text-sidebar-foreground hover:text-[hsl(var(--dashboard-gold))] hover:bg-[hsl(var(--dashboard-gold)/0.04)]"
+                          }`
+                        }
                       >
                         <span
                           className={`h-1.5 w-1.5 rounded-full shrink-0 ${
