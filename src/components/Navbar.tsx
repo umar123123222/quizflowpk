@@ -18,15 +18,14 @@ const Navbar = () => {
 
   return (
     <nav
-      className="fixed top-0 z-50 w-full backdrop-blur-md"
-      style={{ backgroundColor: 'transparent', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+      className="fixed top-0 z-50 w-full backdrop-blur-md bg-white dark:bg-transparent border-b border-border dark:border-white/[0.06]"
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <div className="rounded-lg p-1.5" style={{ backgroundColor: '#e8c87a' }}>
-            <Zap className="h-5 w-5" style={{ color: '#0a0d14' }} />
+          <div className="rounded-lg p-1.5 bg-accent">
+            <Zap className="h-5 w-5 text-accent-foreground" />
           </div>
-          <span className="text-xl font-bold font-serif" style={{ color: '#e8c87a' }}>QuizFlow</span>
+          <span className="text-xl font-bold font-serif text-accent dark:text-accent">QuizFlow</span>
         </div>
 
         <div className="hidden items-center gap-8 md:flex">
@@ -34,10 +33,7 @@ const Navbar = () => {
             <a
               key={item}
               href="#"
-              className="text-sm font-medium transition-colors"
-              style={{ color: 'rgba(232,227,213,0.6)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#e8c87a')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(232,227,213,0.6)')}
+              className="text-sm font-medium transition-colors text-muted-foreground hover:text-accent"
             >
               {item}
             </a>
@@ -47,19 +43,12 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={toggleTheme}
-            className="flex items-center justify-center rounded-full transition-colors"
-            style={{
-              width: 36,
-              height: 36,
-              border: '1px solid rgba(255,255,255,0.12)',
-              background: 'transparent',
-              color: 'rgba(232,227,213,0.6)',
-            }}
+            className="flex items-center justify-center rounded-full transition-colors w-9 h-9 border border-border dark:border-white/[0.12] bg-transparent text-muted-foreground hover:text-foreground"
             aria-label="Toggle theme"
           >
             {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
-          <Button variant="ghost" size="sm" asChild className="font-medium" style={{ color: 'rgba(232,227,213,0.5)' }}>
+          <Button variant="ghost" size="sm" asChild className="font-medium text-muted-foreground">
             <Link to="/login">Log in</Link>
           </Button>
           <Button

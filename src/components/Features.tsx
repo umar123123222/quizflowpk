@@ -44,19 +44,13 @@ const Features = () => {
     <section style={{ paddingTop: '4rem', paddingBottom: '5rem' }}>
       <div className="container mx-auto px-4">
         <div className="mx-auto mb-16 max-w-2xl text-center">
-          <div
-            className="mb-4 text-[11px] font-semibold tracking-[0.2em] uppercase"
-            style={{ color: "#e8c87a", fontFamily: "'DM Mono', monospace" }}
-          >
+          <div className="mb-4 text-[11px] font-semibold tracking-[0.2em] uppercase font-mono text-accent">
             Why QuizFlow
           </div>
-          <h2
-            className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl"
-            style={{ fontFamily: "'Playfair Display', serif", color: "#e8e3d5" }}
-          >
+          <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl font-serif text-foreground">
             Everything you need to quiz smarter
           </h2>
-          <p className="text-base" style={{ color: "rgba(232,227,213,0.5)" }}>
+          <p className="text-base text-muted-foreground">
             Powerful features that make creating, sharing, and analyzing quizzes effortless.
           </p>
         </div>
@@ -65,36 +59,22 @@ const Features = () => {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="group p-8 transition-colors duration-200"
-              style={{
-                backgroundColor: "#0d1018",
-                border: "1px solid rgba(255,255,255,0.06)",
-                cursor: "default",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#10131c")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#0d1018")}
+              className="group p-8 transition-colors duration-200 bg-card dark:bg-[#0d1018] border border-border dark:border-white/[0.06] hover:bg-muted dark:hover:bg-[#10131c] cursor-default"
             >
               <div
-                className="mb-4 flex items-center justify-center"
+                className="mb-4 flex items-center justify-center rounded-lg"
                 style={{
                   width: "40px",
                   height: "40px",
-                  borderRadius: "8px",
                   backgroundColor: `${feature.color}15`,
                 }}
               >
                 <feature.icon style={{ color: feature.color, width: 20, height: 20 }} />
               </div>
-              <h3
-                className="mb-2 text-base font-semibold"
-                style={{ color: "#e8e3d5" }}
-              >
+              <h3 className="mb-2 text-base font-semibold text-foreground">
                 {feature.title}
               </h3>
-              <p
-                className="text-sm leading-relaxed"
-                style={{ color: "rgba(232,227,213,0.45)" }}
-              >
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 {feature.description}
               </p>
             </div>
