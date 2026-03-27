@@ -56,11 +56,6 @@ const CreateExam = () => {
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [loadingExam, setLoadingExam] = useState(false);
 
-  // Owners cannot create exams — redirect to dashboard
-  if (role === "organization_owner") {
-    return <Navigate to="/dashboard/owner" replace />;
-  }
-
   const examLink = (savedExamId || editId) ? `${window.location.origin}/exam/${savedExamId || editId}` : "";
 
   // Load existing exam data in edit mode
