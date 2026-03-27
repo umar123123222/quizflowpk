@@ -15,6 +15,21 @@ const Settings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const { data: userRole } = useQuery({
+    queryKey: ["user-role", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user!.id)
+        .single();
+      return data?.role ?? null;
+    },
+    enabled: !!user?.id,
+  });
+
+  const roleLabel = userRole === "organization_owner" ? "Organization Owner" : userRole === "teacher" ? "Teacher" : "—";
+
   // Profile
   const [displayName, setDisplayName] = useState(user?.user_metadata?.full_name || "");
   const [email, setEmail] = useState(user?.email || "");
