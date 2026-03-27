@@ -1,0 +1,1 @@
+UPDATE public.exams SET is_published = true WHERE is_published = false OR is_published IS NULL;
