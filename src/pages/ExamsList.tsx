@@ -150,6 +150,11 @@ const ExamsList = () => {
                           {exam.is_published ? "Published" : "Draft"}
                         </span>
                       </div>
+                      {exam.teacher_name && (
+                        <p className="font-mono text-[10px] text-white/30 mb-2">
+                          By: <span className="text-white/50">{exam.teacher_name}</span>
+                        </p>
+                      )}
                       {exam.description && (
                         <p className="text-xs text-white/35 mb-3 line-clamp-2">{exam.description}</p>
                       )}
