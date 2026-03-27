@@ -19,7 +19,7 @@ const navItems = [
   { title: "Dashboard", url: "/dashboard/owner", icon: FileText },
   { title: "Exams", url: "/dashboard/owner/exams", icon: ClipboardList },
   { title: "Users", url: "/dashboard/owner/users", icon: Users },
-  { title: "Results", url: "/dashboard/owner/results", icon: BarChart3 },
+  { title: "Submissions", url: "/dashboard/owner/submissions", icon: BarChart3 },
   { title: "Settings", url: "/dashboard/owner/settings", icon: Settings },
 ];
 
