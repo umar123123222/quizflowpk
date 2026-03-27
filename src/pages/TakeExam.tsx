@@ -239,23 +239,91 @@ const TakeExam = () => {
     );
   }
 
-  // Submitted state
+  // Submitted — detailed results
   if (submitted) {
+    const getOptionText = (q: typeof questionResults[0], key: string) => {
+      if (key === "A") return q.option_a;
+      if (key === "B") return q.option_b;
+      if (key === "C") return q.option_c || "";
+      if (key === "D") return q.option_d || "";
+      return "";
+    };
+
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-4">
-        <Card className="w-full max-w-md text-center">
-          <CardContent className="pt-8 pb-8 space-y-4">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
+      <div className="min-h-screen bg-background text-foreground">
+        {/* Score header */}
+        <div className="bg-card border-b border-border">
+          <div className="max-w-3xl mx-auto px-4 py-8 text-center space-y-3">
+            <CheckCircle className="h-14 w-14 text-primary mx-auto" />
             <h2 className="font-serif text-2xl font-bold">Exam Submitted!</h2>
             <p className="text-muted-foreground">
               Thank you, <span className="font-semibold text-foreground">{studentInfo?.fullName}</span>.
             </p>
-            {score !== null && (
-              <div className="text-4xl font-bold text-primary">{score}%</div>
-            )}
-            <p className="text-sm text-muted-foreground">Your answers have been recorded.</p>
-          </CardContent>
-        </Card>
+            <div className="flex items-center justify-center gap-6 mt-4">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
+                <p className="text-xs text-muted-foreground mt-1">Correct Answers</p>
+              </div>
+              <div className="w-px h-12 bg-border" />
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary">{score}%</div>
+                <p className="text-xs text-muted-foreground mt-1">Score</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Question-by-question results */}
+        <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
+          <h3 className="font-serif text-lg font-semibold">Review Your Answers</h3>
+          {questionResults.map((q, index) => (
+            <Card key={index} className={`overflow-hidden border-l-4 ${q.is_correct ? "border-l-primary" : "border-l-destructive"}`}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  {q.is_correct ? (
+                    <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                  ) : (
+                    <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                  )}
+                  <span className="text-primary font-bold">Q{index + 1}.</span>
+                  {q.question_text}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 pt-0">
+                {[
+                  { key: "A", value: q.option_a },
+                  { key: "B", value: q.option_b },
+                  { key: "C", value: q.option_c },
+                  { key: "D", value: q.option_d },
+                ]
+                  .filter((opt) => opt.value)
+                  .map((opt) => {
+                    const isStudentAnswer = q.student_answer === opt.key;
+                    const isCorrectAnswer = q.correct_answer === opt.key;
+                    let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2";
+                    if (isCorrectAnswer) {
+                      classes += " border-primary bg-primary/10 text-foreground";
+                    } else if (isStudentAnswer && !q.is_correct) {
+                      classes += " border-destructive bg-destructive/10 text-foreground";
+                    } else {
+                      classes += " border-border text-muted-foreground";
+                    }
+                    return (
+                      <div key={opt.key} className={classes}>
+                        <span className="font-semibold">{opt.key}.</span>
+                        <span className="flex-1">{opt.value}</span>
+                        {isCorrectAnswer && <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0" />}
+                        {isStudentAnswer && !q.is_correct && <span className="text-xs text-destructive font-medium">Your answer</span>}
+                      </div>
+                    );
+                  })}
+                {!q.student_answer && (
+                  <p className="text-xs text-muted-foreground italic">Not answered</p>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
