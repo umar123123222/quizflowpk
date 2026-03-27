@@ -55,6 +55,21 @@
     --dashboard-gold: 43 49% 54%;
     --dashboard-blue: 217 91% 60%;
     --dashboard-green: 142 71% 45%;
+
+    /* Homepage tokens – light */
+    --homepage-bg: 40 7% 95%;
+    --homepage-text: 240 25% 14%;
+    --homepage-text-muted: 240 10% 40%;
+    --homepage-card-bg: 0 0% 100%;
+    --homepage-card-border: 240 10% 88%;
+    --homepage-card-hover: 240 7% 97%;
+    --homepage-stat-text: 240 25% 14%;
+    --homepage-stat-label: 240 10% 50%;
+    --homepage-heading: 240 25% 14%;
+    --homepage-sub: 240 10% 45%;
+    --homepage-nav-link: 240 10% 40%;
+    --homepage-nav-border: 240 10% 90%;
+    --homepage-gold: 38 72% 60%;
   }
 
   .dark {
@@ -85,6 +100,21 @@
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 213 32% 17%;
     --sidebar-ring: 38 92% 50%;
+
+    /* Homepage tokens – dark */
+    --homepage-bg: 225 33% 6%;
+    --homepage-text: 38 20% 88%;
+    --homepage-text-muted: 38 10% 40%;
+    --homepage-card-bg: 225 27% 7%;
+    --homepage-card-border: 0 0% 100% / 0.06;
+    --homepage-card-hover: 225 25% 9%;
+    --homepage-stat-text: 38 20% 88%;
+    --homepage-stat-label: 38 10% 35%;
+    --homepage-heading: 38 20% 88%;
+    --homepage-sub: 38 10% 40%;
+    --homepage-nav-link: 38 10% 55%;
+    --homepage-nav-border: 0 0% 100% / 0.06;
+    --homepage-gold: 38 72% 66%;
   }
 }
 
