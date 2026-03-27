@@ -49,6 +49,15 @@ const CreateExam = () => {
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
   const [saving, setSaving] = useState(false);
+  const [savedExamId, setSavedExamId] = useState<string | null>(null);
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+
+  const examLink = savedExamId ? `${window.location.origin}/exam/${savedExamId}` : "";
+
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(examLink);
+    toast({ title: "Link copied!", description: "Shareable exam link copied to clipboard." });
+  };
 
   const handleSignOut = async () => {
     await signOut();
