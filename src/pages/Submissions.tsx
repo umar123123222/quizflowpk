@@ -117,6 +117,7 @@ const Submissions = () => {
             id: s.id,
             score: s.score,
             submitted_at: s.submitted_at,
+            violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
             student: studentMap.get(s.student_id) || {
               full_name: "Unknown",
               email: null,
