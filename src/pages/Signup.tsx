@@ -67,6 +67,19 @@ const Signup = () => {
               <Input id="fullName" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
             </div>
             <div className="space-y-2">
+              <Label>Gender</Label>
+              <RadioGroup value={gender} onValueChange={(v) => setGender(v as "male" | "female")} className="flex gap-4">
+                <Label htmlFor="gender-male" className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2.5 cursor-pointer transition-all ${gender === "male" ? "border-accent bg-accent/10" : "border-border hover:border-accent/50"}`}>
+                  <RadioGroupItem value="male" id="gender-male" className="sr-only" />
+                  <span className="text-sm font-medium">Male</span>
+                </Label>
+                <Label htmlFor="gender-female" className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2.5 cursor-pointer transition-all ${gender === "female" ? "border-accent bg-accent/10" : "border-border hover:border-accent/50"}`}>
+                  <RadioGroupItem value="female" id="gender-female" className="sr-only" />
+                  <span className="text-sm font-medium">Female</span>
+                </Label>
+              </RadioGroup>
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
