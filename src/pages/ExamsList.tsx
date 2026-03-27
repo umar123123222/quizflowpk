@@ -175,18 +175,21 @@ const ExamsList = () => {
                         </span>
                       </div>
                       <div className="flex gap-2">
-                        <button
-                          onClick={() => navigate(`/dashboard/owner/create-exam?edit=${exam.id}`)}
-                          className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/40 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/60"
-                        >
-                          View / Edit
-                        </button>
+                        {role === "teacher" && (
+                          <button
+                            onClick={() => navigate(`/dashboard/owner/create-exam?edit=${exam.id}`)}
+                            className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/40 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/60"
+                          >
+                            View / Edit
+                          </button>
+                        )}
                         <button
                           onClick={() => copyExamLink(exam.id)}
                           title="Copy shareable link"
-                          className="flex items-center justify-center rounded-md border border-[hsl(var(--dashboard-border))] px-2.5 py-1.5 text-white/30 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-gold))]"
+                          className={`flex items-center justify-center rounded-md border border-[hsl(var(--dashboard-border))] px-2.5 py-1.5 text-white/30 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-gold))] ${role === "organization_owner" ? "flex-1" : ""}`}
                         >
                           <Copy className="h-3.5 w-3.5" />
+                          {role === "organization_owner" && <span className="ml-1.5 font-mono text-[10px] tracking-wider uppercase">Copy Link</span>}
                         </button>
                       </div>
                     </div>
