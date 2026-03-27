@@ -87,35 +87,6 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Floating preview card */}
-        <div className="mx-auto mt-16 max-w-2xl opacity-0 animate-fade-up [animation-delay:500ms]">
-          <div className="rounded-2xl border bg-card p-6 shadow-card animate-float">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="h-3 w-3 rounded-full bg-destructive/60" />
-              <div className="h-3 w-3 rounded-full bg-accent/60" />
-              <div className="h-3 w-3 rounded-full bg-primary/40" />
-            </div>
-            <div className="space-y-3">
-              <div className="h-4 w-3/4 rounded bg-muted" />
-              <div className="flex gap-3">
-                <div className="flex-1 rounded-lg border-2 border-primary bg-secondary p-3">
-                  <div className="h-3 w-full rounded bg-primary/20" />
-                </div>
-                <div className="flex-1 rounded-lg border bg-card p-3">
-                  <div className="h-3 w-full rounded bg-muted" />
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <div className="flex-1 rounded-lg border bg-card p-3">
-                  <div className="h-3 w-full rounded bg-muted" />
-                </div>
-                <div className="flex-1 rounded-lg border bg-card p-3">
-                  <div className="h-3 w-full rounded bg-muted" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
