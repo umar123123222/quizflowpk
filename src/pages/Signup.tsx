@@ -23,7 +23,7 @@ const Signup = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await signUp(email, password, role, fullName);
+      await signUp(email, password, role, fullName, backupEmail);
       toast({ title: "Account created!", description: "Check your email to verify your account." });
     } catch (error: any) {
       toast({ title: "Signup failed", description: error.message, variant: "destructive" });
