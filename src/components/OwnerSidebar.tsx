@@ -94,7 +94,7 @@ export function OwnerSidebar() {
           </div>
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-white/80 truncate">
+              <p className="text-xs font-medium text-white/90 truncate">
                 {user?.user_metadata?.full_name || "Owner"}
               </p>
               <p className="font-mono text-[10px] text-sidebar-foreground/50 truncate">
@@ -105,7 +105,7 @@ export function OwnerSidebar() {
         </div>
         <button
           onClick={handleSignOut}
-          className="flex w-full items-center justify-center gap-2 rounded-md border border-[hsl(var(--dashboard-border))] px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/40 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/60"
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-[hsl(var(--dashboard-border))] px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/60 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/75"
         >
           <LogOut className="h-3 w-3" />
           {!collapsed && <span>Sign out</span>}

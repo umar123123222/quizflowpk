@@ -26,8 +26,8 @@ const StudentForm = () => {
           {/* Topbar */}
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-5">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-white/40 hover:text-white/70" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/40">
+              <SidebarTrigger className="text-white/60 hover:text-white/80" />
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/60">
                 Org / Student Form
               </span>
             </div>
@@ -37,7 +37,7 @@ const StudentForm = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/25 transition-colors hover:text-white/50"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/45 transition-colors hover:text-white/70"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -47,10 +47,10 @@ const StudentForm = () => {
 
           {/* Main Content */}
           <main className="flex-1 p-6 md:p-10 overflow-y-auto">
-            <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/90 mb-2">
+            <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/95 mb-2">
               Student Identification Form
             </h1>
-            <p className="font-mono text-[11px] text-white/30 mb-8">
+            <p className="font-mono text-[11px] text-white/50 mb-8">
               Configure the fields students fill out before starting an exam
             </p>
 

@@ -146,8 +146,8 @@ const Users = () => {
           {/* Topbar */}
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-5">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-white/40 hover:text-white/70" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/40">
+              <SidebarTrigger className="text-white/60 hover:text-white/80" />
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/60">
                 Org / Teachers
               </span>
             </div>
@@ -159,7 +159,7 @@ const Users = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/25 transition-colors hover:text-white/50"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/45 transition-colors hover:text-white/70"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -171,8 +171,8 @@ const Users = () => {
           <main className="flex-1 p-6 md:p-10">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/90">Teachers</h1>
-                <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-white/30 mt-2">
+                <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/95">Teachers</h1>
+                <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-white/50 mt-2">
                   Manage teachers in your organization
                 </p>
               </div>
@@ -189,69 +189,69 @@ const Users = () => {
             {showForm && (
               <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-6 mb-8">
                 <div className="h-[2px] bg-[hsl(var(--dashboard-gold))] -mt-6 -mx-6 mb-6 rounded-t-lg" />
-                <h2 className="font-serif text-lg font-bold text-white/85 mb-4">Add New Teacher</h2>
+                <h2 className="font-serif text-lg font-bold text-white/92 mb-4">Add New Teacher</h2>
                 <form onSubmit={handleAddTeacher} className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="block font-mono text-[10px] tracking-wider uppercase text-white/40 mb-1.5">
+                    <label className="block font-mono text-[10px] tracking-wider uppercase text-white/60 mb-1.5">
                       Full Name *
                     </label>
                     <input
                       type="text"
                       value={formData.full_name}
                       onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-white/80 placeholder:text-white/20 focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
+                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-white/90 placeholder:text-white/40 focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
                       placeholder="John Doe"
                       maxLength={100}
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] tracking-wider uppercase text-white/40 mb-1.5">
+                    <label className="block font-mono text-[10px] tracking-wider uppercase text-white/60 mb-1.5">
                       Email *
                     </label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-white/80 placeholder:text-white/20 focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
+                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-white/90 placeholder:text-white/40 focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
                       placeholder="teacher@example.com"
                       maxLength={255}
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] tracking-wider uppercase text-white/40 mb-1.5">
+                    <label className="block font-mono text-[10px] tracking-wider uppercase text-white/60 mb-1.5">
                       Password *
                     </label>
                     <input
                       type="password"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-white/80 placeholder:text-white/20 focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
+                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-white/90 placeholder:text-white/40 focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
                       placeholder="Initial password"
                       minLength={6}
                     />
                   </div>
                   <div>
-                    <label className="block font-mono text-[10px] tracking-wider uppercase text-white/40 mb-1.5">
+                    <label className="block font-mono text-[10px] tracking-wider uppercase text-white/60 mb-1.5">
                       Contact Number
                     </label>
                     <input
                       type="text"
                       value={formData.contact_number}
                       onChange={(e) => setFormData({ ...formData, contact_number: e.target.value })}
-                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-white/80 placeholder:text-white/20 focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
+                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-white/90 placeholder:text-white/40 focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
                       placeholder="+1234567890"
                       maxLength={20}
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block font-mono text-[10px] tracking-wider uppercase text-white/40 mb-1.5">
+                    <label className="block font-mono text-[10px] tracking-wider uppercase text-white/60 mb-1.5">
                       Subject They Teach
                     </label>
                     <input
                       type="text"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-white/80 placeholder:text-white/20 focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
+                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-white/90 placeholder:text-white/40 focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
                       placeholder="Mathematics, Physics, etc."
                       maxLength={100}
                     />
@@ -273,25 +273,25 @@ const Users = () => {
             {/* Teachers Table */}
             {loading ? (
               <div className="flex items-center justify-center py-20">
-                <Loader2 className="h-6 w-6 animate-spin text-white/30" />
+                <Loader2 className="h-6 w-6 animate-spin text-white/50" />
               </div>
             ) : teachers.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] mb-4">
-                  <UsersIcon className="h-6 w-6 text-white/20" />
+                  <UsersIcon className="h-6 w-6 text-white/40" />
                 </div>
-                <p className="text-sm text-white/50 mb-1">No teachers yet</p>
-                <p className="font-mono text-[10px] text-white/25">Add your first teacher to get started</p>
+                <p className="text-sm text-white/70 mb-1">No teachers yet</p>
+                <p className="font-mono text-[10px] text-white/45">Add your first teacher to get started</p>
               </div>
             ) : (
               <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] overflow-hidden">
                 <Table>
                   <TableHeader>
                     <TableRow className="border-[hsl(var(--dashboard-border))] hover:bg-transparent">
-                      <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Full Name</TableHead>
-                      <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Contact Number</TableHead>
-                      <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Subject</TableHead>
-                      <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Joined</TableHead>
+                      <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Full Name</TableHead>
+                      <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Contact Number</TableHead>
+                      <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Subject</TableHead>
+                      <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-right">Joined</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -300,16 +300,16 @@ const Users = () => {
                         key={teacher.id}
                         className="border-[hsl(var(--dashboard-border))] hover:bg-[hsl(var(--dashboard-gold)/0.03)]"
                       >
-                        <TableCell className="text-sm text-white/75 font-medium">
+                        <TableCell className="text-sm text-white/85 font-medium">
                           {teacher.full_name}
                         </TableCell>
-                        <TableCell className="font-mono text-xs text-white/50">
+                        <TableCell className="font-mono text-xs text-white/70">
                           {teacher.contact_number || "—"}
                         </TableCell>
-                        <TableCell className="text-xs text-white/50">
+                        <TableCell className="text-xs text-white/70">
                           {teacher.subject || "—"}
                         </TableCell>
-                        <TableCell className="font-mono text-[11px] text-white/40 text-right">
+                        <TableCell className="font-mono text-[11px] text-white/60 text-right">
                           {teacher.created_at
                             ? new Date(teacher.created_at).toLocaleDateString("en-US", {
                                 month: "short",
