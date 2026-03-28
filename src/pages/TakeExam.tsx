@@ -155,7 +155,22 @@ const TakeExam = () => {
         setLoading(false);
         return;
       }
-      setExam(examData);
+
+      // Check schedule window
+      const now = new Date();
+      if ((examData as any).start_time && new Date((examData as any).start_time) > now) {
+        const startDate = new Date((examData as any).start_time);
+        setError(`This exam hasn't started yet. It begins on ${format(startDate, "PPP")} at ${format(startDate, "p")}.`);
+        setLoading(false);
+        return;
+      }
+      if ((examData as any).end_time && new Date((examData as any).end_time) < now) {
+        setError("This exam has ended and is no longer accepting submissions.");
+        setLoading(false);
+        return;
+      }
+
+      setExam(examData as any);
       setExamId(examData.id);
 
       // Fetch form settings for the org
