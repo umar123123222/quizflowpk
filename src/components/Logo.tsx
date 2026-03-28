@@ -7,6 +7,7 @@ interface LogoProps {
   linkTo?: string;
   showText?: boolean;
   className?: string;
+  variant?: "dark" | "light";
 }
 
 const sizeMap = {
@@ -15,14 +16,15 @@ const sizeMap = {
   lg: { icon: "h-7 w-7", text: "text-xl" },
 };
 
-export function Logo({ size = "md", linkTo, showText = true, className }: LogoProps) {
+export function Logo({ size = "md", linkTo, showText = true, className, variant }: LogoProps) {
   const s = sizeMap[size];
+  const textColor = variant === "light" ? "text-[#0f1117]" : "text-sidebar-primary";
 
   const content = (
     <div className={cn("flex items-center gap-2.5", className)}>
       <GraduationCap className={cn(s.icon, "text-sidebar-primary")} />
       {showText && (
-        <span className={cn("font-serif font-bold tracking-wide text-sidebar-primary", s.text)}>
+        <span className={cn("font-serif font-bold tracking-wide", s.text, textColor)}>
           QuizFlow
         </span>
       )}
