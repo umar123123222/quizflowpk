@@ -691,6 +691,42 @@ const TakeExam = () => {
                     </FormItem>
                   )} />
                 )}
+
+                {/* Custom fields */}
+                {customFieldDefs.map((cf) => (
+                  <div key={cf.id} className="space-y-2">
+                    <Label>
+                      {cf.field_label}
+                      {!cf.is_required && <span className="text-muted-foreground text-xs ml-1">(Optional)</span>}
+                    </Label>
+                    {cf.field_type === "dropdown" ? (
+                      <select
+                        value={customFieldValues[cf.id] || ""}
+                        onChange={(e) =>
+                          setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
+                        }
+                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        required={cf.is_required}
+                      >
+                        <option value="">Select {cf.field_label}</option>
+                        {cf.dropdown_options.map((opt) => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <Input
+                        type={cf.field_type === "number" ? "number" : "text"}
+                        placeholder={`Enter ${cf.field_label.toLowerCase()}`}
+                        value={customFieldValues[cf.id] || ""}
+                        onChange={(e) =>
+                          setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
+                        }
+                        required={cf.is_required}
+                      />
+                    )}
+                  </div>
+                ))}
+
                 <Button type="submit" className="w-full mt-2">Start Exam</Button>
               </form>
             </Form>
