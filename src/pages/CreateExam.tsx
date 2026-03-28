@@ -204,6 +204,22 @@ const CreateExam = () => {
       return;
     }
 
+    // Validate custom marking constraints
+    if (customMarking) {
+      if (typeof totalMarks !== "number" || totalMarks <= 0) {
+        toast({ title: "Total Marks required", description: "Please set Total Marks when Custom Marking is enabled.", variant: "destructive" });
+        return;
+      }
+      const assignedMarks = questions.reduce((sum, q) => {
+        if (q.marks !== "" && typeof q.marks === "number" && q.marks > 0) return sum + q.marks;
+        return sum;
+      }, 0);
+      if (assignedMarks > totalMarks) {
+        toast({ title: "Marks exceed total", description: `Assigned marks (${assignedMarks}) exceed total exam marks (${totalMarks}). Please adjust.`, variant: "destructive" });
+        return;
+      }
+    }
+
     setSaving(true);
     try {
       // Try to get org (optional for teachers)
