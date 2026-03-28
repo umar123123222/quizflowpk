@@ -60,6 +60,7 @@ export type Database = {
           id: string
           is_published: boolean | null
           organization_id: string | null
+          passing_percentage: number | null
           result_visibility: string
           shuffle_options: boolean
           shuffle_questions: boolean
@@ -78,6 +79,7 @@ export type Database = {
           id?: string
           is_published?: boolean | null
           organization_id?: string | null
+          passing_percentage?: number | null
           result_visibility?: string
           shuffle_options?: boolean
           shuffle_questions?: boolean
@@ -96,6 +98,7 @@ export type Database = {
           id?: string
           is_published?: boolean | null
           organization_id?: string | null
+          passing_percentage?: number | null
           result_visibility?: string
           shuffle_options?: boolean
           shuffle_questions?: boolean
