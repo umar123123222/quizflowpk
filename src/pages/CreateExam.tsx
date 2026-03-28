@@ -461,11 +461,18 @@ const CreateExam = () => {
             {/* Add Question + Save */}
             <div className="flex flex-col sm:flex-row gap-3">
               <button
-                onClick={addQuestion}
+                onClick={() => setQuestions((prev) => [...prev, createEmptyQuestion("mcq")])}
                 className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-[hsl(var(--dashboard-border))] px-5 py-3 font-mono text-[11px] tracking-wider uppercase text-white/30 transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
               >
-                <Plus className="h-3.5 w-3.5" />
-                Add Question
+                <ListChecks className="h-3.5 w-3.5" />
+                Add MCQ
+              </button>
+              <button
+                onClick={() => setQuestions((prev) => [...prev, createEmptyQuestion("text")])}
+                className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-[hsl(var(--dashboard-border))] px-5 py-3 font-mono text-[11px] tracking-wider uppercase text-white/30 transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
+              >
+                <FileText className="h-3.5 w-3.5" />
+                Add Text Question
               </button>
               <Button
                 onClick={handleSave}
