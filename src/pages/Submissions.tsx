@@ -162,14 +162,21 @@ const Submissions = () => {
 
       if (!exams || exams.length === 0) { setLoading(false); return; }
 
-      // Check which exams have text questions
+      // Fetch all questions for all exams (for text question detection + CSV export)
       const examIds = exams.map((e) => e.id);
-      const { data: textQs } = await supabase
+      const { data: allQuestions } = await supabase
         .from("questions")
-        .select("exam_id")
+        .select("id, exam_id, question_text, question_type, order_index")
         .in("exam_id", examIds)
-        .eq("question_type", "text");
-      const examsWithText = new Set((textQs || []).map((q) => q.exam_id));
+        .order("order_index", { ascending: true });
+      const examsWithText = new Set(
+        (allQuestions || []).filter((q) => q.question_type === "text").map((q) => q.exam_id)
+      );
+      const questionsByExam = new Map<string, ExamQuestion[]>();
+      (allQuestions || []).forEach((q) => {
+        if (!questionsByExam.has(q.exam_id)) questionsByExam.set(q.exam_id, []);
+        questionsByExam.get(q.exam_id)!.push({ id: q.id, question_text: q.question_text, order_index: q.order_index });
+      });
 
       // Get submissions with student info for all exams
       const results: ExamWithSubmissions[] = [];
