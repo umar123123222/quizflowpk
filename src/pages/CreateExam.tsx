@@ -78,6 +78,7 @@ const CreateExam = () => {
         if (exam) {
           setTitle(exam.title);
           setTimeLimit(exam.time_limit ?? 30);
+          if (exam.code) setSavedExamCode(exam.code);
         }
         const { data: qs } = await supabase
           .from("questions")
