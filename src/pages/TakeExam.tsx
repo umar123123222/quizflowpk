@@ -296,11 +296,16 @@ const TakeExam = () => {
     const total = mcqCount;
     const calculatedScore = total > 0 ? Math.round((correct / total) * 100) : 0;
 
-    // Submit
+    // Submit — include custom fields in the answers payload
+    const submissionAnswers: Record<string, any> = { ...answers };
+    if (studentInfo.customFields && Object.keys(studentInfo.customFields).length > 0) {
+      submissionAnswers._customFields = studentInfo.customFields;
+    }
+
     const { error: subError } = await supabase.from("submissions").insert({
       exam_id: examId,
       student_id: studentId,
-      answers: answers,
+      answers: submissionAnswers,
       score: calculatedScore,
       violations: violationsRef.current,
     });

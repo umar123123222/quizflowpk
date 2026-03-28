@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, XCircle, AlertTriangle, Mail, User, Calendar, FileText } from "lucide-react";
+import { CheckCircle, XCircle, AlertTriangle, Mail, User, Calendar, FileText, ClipboardList, Phone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface QuestionResult {
@@ -23,12 +23,15 @@ const ViewSubmission = () => {
   const [error, setError] = useState<string | null>(null);
   const [studentName, setStudentName] = useState("");
   const [studentEmail, setStudentEmail] = useState("");
+  const [studentPhone, setStudentPhone] = useState("");
   const [examTitle, setExamTitle] = useState("");
   const [submittedAt, setSubmittedAt] = useState<string | null>(null);
   const [score, setScore] = useState<number | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [questionResults, setQuestionResults] = useState<QuestionResult[]>([]);
+  const [customFieldData, setCustomFieldData] = useState<Record<string, string>>({});
+  const [customFieldLabels, setCustomFieldLabels] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchSubmission = async () => {
@@ -46,12 +49,16 @@ const ViewSubmission = () => {
         return;
       }
 
+      // Extract custom fields from answers
+      const answersObj = (sub.answers as Record<string, any>) || {};
+      const customFields = answersObj._customFields as Record<string, string> | undefined;
+
       setSubmittedAt(sub.submitted_at);
 
-      // Fetch student & exam in parallel
+      // Fetch student, exam, questions, and org custom field labels in parallel
       const [studentRes, examRes, questionsRes] = await Promise.all([
-        supabase.from("students").select("full_name, email").eq("id", sub.student_id).single(),
-        supabase.from("exams").select("title").eq("id", sub.exam_id).single(),
+        supabase.from("students").select("full_name, email, phone").eq("id", sub.student_id).single(),
+        supabase.from("exams").select("title, organization_id").eq("id", sub.exam_id).single(),
         supabase
           .from("questions")
           .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index")
@@ -61,9 +68,25 @@ const ViewSubmission = () => {
 
       setStudentName(studentRes.data?.full_name || "Unknown");
       setStudentEmail(studentRes.data?.email || "—");
+      setStudentPhone(studentRes.data?.phone || "");
       setExamTitle(examRes.data?.title || "Unknown Exam");
 
-      const answers = (sub.answers as Record<string, string>) || {};
+      // Fetch custom field labels if org exists
+      if (customFields && Object.keys(customFields).length > 0) {
+        setCustomFieldData(customFields);
+        const cfIds = Object.keys(customFields);
+        const { data: cfDefs } = await supabase
+          .from("organization_custom_fields")
+          .select("id, field_label")
+          .in("id", cfIds);
+        if (cfDefs) {
+          const labels: Record<string, string> = {};
+          cfDefs.forEach((cf: any) => { labels[cf.id] = cf.field_label; });
+          setCustomFieldLabels(labels);
+        }
+      }
+
+      const answers = answersObj as Record<string, string>;
       const sorted = questionsRes.data || [];
       let correct = 0;
       const mcqCount = sorted.filter((q) => q.question_type !== "text").length;
@@ -147,6 +170,12 @@ const ViewSubmission = () => {
                     <Mail className="h-4 w-4 shrink-0" />
                     <span>Email: <span className="font-medium text-foreground">{studentEmail}</span></span>
                   </div>
+                  {studentPhone && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Phone className="h-4 w-4 shrink-0" />
+                      <span>Phone: <span className="font-medium text-foreground">{studentPhone}</span></span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <FileText className="h-4 w-4 shrink-0" />
                     <span>Exam: <span className="font-semibold text-foreground">{examTitle}</span></span>
@@ -155,6 +184,20 @@ const ViewSubmission = () => {
                     <Calendar className="h-4 w-4 shrink-0" />
                     <span>Submitted: <span className="font-medium text-foreground">{formatDate(submittedAt)}</span></span>
                   </div>
+                  {/* Custom fields */}
+                  {Object.keys(customFieldData).length > 0 && (
+                    <>
+                      {Object.entries(customFieldData).map(([fieldId, value]) => (
+                        <div key={fieldId} className="flex items-center gap-2 text-muted-foreground">
+                          <ClipboardList className="h-4 w-4 shrink-0" />
+                          <span>
+                            {customFieldLabels[fieldId] || fieldId}:{" "}
+                            <span className="font-medium text-foreground">{value || "—"}</span>
+                          </span>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
 
