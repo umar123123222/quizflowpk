@@ -86,6 +86,7 @@ interface Exam {
   end_time: string | null;
   shuffle_questions?: boolean;
   shuffle_options?: boolean;
+  passing_percentage?: number | null;
 }
 
 // Maps shuffled display key -> original key, per question
@@ -404,13 +405,18 @@ const TakeExam = () => {
       submissionAnswers._customFields = studentInfo.customFields;
     }
 
+    // Determine pass/fail for MCQ-only exams; mixed exams wait for manual review
+    const passingThreshold = exam?.passing_percentage ?? 50;
+    const passFail = hasTextQs ? null : (calculatedScore >= passingThreshold ? "PASS" : "FAIL");
+
     const { error: subError } = await supabase.from("submissions").insert({
       exam_id: examId,
       student_id: studentId,
       answers: submissionAnswers,
       score: calculatedScore,
       violations: violationsRef.current,
-    });
+      pass_fail: passFail,
+    } as any);
 
     if (subError) {
       toast({ title: "Error", description: `Failed to submit exam: ${subError?.message || "Unknown error"}`, variant: "destructive" });

@@ -175,6 +175,15 @@ const ViewSubmission = () => {
 
       const finalScore = totalPoints > 0 ? Math.round(((mcqEarned + textEarned) / totalPoints) * 100) : 0;
 
+      // Fetch exam's passing percentage for pass/fail determination
+      const { data: examForPass } = await supabase
+        .from("exams")
+        .select("passing_percentage")
+        .eq("id", submissionData.exam_id)
+        .single();
+      const passingThreshold = (examForPass as any)?.passing_percentage ?? 50;
+      const passFail = finalScore >= passingThreshold ? "PASS" : "FAIL";
+
       // Save text scores inside answers JSON and update overall score
       const now = new Date().toISOString();
       const updatedAnswers = {
@@ -186,7 +195,7 @@ const ViewSubmission = () => {
 
       const { error } = await supabase
         .from("submissions")
-        .update({ score: finalScore, answers: updatedAnswers })
+        .update({ score: finalScore, answers: updatedAnswers, pass_fail: passFail } as any)
         .eq("id", submissionData.id);
 
       if (error) throw error;
