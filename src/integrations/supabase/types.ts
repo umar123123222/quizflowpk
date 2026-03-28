@@ -61,6 +61,39 @@ export type Database = {
           },
         ]
       }
+      organization_custom_fields: {
+        Row: {
+          created_at: string | null
+          dropdown_options: Json | null
+          field_label: string
+          field_type: string
+          id: string
+          is_required: boolean
+          organization_id: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string | null
+          dropdown_options?: Json | null
+          field_label: string
+          field_type?: string
+          id?: string
+          is_required?: boolean
+          organization_id: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string | null
+          dropdown_options?: Json | null
+          field_label?: string
+          field_type?: string
+          id?: string
+          is_required?: boolean
+          organization_id?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
       organization_form_settings: {
         Row: {
           created_at: string | null
