@@ -323,6 +323,17 @@ const Submissions = () => {
                                     <TableCell className="font-mono text-[11px] text-white/40 text-right">
                                       {formatDate(sub.submitted_at)}
                                     </TableCell>
+                                    <TableCell className="text-center">
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-7 px-2 text-[10px] font-mono tracking-wider uppercase text-white/40 hover:text-white/70"
+                                        onClick={() => window.open(`/submission/${sub.id}`, "_blank")}
+                                      >
+                                        <Eye className="h-3 w-3 mr-1" />
+                                        View
+                                      </Button>
+                                    </TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>
