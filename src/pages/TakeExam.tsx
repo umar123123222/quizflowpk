@@ -56,11 +56,12 @@ const TakeExam = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [questionResults, setQuestionResults] = useState<Array<{
     question_text: string;
+    question_type: string;
     student_answer: string | null;
-    correct_answer: string;
+    correct_answer: string | null;
     is_correct: boolean;
-    option_a: string;
-    option_b: string;
+    option_a: string | null;
+    option_b: string | null;
     option_c: string | null;
     option_d: string | null;
   }>>([]);
