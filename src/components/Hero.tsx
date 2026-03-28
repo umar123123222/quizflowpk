@@ -29,7 +29,7 @@ const Hero = () => {
             <span style={{ color: '#5b7fa6' }}>in</span>
             <br />
             <span style={{ color: '#6b6b6b' }}>minu</span>
-            <span style={{ color: '#e8a020' }}>tes</span>
+            <span style={{ color: '#c17f24' }}>tes</span>
           </h1>
 
           <p
