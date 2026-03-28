@@ -322,9 +322,10 @@ const Settings = () => {
                       <button
                         type="button"
                         onClick={() => setShowConfirm(!showConfirm)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                        tabIndex={-1}
                       >
-                        {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showConfirm ? <EyeOff size={18} color="#e09615" /> : <Eye size={18} color="#e09615" />}
                       </button>
                     </div>
                   </div>
