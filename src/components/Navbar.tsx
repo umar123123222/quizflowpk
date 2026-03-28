@@ -23,7 +23,7 @@ const Navbar = () => {
               href="#"
               className="text-sm font-medium transition-colors"
               style={{ color: 'rgba(232,227,213,0.6)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#e8c87a')}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#F59E0B')}
               onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(232,227,213,0.6)')}
             >
               {item}
