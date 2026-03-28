@@ -56,10 +56,12 @@ export type Database = {
           created_by: string
           description: string | null
           duration_minutes: number | null
+          end_time: string | null
           id: string
           is_published: boolean | null
           organization_id: string | null
           result_visibility: string
+          start_time: string | null
           time_limit: number | null
           title: string
         }
@@ -69,10 +71,12 @@ export type Database = {
           created_by: string
           description?: string | null
           duration_minutes?: number | null
+          end_time?: string | null
           id?: string
           is_published?: boolean | null
           organization_id?: string | null
           result_visibility?: string
+          start_time?: string | null
           time_limit?: number | null
           title: string
         }
@@ -82,10 +86,12 @@ export type Database = {
           created_by?: string
           description?: string | null
           duration_minutes?: number | null
+          end_time?: string | null
           id?: string
           is_published?: boolean | null
           organization_id?: string | null
           result_visibility?: string
+          start_time?: string | null
           time_limit?: number | null
           title?: string
         }
