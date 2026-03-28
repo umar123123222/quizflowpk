@@ -41,6 +41,7 @@ interface Question {
   text: string;
   options: [string, string, string, string];
   correctAnswer: string;
+  marks: number | "";
 }
 
 const createEmptyQuestion = (type: QuestionType = "mcq"): Question => ({
@@ -49,6 +50,7 @@ const createEmptyQuestion = (type: QuestionType = "mcq"): Question => ({
   text: "",
   options: ["", "", "", ""],
   correctAnswer: type === "mcq" ? "A" : "",
+  marks: "",
 });
 
 const CreateExam = () => {
@@ -61,6 +63,9 @@ const CreateExam = () => {
 
   const [title, setTitle] = useState("");
   const [totalMarks, setTotalMarks] = useState<number | "">(""); 
+  const [customMarking, setCustomMarking] = useState(false);
+  const [defaultMcqMarks, setDefaultMcqMarks] = useState<number | "">(2);
+  const [defaultTextMarks, setDefaultTextMarks] = useState<number | "">(5);
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
   const [resultVisibility, setResultVisibility] = useState<"immediate" | "after_exam_ends">("immediate");
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
@@ -113,6 +118,8 @@ const CreateExam = () => {
           .eq("exam_id", editId)
           .order("order_index", { ascending: true });
         if (qs && qs.length > 0) {
+          const hasCustomMarks = qs.some((q) => (q.points ?? 1) !== 1);
+          if (hasCustomMarks) setCustomMarking(true);
           setQuestions(
             qs.map((q) => ({
               id: q.id,
@@ -120,6 +127,7 @@ const CreateExam = () => {
               text: q.question_text,
               options: [q.option_a || "", q.option_b || "", q.option_c || "", q.option_d || ""] as [string, string, string, string],
               correctAnswer: q.correct_answer || "",
+              marks: hasCustomMarks ? (q.points ?? 1) : "",
             }))
           );
         }
@@ -263,7 +271,21 @@ const CreateExam = () => {
         setSavedExamCode(exam.code);
       }
 
-      // Insert questions
+      // Calculate points per question
+      const getQuestionPoints = (q: Question): number => {
+        if (customMarking) {
+          if (q.marks !== "" && q.marks > 0) return q.marks;
+          // Fall back to default per type
+          const defaultVal = q.type === "mcq" ? defaultMcqMarks : defaultTextMarks;
+          return typeof defaultVal === "number" && defaultVal > 0 ? defaultVal : 1;
+        }
+        // Equal distribution from total marks or 1 per question
+        if (totalMarks && typeof totalMarks === "number") {
+          return Math.round((totalMarks / questions.length) * 100) / 100;
+        }
+        return 1;
+      };
+
       const questionRows = questions.map((q, i) => ({
         exam_id: examId!,
         question_type: q.type,
@@ -274,6 +296,7 @@ const CreateExam = () => {
         option_d: q.type === "mcq" ? q.options[3].trim() : null,
         correct_answer: q.type === "mcq" ? q.correctAnswer : (q.correctAnswer.trim() || null),
         order_index: i,
+        points: getQuestionPoints(q),
         options: q.type === "mcq"
           ? q.options.map((o, idx) => ({
               label: String.fromCharCode(65 + idx),
@@ -563,11 +586,69 @@ const CreateExam = () => {
               </p>
             </div>
 
-            {/* Questions */}
-            <div className="mb-4">
-              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/30 mb-4">
-                Questions
-              </p>
+            {/* Custom Marking Toggle */}
+            <div className="mb-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/30">
+                    Questions
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCustomMarking(!customMarking)}
+                  className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase transition-all ${
+                    customMarking
+                      ? "border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.1)] text-[hsl(var(--dashboard-gold))]"
+                      : "border-[hsl(var(--dashboard-border))] text-white/30 hover:text-white/50"
+                  }`}
+                >
+                  <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "bg-white/15"}`}>
+                    <div className={`absolute top-0.5 h-2 w-2 rounded-full bg-white transition-all ${customMarking ? "left-3.5" : "left-0.5"}`} />
+                  </div>
+                  Custom Marking
+                </button>
+              </div>
+
+              {customMarking && (
+                <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-4 space-y-3">
+                  <p className="font-mono text-[9px] tracking-wider uppercase text-white/25">
+                    Default marks per question type (can be overridden individually)
+                  </p>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="font-mono text-[9px] tracking-wider uppercase text-white/35 flex items-center gap-1.5">
+                        <ListChecks className="h-3 w-3" />
+                        MCQ Default Marks
+                      </label>
+                      <Input
+                        type="number"
+                        value={defaultMcqMarks}
+                        onChange={(e) => setDefaultMcqMarks(e.target.value ? Number(e.target.value) : "")}
+                        placeholder="2"
+                        min={0.5}
+                        step={0.5}
+                        className="h-8 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="font-mono text-[9px] tracking-wider uppercase text-white/35 flex items-center gap-1.5">
+                        <FileText className="h-3 w-3" />
+                        Text Default Marks
+                      </label>
+                      <Input
+                        type="number"
+                        value={defaultTextMarks}
+                        onChange={(e) => setDefaultTextMarks(e.target.value ? Number(e.target.value) : "")}
+                        placeholder="5"
+                        min={0.5}
+                        step={0.5}
+                        className="h-8 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-6 mb-8">
@@ -610,15 +691,31 @@ const CreateExam = () => {
                           </button>
                         </div>
                       </div>
-                      {questions.length > 1 && (
-                        <button
-                          onClick={() => removeQuestion(qIndex)}
-                          className="flex items-center gap-1 font-mono text-[10px] tracking-wider uppercase text-white/20 hover:text-red-400 transition-colors"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                          Remove
-                        </button>
-                      )}
+                      <div className="flex items-center gap-3">
+                        {customMarking && (
+                          <div className="flex items-center gap-1.5">
+                            <Input
+                              type="number"
+                              value={q.marks}
+                              onChange={(e) => updateQuestion(qIndex, "marks", e.target.value ? Number(e.target.value) : "")}
+                              placeholder={`${q.type === "mcq" ? (defaultMcqMarks || 1) : (defaultTextMarks || 1)}`}
+                              min={0.5}
+                              step={0.5}
+                              className="w-16 h-7 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-xs text-center focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                            />
+                            <span className="font-mono text-[9px] text-white/25">marks</span>
+                          </div>
+                        )}
+                        {questions.length > 1 && (
+                          <button
+                            onClick={() => removeQuestion(qIndex)}
+                            className="flex items-center gap-1 font-mono text-[10px] tracking-wider uppercase text-white/20 hover:text-red-400 transition-colors"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            Remove
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {/* Question text */}
