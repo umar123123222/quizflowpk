@@ -305,8 +305,8 @@ const TakeExam = () => {
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
   const onStudentSubmit = async (data: StudentInfo) => {
-    // Check if student already submitted this exam
-    if (examId) {
+    // Check if student already submitted this exam (only if email provided)
+    if (examId && data.email) {
       const { data: existingStudents } = await supabase
         .from("students")
         .select("id")
