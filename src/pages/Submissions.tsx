@@ -581,17 +581,29 @@ const Submissions = () => {
                                       {(() => {
                                         const isPending = exam.hasTextQuestions && !sub.isReviewed;
                                         const isEvaluated = exam.hasTextQuestions && sub.isReviewed;
-                                        const statusLabel = isPending ? "Pending Review" : isEvaluated ? "Published" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail";
+                                        const statusLabel = isPending ? "Pending Review" : isEvaluated ? "Published" : "Published";
                                         const statusClass = isPending
                                           ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
-                                          : isEvaluated
-                                          ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
-                                          : (sub.score ?? 0) >= 50
-                                          ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
-                                          : "bg-destructive/15 text-destructive";
+                                          : "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]";
                                         return (
                                           <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${statusClass}`}>
                                             {statusLabel}
+                                          </span>
+                                        );
+                                      })()}
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                      {(() => {
+                                        const pf = sub.passFail;
+                                        if (!pf) return <span className="text-xs text-white/30">—</span>;
+                                        const isPass = pf === "PASS";
+                                        return (
+                                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
+                                            isPass
+                                              ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
+                                              : "bg-destructive/15 text-destructive"
+                                          }`}>
+                                            {pf}
                                           </span>
                                         );
                                       })()}
