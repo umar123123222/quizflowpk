@@ -184,7 +184,7 @@ const TakeExam = () => {
     const { data: fullQuestions } = await supabase
       .from("questions")
         .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index")
-        .eq("exam_id", id)
+        .eq("exam_id", examId)
       .order("order_index", { ascending: true });
 
     const sorted = fullQuestions || [];
