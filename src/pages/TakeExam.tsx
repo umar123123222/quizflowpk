@@ -53,7 +53,6 @@ const TakeExam = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [alreadySubmitted, setAlreadySubmitted] = useState(false);
   const [score, setScore] = useState<number | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
@@ -250,29 +249,6 @@ const TakeExam = () => {
   };
 
   const onStudentSubmit = async (data: StudentInfo) => {
-    // Check if student already submitted this exam (by email or phone + exam_id)
-    if (examId) {
-      const { data: existingStudents } = await supabase
-        .from("students")
-        .select("id")
-        .eq("email", data.email);
-
-      if (existingStudents && existingStudents.length > 0) {
-        const studentIds = existingStudents.map((s) => s.id);
-        const { data: existingSubs } = await supabase
-          .from("submissions")
-          .select("id")
-          .eq("exam_id", examId)
-          .in("student_id", studentIds);
-
-        if (existingSubs && existingSubs.length > 0) {
-          setAlreadySubmitted(true);
-          setStudentInfo(data);
-          return;
-        }
-      }
-    }
-
     setStudentInfo(data);
     // Request fullscreen when exam starts
     try {
@@ -380,26 +356,6 @@ const TakeExam = () => {
             <h2 className="text-xl font-bold">{error}</h2>
           </CardContent>
         </Card>
-      </div>
-    );
-  }
-
-  // Already submitted state
-  if (alreadySubmitted) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground px-4">
-        <div className="max-w-md w-full text-center space-y-6">
-          <div className="mx-auto w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center">
-            <AlertTriangle className="h-12 w-12 text-destructive" />
-          </div>
-          <h1 className="font-serif text-2xl font-bold">You have already submitted this exam.</h1>
-          <p className="text-muted-foreground">
-            Our records show that <span className="font-semibold text-foreground">{studentInfo?.fullName}</span> has already submitted a response for this exam. Each student may only submit once.
-          </p>
-          <p className="text-sm text-muted-foreground italic border border-border rounded-lg p-3 bg-muted/30">
-            If you believe this is an error, please contact your instructor.
-          </p>
-        </div>
       </div>
     );
   }
