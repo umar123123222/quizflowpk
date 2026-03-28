@@ -1,0 +1,1 @@
+ALTER TABLE public.students ALTER COLUMN organization_id DROP NOT NULL;
