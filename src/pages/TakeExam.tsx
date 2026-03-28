@@ -117,6 +117,7 @@ const TakeExam = () => {
       timestamp: new Date().toISOString(),
     });
   };
+  const studentInfoSchema = buildStudentInfoSchema(formSettings);
   const form = useForm<StudentInfo>({
     resolver: zodResolver(studentInfoSchema),
     defaultValues: { fullName: "", email: "", phone: "" },
