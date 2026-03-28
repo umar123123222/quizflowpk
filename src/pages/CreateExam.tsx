@@ -193,7 +193,7 @@ const CreateExam = () => {
         // Update existing exam
         const { error: examError } = await supabase
           .from("exams")
-          .update({ title: title.trim(), time_limit: timeLimit || null })
+          .update({ title: title.trim(), time_limit: timeLimit || null, result_visibility: resultVisibility })
           .eq("id", editId);
         if (examError) throw examError;
 
