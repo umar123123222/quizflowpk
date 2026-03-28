@@ -187,17 +187,21 @@ const Submissions = () => {
           ...exam,
           teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
           hasTextQuestions: examsWithText.has(exam.id),
-          submissions: subs.map((s) => ({
-            id: s.id,
-            score: s.score,
-            submitted_at: s.submitted_at,
-            violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
-            student: studentMap.get(s.student_id) || {
-              full_name: "Unknown",
-              email: null,
-              phone: null,
-            },
-          })),
+          submissions: subs.map((s) => {
+            const answersObj = (s as any).answers as Record<string, any> | null;
+            return {
+              id: s.id,
+              score: s.score,
+              submitted_at: s.submitted_at,
+              violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
+              isReviewed: answersObj?._reviewed === true,
+              student: studentMap.get(s.student_id) || {
+                full_name: "Unknown",
+                email: null,
+                phone: null,
+              },
+            };
+          }),
         });
       }
 
