@@ -131,8 +131,44 @@ const ExamsList = () => {
 
           {/* Main Content */}
           <main className="flex-1 p-6 md:p-10">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6">
               <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/90">Exams</h1>
+            </div>
+
+            {/* Search & Filter Bar */}
+            <div className="flex flex-col sm:flex-row gap-3 mb-8">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/25" />
+                <Input
+                  placeholder="Search exams by name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/25 font-mono text-xs focus-visible:ring-[hsl(var(--dashboard-gold))]"
+                />
+              </div>
+              <div className="relative">
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as "all" | "published" | "draft")}
+                  className="appearance-none rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 pr-8 py-2 font-mono text-xs text-white/60 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--dashboard-gold))] h-10"
+                >
+                  <option value="all">All Status</option>
+                  <option value="published">Published</option>
+                  <option value="draft">Draft</option>
+                </select>
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/25 pointer-events-none" />
+              </div>
+              <div className="relative">
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value as "newest" | "oldest")}
+                  className="appearance-none rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 pr-8 py-2 font-mono text-xs text-white/60 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--dashboard-gold))] h-10"
+                >
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                </select>
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/25 pointer-events-none" />
+              </div>
             </div>
 
             {loading ? (
