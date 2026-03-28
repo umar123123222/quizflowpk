@@ -35,6 +35,7 @@ interface ExamWithSubmissions {
     score: number | null;
     submitted_at: string | null;
     violations: Array<{ type: string; timestamp: string }> | null;
+    isReviewed?: boolean;
     student: {
       full_name: string;
       email: string | null;
@@ -61,7 +62,10 @@ const Submissions = () => {
     // First filter exams by status filter
     let exams = examsWithSubs;
     if (statusFilter === "pending_review") {
-      exams = exams.filter((e) => e.hasTextQuestions);
+      exams = exams.filter((e) => e.hasTextQuestions).map((e) => ({
+        ...e,
+        submissions: e.submissions.filter((s) => !s.isReviewed),
+      }));
     } else if (statusFilter === "auto_evaluated") {
       exams = exams.filter((e) => !e.hasTextQuestions);
     }
@@ -97,7 +101,7 @@ const Submissions = () => {
     });
   }, [examsWithSubs, searchQuery, scoreFilter, sortOrder, statusFilter]);
 
-  const pendingCount = useMemo(() => examsWithSubs.filter((e) => e.hasTextQuestions).reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
+  const pendingCount = useMemo(() => examsWithSubs.filter((e) => e.hasTextQuestions).reduce((sum, e) => sum + e.submissions.filter((s) => !s.isReviewed).length, 0), [examsWithSubs]);
   const autoCount = useMemo(() => examsWithSubs.filter((e) => !e.hasTextQuestions).reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
   const totalCount = useMemo(() => examsWithSubs.reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
 
@@ -162,7 +166,7 @@ const Submissions = () => {
       for (const exam of exams) {
         const { data: subs } = await supabase
           .from("submissions")
-          .select("id, score, submitted_at, student_id, violations")
+          .select("id, score, submitted_at, student_id, violations, answers")
           .eq("exam_id", exam.id)
           .order("submitted_at", { ascending: false });
 
@@ -186,17 +190,21 @@ const Submissions = () => {
           ...exam,
           teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
           hasTextQuestions: examsWithText.has(exam.id),
-          submissions: subs.map((s) => ({
-            id: s.id,
-            score: s.score,
-            submitted_at: s.submitted_at,
-            violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
-            student: studentMap.get(s.student_id) || {
-              full_name: "Unknown",
-              email: null,
-              phone: null,
-            },
-          })),
+          submissions: subs.map((s) => {
+            const answersObj = (s as any).answers as Record<string, any> | null;
+            return {
+              id: s.id,
+              score: s.score,
+              submitted_at: s.submitted_at,
+              violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
+              isReviewed: answersObj?._reviewed === true,
+              student: studentMap.get(s.student_id) || {
+                full_name: "Unknown",
+                email: null,
+                phone: null,
+              },
+            };
+          }),
         });
       }
 
@@ -339,7 +347,7 @@ const Submissions = () => {
                           sub.student.email || "—",
                           sub.student.phone || "—",
                           sub.score !== null ? `${sub.score}%` : "—",
-                          exam.hasTextQuestions ? "Pending Review" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
+                          exam.hasTextQuestions ? (sub.isReviewed ? "Evaluated" : "Pending Review") : (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
                           violations,
                           date,
                         ]);
@@ -538,17 +546,23 @@ const Submissions = () => {
                                       </span>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                      <span
-                                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
-                                          exam.hasTextQuestions
-                                            ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
-                                            : (sub.score ?? 0) >= 50
-                                            ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
-                                            : "bg-destructive/15 text-destructive"
-                                        }`}
-                                      >
-                                        {exam.hasTextQuestions ? "Pending Review" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail"}
-                                      </span>
+                                      {(() => {
+                                        const isPending = exam.hasTextQuestions && !sub.isReviewed;
+                                        const isEvaluated = exam.hasTextQuestions && sub.isReviewed;
+                                        const statusLabel = isPending ? "Pending Review" : isEvaluated ? "Evaluated" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail";
+                                        const statusClass = isPending
+                                          ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
+                                          : isEvaluated
+                                          ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
+                                          : (sub.score ?? 0) >= 50
+                                          ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
+                                          : "bg-destructive/15 text-destructive";
+                                        return (
+                                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${statusClass}`}>
+                                            {statusLabel}
+                                          </span>
+                                        );
+                                      })()}
                                     </TableCell>
                                     <TableCell>
                                       {sub.violations && sub.violations.length > 0 ? (
