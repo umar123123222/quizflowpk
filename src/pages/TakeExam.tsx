@@ -472,6 +472,9 @@ const TakeExam = () => {
     }>;
   } | null>(null);
   const [showPrevReview, setShowPrevReview] = useState(false);
+  const [reattemptGranted, setReattemptGranted] = useState(false);
+  const [reattemptId, setReattemptId] = useState<string | null>(null);
+  const [pendingStudentData, setPendingStudentData] = useState<StudentInfo | null>(null);
 
   const onStudentSubmit = async (data: StudentInfo) => {
     // Validate custom required fields
