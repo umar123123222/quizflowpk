@@ -70,6 +70,7 @@ const CreateExam = () => {
   const [defaultMcqMarks, setDefaultMcqMarks] = useState<number | "">(2);
   const [defaultTextMarks, setDefaultTextMarks] = useState<number | "">(5);
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
+  const [passingPercentage, setPassingPercentage] = useState<number | "">("");
   const [resultVisibility, setResultVisibility] = useState<"immediate" | "after_exam_ends">("immediate");
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
   const [startTime, setStartTime] = useState<Date | undefined>(undefined);
@@ -105,6 +106,7 @@ const CreateExam = () => {
         if (exam) {
           setTitle(exam.title);
           setTotalMarks((exam as any).total_marks ?? "");
+          setPassingPercentage((exam as any).passing_percentage ?? "");
           setTimeLimit(exam.time_limit ?? 30);
           setResultVisibility((exam as any).result_visibility || "immediate");
           if ((exam as any).start_time) {
@@ -288,6 +290,7 @@ const CreateExam = () => {
             title: title.trim(),
             time_limit: timeLimit || null,
             total_marks: totalMarks || null,
+            passing_percentage: passingPercentage || null,
             result_visibility: resultVisibility,
             start_time: buildDatetime(startTime, startHour, startMinute),
             end_time: buildDatetime(endTime, endHour, endMinute),
@@ -303,6 +306,7 @@ const CreateExam = () => {
           title: title.trim(),
           time_limit: timeLimit || null,
           total_marks: totalMarks || null,
+          passing_percentage: passingPercentage || null,
           result_visibility: resultVisibility,
           start_time: buildDatetime(startTime, startHour, startMinute),
           end_time: buildDatetime(endTime, endHour, endMinute),
@@ -469,6 +473,28 @@ const CreateExam = () => {
                 />
                 <p className="font-mono text-[9px] text-white/45">
                   Leave empty to use 1 mark per question
+                </p>
+              </div>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/55">
+                  Passing Percentage (Optional)
+                </label>
+                <Input
+                  type="number"
+                  value={passingPercentage}
+                  onChange={(e) => {
+                    const val = e.target.value ? Number(e.target.value) : "";
+                    if (val === "" || (typeof val === "number" && val >= 1 && val <= 100)) {
+                      setPassingPercentage(val);
+                    }
+                  }}
+                  placeholder="Default: 50%"
+                  min={1}
+                  max={100}
+                  className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                />
+                <p className="font-mono text-[9px] text-white/45">
+                  Students scoring at or above this percentage will be marked as Pass. Default is 50% if left empty.
                 </p>
               </div>
               <div className="space-y-2">

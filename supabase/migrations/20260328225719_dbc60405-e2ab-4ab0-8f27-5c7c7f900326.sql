@@ -1,0 +1,1 @@
+ALTER TABLE public.exams ADD COLUMN passing_percentage integer DEFAULT NULL;
