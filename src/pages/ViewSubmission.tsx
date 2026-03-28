@@ -45,6 +45,7 @@ const ViewSubmission = () => {
   const [textScores, setTextScores] = useState<Record<string, string>>({});
   const [submissionData, setSubmissionData] = useState<{ id: string; exam_id: string; answers: Record<string, any> } | null>(null);
   const [publishedAt, setPublishedAt] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchSubmission = async () => {
