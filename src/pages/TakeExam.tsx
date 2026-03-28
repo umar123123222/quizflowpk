@@ -116,7 +116,7 @@ const TakeExam = () => {
         question_type: q.question_type || "mcq",
       }));
 
-      setQuestions(questionsData || []);
+      setQuestions(questionsWithType);
       setLoading(false);
     };
     fetchExam();
