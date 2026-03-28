@@ -354,10 +354,19 @@ const TakeExam = () => {
       .order("order_index", { ascending: true });
 
     const sorted = fullQuestions || [];
+    // Translate shuffled answers back to original keys
+    const translatedAnswers: Record<string, string> = {};
+    for (const [qId, displayKey] of Object.entries(answers)) {
+      if (optionShuffleMap[qId] && displayKey) {
+        translatedAnswers[qId] = optionShuffleMap[qId][displayKey] || displayKey;
+      } else {
+        translatedAnswers[qId] = displayKey;
+      }
+    }
     let mcqEarnedPoints = 0;
     let mcqTotalPoints = 0;
     const results = sorted.map((q: any) => {
-      const studentAnswer = answers[q.id] || null;
+      const studentAnswer = translatedAnswers[q.id] || null;
       const qType = q.question_type || "mcq";
       const qPoints = q.points ?? 1;
       const isCorrect = qType === "mcq" ? studentAnswer === q.correct_answer : false;
