@@ -41,6 +41,40 @@ const Submissions = () => {
   const [examsWithSubs, setExamsWithSubs] = useState<ExamWithSubmissions[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedExams, setExpandedExams] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [scoreFilter, setScoreFilter] = useState("all");
+  const [sortOrder, setSortOrder] = useState("newest");
+
+  const filteredExams = useMemo(() => {
+    return examsWithSubs.map((exam) => {
+      let subs = exam.submissions;
+
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        subs = subs.filter(
+          (s) =>
+            s.student.full_name.toLowerCase().includes(q) ||
+            (s.student.email && s.student.email.toLowerCase().includes(q))
+        );
+      }
+
+      if (scoreFilter !== "all") {
+        const [min, max] = scoreFilter.split("-").map(Number);
+        subs = subs.filter((s) => {
+          const score = s.score ?? 0;
+          return score >= min && score <= max;
+        });
+      }
+
+      subs = [...subs].sort((a, b) => {
+        const da = new Date(a.submitted_at || 0).getTime();
+        const db = new Date(b.submitted_at || 0).getTime();
+        return sortOrder === "newest" ? db - da : da - db;
+      });
+
+      return { ...exam, submissions: subs };
+    });
+  }, [examsWithSubs, searchQuery, scoreFilter, sortOrder]);
 
   useEffect(() => {
     const fetchData = async () => {
