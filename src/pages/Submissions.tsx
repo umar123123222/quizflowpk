@@ -398,14 +398,16 @@ const Submissions = () => {
                       qHeaders.push(`Q${i + 1} - Student Answer`);
                       qHeaders.push(`Q${i + 1} - Correct Answer`);
                       qHeaders.push(`Q${i + 1} - Status`);
+                      qHeaders.push(`Q${i + 1} - Marks`);
                     }
                     const baseHeader = isOwner
-                      ? ["Exam", "Teacher", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]
-                      : ["Exam", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"];
-                    const header = [...baseHeader, ...qHeaders];
+                      ? ["Exam", "Teacher", "Name", "Email", "Phone", "Violations", "Date"]
+                      : ["Exam", "Name", "Email", "Phone", "Violations", "Date"];
+                    const header = [...baseHeader, ...qHeaders, "Total Score", "Total Marks", "Percentage", "Pass/Fail"];
                     const rows: string[][] = [header];
                     examsWithSubs.forEach((exam) => {
                       const sortedQs = [...(exam.questions || [])].sort((a, b) => a.order_index - b.order_index);
+                      const totalMarks = sortedQs.reduce((s, q) => s + q.points, 0);
                       exam.submissions.forEach((sub) => {
                         const violations = sub.violations && sub.violations.length > 0
                           ? sub.violations.map((v) => v.type).join("; ")
@@ -413,8 +415,9 @@ const Submissions = () => {
                         const date = sub.submitted_at
                           ? new Date(sub.submitted_at).toLocaleString("en-US")
                           : "—";
-                        const isPending = exam.hasTextQuestions && !sub.isReviewed;
+                        const textScores = sub.answers?._textScores as Record<string, number> | undefined;
                         const qCols: string[] = [];
+                        let earnedTotal = 0;
                         sortedQs.forEach((q) => {
                           qCols.push(q.question_text);
                           // Student answer
@@ -431,32 +434,36 @@ const Submissions = () => {
                           if (q.question_type === "text") {
                             qCols.push("Manual Review");
                             qCols.push("Manual Review");
+                            const awarded = textScores ? (textScores[q.id] ?? 0) : 0;
+                            earnedTotal += awarded;
+                            qCols.push(textScores ? `${awarded} / ${q.points}` : `— / ${q.points}`);
                           } else {
                             const correctOpt = q.options.find((o) => o.key === q.correct_answer);
                             qCols.push(correctOpt ? correctOpt.text : (q.correct_answer || "—"));
-                            // Status
-                            if (!rawAns) {
-                              qCols.push("Wrong");
-                            } else {
-                              qCols.push(rawAns === q.correct_answer ? "Correct" : "Wrong");
-                            }
+                            const isCorrect = rawAns && rawAns === q.correct_answer;
+                            qCols.push(!rawAns ? "Wrong" : (isCorrect ? "Correct" : "Wrong"));
+                            const awarded = isCorrect ? q.points : 0;
+                            earnedTotal += awarded;
+                            qCols.push(`${awarded} / ${q.points}`);
                           }
                         });
-                        // Pad if fewer questions (4 cols per question)
-                        const padCount = (maxQs - sortedQs.length) * 4;
+                        // Pad if fewer questions (5 cols per question)
+                        const padCount = (maxQs - sortedQs.length) * 5;
                         for (let p = 0; p < padCount; p++) qCols.push("");
+                        const pct = totalMarks > 0 ? Math.round((earnedTotal / totalMarks) * 100) : 0;
                         const row = [
                           exam.title,
                           ...(isOwner ? [exam.teacher_name || "—"] : []),
                           sub.student.full_name + (sub.attemptLabel ? ` (${sub.attemptLabel})` : ""),
                           sub.student.email || "—",
                           sub.student.phone || "—",
-                          sub.score !== null ? `${sub.score}%` : "—",
-                          isPending ? "Pending Review" : "Published",
-                          sub.passFail || "—",
                           violations,
                           date,
                           ...qCols,
+                          `${earnedTotal}`,
+                          `${totalMarks}`,
+                          `${pct}%`,
+                          sub.passFail || "—",
                         ];
                         rows.push(row);
                       });
