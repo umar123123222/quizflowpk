@@ -22,18 +22,18 @@ const Hero = () => {
           </div>
 
           <h1
-            className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl opacity-0 animate-fade-up [animation-delay:100ms]"
-            style={{ color: '#ffffff', fontFamily: "'Playfair Display', serif" }}
+            className="mb-6 tracking-tight opacity-0 animate-fade-up [animation-delay:100ms]"
+            style={{ color: '#e8e3d5', fontFamily: "'Playfair Display', serif", fontWeight: 900, fontSize: 'clamp(3rem, 5vw, 5.5rem)', lineHeight: 1.1 }}
           >
             Build engaging quizzes{" "}
             <span style={{ color: '#5b7fa6', opacity: 0.7 }}>in</span>
             <br />
-            <span style={{ background: 'linear-gradient(to right, #707070, #707070 45%, #b87a20 55%, #b87a20 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>minutes</span>
+            <span style={{ color: '#e8c87a' }}>minutes</span>
           </h1>
 
           <p
-            className="mb-10 text-lg md:text-xl opacity-0 animate-fade-up [animation-delay:200ms]"
-            style={{ color: '#8892a4' }}
+            className="mb-10 opacity-0 animate-fade-up [animation-delay:200ms] mx-auto"
+            style={{ color: 'rgba(232,227,213,0.55)', fontFamily: "'DM Sans', sans-serif", fontWeight: 300, maxWidth: '520px', lineHeight: 1.75, fontSize: '1.1rem' }}
           >
             QuizFlow helps educators, trainers, and creators build beautiful,
             interactive quizzes with AI-powered question generation, real-time
