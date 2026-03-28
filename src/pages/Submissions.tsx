@@ -53,6 +53,7 @@ const Submissions = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [scoreFilter, setScoreFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState("newest");
+  const [statusFilter, setStatusFilter] = useState<"all" | "auto_evaluated" | "pending_review">("all");
   const [reattemptDialogExamId, setReattemptDialogExamId] = useState<string | null>(null);
   const [reattemptEmails, setReattemptEmails] = useState<string[]>([""]);
   const [savingReattempts, setSavingReattempts] = useState(false);
