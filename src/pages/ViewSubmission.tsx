@@ -184,6 +184,11 @@ const ViewSubmission = () => {
       if (error) throw error;
 
       setScore(finalScore);
+      // Update submissionData to reflect published state
+      setSubmissionData((prev) => prev ? {
+        ...prev,
+        answers: { ...prev.answers, _textScores: textScoresNumeric, _reviewed: true },
+      } : prev);
       toast({ title: "Grades saved", description: `Final score: ${finalScore}%` });
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Failed to save grades.", variant: "destructive" });
