@@ -99,10 +99,10 @@ const OwnerDashboard = () => {
         <OwnerSidebar />
         <div className="flex-1 flex flex-col">
           {/* Topbar */}
-          <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-5">
+          <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-white/60 hover:text-white/80" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/60">
+              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.6)] hover:text-[hsl(var(--dashboard-text)/.8)]" />
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.6)]">
                 Org / <span className="text-[hsl(var(--dashboard-gold))]">Dashboard</span>
               </span>
             </div>
@@ -119,7 +119,7 @@ const OwnerDashboard = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/45 transition-colors hover:text-white/70"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.45)] transition-colors hover:text-[hsl(var(--dashboard-text)/.7)]"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -131,14 +131,14 @@ const OwnerDashboard = () => {
           <main className="flex-1 p-6 md:p-10">
             {/* Welcome */}
             <div className="mb-10">
-              <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-white/50 mb-2">
+              <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.5)] mb-2">
                 {today}
               </p>
-              <h1 className="font-serif text-4xl md:text-5xl font-bold text-white/95">
+              <h1 className="font-serif text-4xl md:text-5xl font-bold text-[hsl(var(--dashboard-text)/.95)]">
                 Welcome <span className="text-[hsl(var(--dashboard-gold))]">back,</span>
               </h1>
               {user?.user_metadata?.full_name && (
-                <p className="font-serif text-lg md:text-xl text-white/70 mt-2">
+                <p className="font-serif text-lg md:text-xl text-[hsl(var(--dashboard-text)/.7)] mt-2">
                   {user.user_metadata.gender === "male" ? "Mr." : "Miss"}{" "}
                   <span className="text-[hsl(var(--dashboard-gold))]">{user.user_metadata.full_name.split(" ")[0]}</span>
                 </p>
@@ -157,10 +157,10 @@ const OwnerDashboard = () => {
                     style={{ backgroundColor: `hsl(${stat.accent})` }}
                   />
                   <div className="p-5">
-                    <p className="font-serif text-3xl font-bold text-white/95">
+                    <p className="font-serif text-3xl font-bold text-[hsl(var(--dashboard-text)/.95)]">
                       {stat.value}
                     </p>
-                    <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/55 mt-1.5">
+                    <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)] mt-1.5">
                       {stat.label}
                     </p>
                   </div>
@@ -170,7 +170,7 @@ const OwnerDashboard = () => {
 
             {/* Quick Actions */}
             <div className="mb-4">
-              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/50 mb-4">
+              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.5)] mb-4">
                 Quick Actions
               </p>
             </div>
@@ -193,10 +193,10 @@ const OwnerDashboard = () => {
                     />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white/90 group-hover:text-[hsl(var(--dashboard-gold))] transition-colors">
+                    <p className="text-sm font-medium text-[hsl(var(--dashboard-text)/.9)] group-hover:text-[hsl(var(--dashboard-gold))] transition-colors">
                       {action.title}
                     </p>
-                    <p className="font-mono text-[10px] text-white/50 mt-0.5">
+                    <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.5)] mt-0.5">
                       {action.subtitle}
                     </p>
                   </div>

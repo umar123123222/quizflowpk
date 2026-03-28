@@ -25,10 +25,10 @@ const StudentForm = () => {
         <RoleSidebar />
         <div className="flex-1 flex flex-col">
           {/* Topbar */}
-          <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-5">
+          <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-white/60 hover:text-white/80" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/60">
+              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.6)] hover:text-[hsl(var(--dashboard-text)/.8)]" />
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.6)]">
                 Org / Student Form
               </span>
             </div>
@@ -39,7 +39,7 @@ const StudentForm = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/45 transition-colors hover:text-white/70"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.45)] transition-colors hover:text-[hsl(var(--dashboard-text)/.7)]"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -49,10 +49,10 @@ const StudentForm = () => {
 
           {/* Main Content */}
           <main className="flex-1 p-6 md:p-10 overflow-y-auto">
-            <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/95 mb-2">
+            <h1 className="font-serif text-3xl md:text-4xl font-bold text-[hsl(var(--dashboard-text)/.95)] mb-2">
               Student Identification Form
             </h1>
-            <p className="font-mono text-[11px] text-white/50 mb-8">
+            <p className="font-mono text-[11px] text-[hsl(var(--dashboard-text)/.5)] mb-8">
               Configure the fields students fill out before starting an exam
             </p>
 

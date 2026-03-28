@@ -167,9 +167,9 @@ const Settings = () => {
     "rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] overflow-hidden";
   const sectionHeaderClass =
     "flex items-center gap-2.5 px-5 py-4 border-b border-[hsl(var(--dashboard-border))]";
-  const labelClass = "font-mono text-[10px] tracking-[0.15em] uppercase text-white/55";
+  const labelClass = "font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]";
   const inputClass =
-    "bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]";
+    "bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]";
 
   return (
     <SidebarProvider>
@@ -177,10 +177,10 @@ const Settings = () => {
         <RoleSidebar />
         <div className="flex-1 flex flex-col">
           {/* Topbar */}
-          <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-5">
+          <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-white/60 hover:text-white/80" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/60">
+              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.6)] hover:text-[hsl(var(--dashboard-text)/.8)]" />
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.6)]">
                 Org / Settings
               </span>
             </div>
@@ -191,7 +191,7 @@ const Settings = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/45 transition-colors hover:text-white/70"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.45)] transition-colors hover:text-[hsl(var(--dashboard-text)/.7)]"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -201,7 +201,7 @@ const Settings = () => {
 
           {/* Main Content */}
           <main className="flex-1 p-6 md:p-10 overflow-y-auto">
-            <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/95 mb-8">
+            <h1 className="font-serif text-3xl md:text-4xl font-bold text-[hsl(var(--dashboard-text)/.95)] mb-8">
               Settings
             </h1>
 
@@ -234,7 +234,7 @@ const Settings = () => {
                       placeholder="your@email.com"
                       className={inputClass}
                     />
-                    <p className="font-mono text-[9px] text-white/40">
+                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.4)]">
                       Changing email requires confirmation via the new address
                     </p>
                   </div>
@@ -246,7 +246,7 @@ const Settings = () => {
                       disabled
                       className={`${inputClass} opacity-70 cursor-not-allowed`}
                     />
-                    <p className="font-mono text-[9px] text-white/40">
+                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.4)]">
                       Your role is assigned by the system and cannot be changed here
                     </p>
                   </div>
@@ -362,7 +362,7 @@ const Settings = () => {
                       placeholder={user?.user_metadata?.backup_email || "backup@email.com"}
                       className={inputClass}
                     />
-                    <p className="font-mono text-[9px] text-white/40">
+                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.4)]">
                       Used for account recovery if you lose access to your primary email
                     </p>
                   </div>
