@@ -49,6 +49,10 @@ const ViewSubmission = () => {
         return;
       }
 
+      // Extract custom fields from answers
+      const answersObj = (sub.answers as Record<string, any>) || {};
+      const customFields = answersObj._customFields as Record<string, string> | undefined;
+
       setSubmittedAt(sub.submitted_at);
 
       // Fetch student & exam in parallel
