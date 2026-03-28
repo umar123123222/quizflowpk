@@ -53,6 +53,14 @@ const buildStudentInfoSchema = (fs: FormFieldSettings | null) => {
 
 type StudentInfo = { fullName: string; email?: string; phone?: string; customFields?: Record<string, string> };
 
+interface CustomFieldDef {
+  id: string;
+  field_label: string;
+  field_type: string;
+  is_required: boolean;
+  dropdown_options: string[];
+}
+
 interface Question {
   id: string;
   question_text: string;
