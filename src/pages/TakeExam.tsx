@@ -502,6 +502,64 @@ const TakeExam = () => {
               .update({ used: true })
               .eq("id", (reattempt as any).id);
           } else {
+            // Fetch the previous submission details
+            const subId = existingSubs[0].id;
+            const { data: subDetail } = await supabase
+              .from("submissions")
+              .select("score, submitted_at, answers, exam_id")
+              .eq("id", subId)
+              .single();
+
+            if (subDetail) {
+              const answersObj = (subDetail.answers as Record<string, any>) || {};
+              const isReviewed = answersObj._reviewed === true;
+
+              // Fetch questions to compute points
+              const { data: qs } = await supabase
+                .from("questions")
+                .select("id, question_type, points")
+                .eq("exam_id", subDetail.exam_id);
+
+              const allQs = qs || [];
+              const hasTextQuestions = allQs.some((q: any) => q.question_type === "text");
+              const totalPoints = allQs.reduce((s: number, q: any) => s + (q.points ?? 1), 0);
+
+              // Compute earned points
+              let earnedPoints = 0;
+              if (isReviewed || !hasTextQuestions) {
+                // MCQ points from score percentage
+                const mcqQs = allQs.filter((q: any) => q.question_type !== "text");
+                const mcqTotal = mcqQs.reduce((s: number, q: any) => s + (q.points ?? 1), 0);
+
+                // Fetch full questions for correct answer comparison
+                const { data: fullQs } = await supabase
+                  .from("questions")
+                  .select("id, question_type, correct_answer, points")
+                  .eq("exam_id", subDetail.exam_id);
+
+                let mcqEarned = 0;
+                const textScores = answersObj._textScores as Record<string, number> | undefined;
+                let textEarned = 0;
+                (fullQs || []).forEach((q: any) => {
+                  if (q.question_type !== "text") {
+                    if (answersObj[q.id] === q.correct_answer) mcqEarned += (q.points ?? 1);
+                  } else if (textScores && textScores[q.id] !== undefined) {
+                    textEarned += textScores[q.id];
+                  }
+                });
+                earnedPoints = mcqEarned + (isReviewed ? textEarned : 0);
+              }
+
+              setPrevSubmission({
+                score: subDetail.score,
+                submitted_at: subDetail.submitted_at,
+                totalPoints,
+                earnedPoints,
+                isReviewed,
+                hasTextQuestions,
+              });
+            }
+
             setAlreadySubmitted(true);
             toast({
               title: "Already Submitted",
