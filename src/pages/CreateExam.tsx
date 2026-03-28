@@ -84,6 +84,7 @@ const CreateExam = () => {
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [showPublishDialog, setShowPublishDialog] = useState(false);
   const [publishStep, setPublishStep] = useState(1);
+  const [noSchedule, setNoSchedule] = useState(true);
   const [loadingExam, setLoadingExam] = useState(false);
 
   const examLink = savedExamCode ? `${window.location.origin}/exam/${savedExamCode}` : "";
