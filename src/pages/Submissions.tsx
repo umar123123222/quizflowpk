@@ -376,11 +376,16 @@ const Submissions = () => {
                   className="shrink-0 border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] text-white/75 hover:text-white/95 font-mono text-[10px] tracking-wider uppercase"
                   onClick={() => {
                     const isOwner = role === "organization_owner";
-                    const header = isOwner
+                    // Find max question count across all exams for dynamic columns
+                    const maxQs = Math.max(...examsWithSubs.map((e) => (e.questions || []).length), 0);
+                    const qHeaders = Array.from({ length: maxQs }, (_, i) => `Q${i + 1} - Question`);
+                    const baseHeader = isOwner
                       ? ["Exam", "Teacher", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]
                       : ["Exam", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"];
+                    const header = [...baseHeader, ...qHeaders];
                     const rows: string[][] = [header];
                     examsWithSubs.forEach((exam) => {
+                      const sortedQs = [...(exam.questions || [])].sort((a, b) => a.order_index - b.order_index);
                       exam.submissions.forEach((sub) => {
                         const violations = sub.violations && sub.violations.length > 0
                           ? sub.violations.map((v) => v.type).join("; ")
@@ -400,6 +405,10 @@ const Submissions = () => {
                           sub.passFail || "—",
                           violations,
                           date,
+                          // Question text columns
+                          ...sortedQs.map((q) => q.question_text),
+                          // Pad remaining columns if this exam has fewer questions
+                          ...Array.from({ length: maxQs - sortedQs.length }, () => ""),
                         ];
                         rows.push(row);
                       });
