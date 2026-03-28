@@ -196,6 +196,12 @@ const ViewSubmission = () => {
     .filter((q) => q.question_type === "text")
     .every((q) => textScores[q.id] !== undefined && textScores[q.id] !== "");
 
+  const hasExceededMarks = questionResults
+    .filter((q) => q.question_type === "text")
+    .some((q) => textScores[q.id] !== undefined && textScores[q.id] !== "" && parseFloat(textScores[q.id]) > q.points);
+
+  const canPublish = allTextGraded && !hasExceededMarks;
+
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return "—";
     return new Date(dateStr).toLocaleDateString("en-US", {
