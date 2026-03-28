@@ -162,6 +162,9 @@ const TakeExam = () => {
           .eq("organization_id", examData.organization_id)
           .single();
         if (fs) {
+          const savedOrder = Array.isArray(fs.field_order)
+            ? (fs.field_order as string[])
+            : ["name", "email", "phone"];
           setFormSettings({
             name_visible: fs.name_visible,
             name_required: fs.name_required,
@@ -169,6 +172,7 @@ const TakeExam = () => {
             email_required: fs.email_required,
             phone_visible: fs.phone_visible,
             phone_required: fs.phone_required,
+            field_order: savedOrder,
           });
         }
         // Fetch custom fields
