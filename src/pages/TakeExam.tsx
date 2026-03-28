@@ -129,6 +129,7 @@ const TakeExam = () => {
   const [customFieldDefs, setCustomFieldDefs] = useState<CustomFieldDef[]>([]);
   const [customFieldValues, setCustomFieldValues] = useState<Record<string, string>>({});
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [optionShuffleMap, setOptionShuffleMap] = useState<OptionShuffleMap>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
