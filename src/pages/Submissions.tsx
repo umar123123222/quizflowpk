@@ -53,11 +53,20 @@ const Submissions = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [scoreFilter, setScoreFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState("newest");
+  const [statusFilter, setStatusFilter] = useState<"all" | "auto_evaluated" | "pending_review">("all");
   const [reattemptDialogExamId, setReattemptDialogExamId] = useState<string | null>(null);
   const [reattemptEmails, setReattemptEmails] = useState<string[]>([""]);
   const [savingReattempts, setSavingReattempts] = useState(false);
   const filteredExams = useMemo(() => {
-    return examsWithSubs.map((exam) => {
+    // First filter exams by status filter
+    let exams = examsWithSubs;
+    if (statusFilter === "pending_review") {
+      exams = exams.filter((e) => e.hasTextQuestions);
+    } else if (statusFilter === "auto_evaluated") {
+      exams = exams.filter((e) => !e.hasTextQuestions);
+    }
+
+    return exams.map((exam) => {
       let subs = exam.submissions;
 
       if (searchQuery.trim()) {
@@ -86,7 +95,11 @@ const Submissions = () => {
 
       return { ...exam, submissions: subs };
     });
-  }, [examsWithSubs, searchQuery, scoreFilter, sortOrder]);
+  }, [examsWithSubs, searchQuery, scoreFilter, sortOrder, statusFilter]);
+
+  const pendingCount = useMemo(() => examsWithSubs.filter((e) => e.hasTextQuestions).reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
+  const autoCount = useMemo(() => examsWithSubs.filter((e) => !e.hasTextQuestions).reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
+  const totalCount = useMemo(() => examsWithSubs.reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -348,6 +361,40 @@ const Submissions = () => {
                 </Button>
               )}
             </div>
+
+            {/* Status Filter Tabs */}
+            {examsWithSubs.length > 0 && (
+              <div className="mb-4 flex gap-1 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-1 w-fit">
+                {([
+                  { key: "all" as const, label: "All", count: totalCount },
+                  { key: "auto_evaluated" as const, label: "Auto Evaluated", count: autoCount },
+                  { key: "pending_review" as const, label: "Pending Review", count: pendingCount },
+                ]).map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setStatusFilter(tab.key)}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase transition-colors ${
+                      statusFilter === tab.key
+                        ? tab.key === "pending_review"
+                          ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
+                          : "bg-[hsl(var(--dashboard-gold)/0.1)] text-white/80"
+                        : "text-white/35 hover:text-white/55"
+                    }`}
+                  >
+                    {tab.label}
+                    <span className={`inline-flex items-center justify-center rounded-full px-1.5 min-w-[18px] h-[18px] text-[9px] font-bold ${
+                      statusFilter === tab.key
+                        ? tab.key === "pending_review"
+                          ? "bg-[hsl(var(--dashboard-gold)/0.25)] text-[hsl(var(--dashboard-gold))]"
+                          : "bg-white/10 text-white/60"
+                        : "bg-white/5 text-white/25"
+                    }`}>
+                      {tab.count}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Search & Filter Bar */}
             {examsWithSubs.length > 0 && (
