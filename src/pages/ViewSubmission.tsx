@@ -190,6 +190,7 @@ const ViewSubmission = () => {
         ...prev,
         answers: { ...prev.answers, _textScores: textScoresNumeric, _reviewed: true },
       } : prev);
+      setPublishedAt(new Date().toISOString());
       toast({ title: "Grades saved", description: `Final score: ${finalScore}%` });
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Failed to save grades.", variant: "destructive" });
