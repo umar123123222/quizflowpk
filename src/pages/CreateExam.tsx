@@ -214,6 +214,7 @@ const CreateExam = () => {
 
         if (examError || !exam) throw examError || new Error("Failed to create exam");
         examId = exam.id;
+        setSavedExamCode(exam.code);
       }
 
       // Insert questions
