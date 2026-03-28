@@ -308,6 +308,8 @@ const CreateExam = () => {
           end_time: buildDatetime(endTime, endHour, endMinute),
           created_by: user!.id,
           is_published: publish,
+          shuffle_questions: shuffleQuestions,
+          shuffle_options: shuffleOptions,
         };
         if (orgId) insertData.organization_id = orgId;
 
