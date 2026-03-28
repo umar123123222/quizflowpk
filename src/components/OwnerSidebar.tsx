@@ -19,9 +19,9 @@ import {
 const navItems = [
   { title: "Dashboard", url: "/dashboard/owner", icon: FileText },
   { title: "Exams", url: "/dashboard/owner/exams", icon: ClipboardList },
-  
   { title: "Users", url: "/dashboard/owner/users", icon: Users },
   { title: "Submissions", url: "/dashboard/owner/submissions", icon: BarChart3 },
+  { title: "Student Form", url: "/dashboard/owner/student-form", icon: FormInput },
   { title: "Settings", url: "/dashboard/owner/settings", icon: Settings },
 ];
 
