@@ -367,7 +367,7 @@ const Submissions = () => {
                           : "—";
                         rows.push([
                           exam.title,
-                          sub.student.full_name,
+                          sub.student.full_name + (sub.attemptLabel ? ` (${sub.attemptLabel})` : ""),
                           sub.student.email || "—",
                           sub.student.phone || "—",
                           sub.score !== null ? `${sub.score}%` : "—",
