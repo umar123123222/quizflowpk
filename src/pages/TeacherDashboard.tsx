@@ -104,12 +104,10 @@ const TeacherDashboard = () => {
     navigate("/");
   };
 
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const now = new Date();
+  const weekday = now.toLocaleDateString("en-US", { weekday: "long" });
+  const rest = now.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  const today = `${weekday} ${rest}`;
 
   return (
     <SidebarProvider>
