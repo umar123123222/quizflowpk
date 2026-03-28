@@ -118,6 +118,8 @@ const CreateExam = () => {
           .eq("exam_id", editId)
           .order("order_index", { ascending: true });
         if (qs && qs.length > 0) {
+          const hasCustomMarks = qs.some((q) => (q.points ?? 1) !== 1);
+          if (hasCustomMarks) setCustomMarking(true);
           setQuestions(
             qs.map((q) => ({
               id: q.id,
@@ -125,6 +127,7 @@ const CreateExam = () => {
               text: q.question_text,
               options: [q.option_a || "", q.option_b || "", q.option_c || "", q.option_d || ""] as [string, string, string, string],
               correctAnswer: q.correct_answer || "",
+              marks: hasCustomMarks ? (q.points ?? 1) : "",
             }))
           );
         }
