@@ -271,7 +271,21 @@ const CreateExam = () => {
         setSavedExamCode(exam.code);
       }
 
-      // Insert questions
+      // Calculate points per question
+      const getQuestionPoints = (q: Question): number => {
+        if (customMarking) {
+          if (q.marks !== "" && q.marks > 0) return q.marks;
+          // Fall back to default per type
+          const defaultVal = q.type === "mcq" ? defaultMcqMarks : defaultTextMarks;
+          return typeof defaultVal === "number" && defaultVal > 0 ? defaultVal : 1;
+        }
+        // Equal distribution from total marks or 1 per question
+        if (totalMarks && typeof totalMarks === "number") {
+          return Math.round((totalMarks / questions.length) * 100) / 100;
+        }
+        return 1;
+      };
+
       const questionRows = questions.map((q, i) => ({
         exam_id: examId!,
         question_type: q.type,
@@ -282,6 +296,7 @@ const CreateExam = () => {
         option_d: q.type === "mcq" ? q.options[3].trim() : null,
         correct_answer: q.type === "mcq" ? q.correctAnswer : (q.correctAnswer.trim() || null),
         order_index: i,
+        points: getQuestionPoints(q),
         options: q.type === "mcq"
           ? q.options.map((o, idx) => ({
               label: String.fromCharCode(65 + idx),
