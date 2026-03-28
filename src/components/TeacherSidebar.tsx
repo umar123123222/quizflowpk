@@ -1,4 +1,5 @@
-import { FileText, ClipboardList, Settings, GraduationCap, LogOut, Plus } from "lucide-react";
+import { FileText, ClipboardList, Settings, LogOut, Plus } from "lucide-react";
+import { Logo } from "@/components/Logo";
 import { NavLink as RouterNavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
