@@ -106,6 +106,7 @@ const CreateExam = () => {
         if (exam) {
           setTitle(exam.title);
           setTotalMarks((exam as any).total_marks ?? "");
+          setPassingPercentage((exam as any).passing_percentage ?? "");
           setTimeLimit(exam.time_limit ?? 30);
           setResultVisibility((exam as any).result_visibility || "immediate");
           if ((exam as any).start_time) {
