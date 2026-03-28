@@ -170,6 +170,23 @@ const TakeExam = () => {
             phone_required: fs.phone_required,
           });
         }
+        // Fetch custom fields
+        const { data: cfData } = await supabase
+          .from("organization_custom_fields")
+          .select("*")
+          .eq("organization_id", examData.organization_id)
+          .order("sort_order", { ascending: true });
+        if (cfData) {
+          setCustomFieldDefs(
+            cfData.map((cf: any) => ({
+              id: cf.id,
+              field_label: cf.field_label,
+              field_type: cf.field_type,
+              is_required: cf.is_required,
+              dropdown_options: Array.isArray(cf.dropdown_options) ? cf.dropdown_options : [],
+            }))
+          );
+        }
       }
 
       const { data: questionsData } = await supabase
