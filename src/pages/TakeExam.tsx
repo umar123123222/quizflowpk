@@ -406,7 +406,7 @@ const TakeExam = () => {
     }
 
     // Determine pass/fail for MCQ-only exams; mixed exams wait for manual review
-    const passingThreshold = (examData as any).passing_percentage ?? 50;
+    const passingThreshold = exam?.passing_percentage ?? 50;
     const passFail = hasTextQs ? null : (calculatedScore >= passingThreshold ? "PASS" : "FAIL");
 
     const { error: subError } = await supabase.from("submissions").insert({
