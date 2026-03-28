@@ -782,7 +782,7 @@ const Submissions = () => {
                     updated[idx] = e.target.value;
                     setReattemptEmails(updated);
                   }}
-                  className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] font-mono text-xs"
+                  className="flex-1 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] font-mono text-xs"
                 />
                 {reattemptEmails.length > 1 && (
                   <button

@@ -201,7 +201,7 @@ const Users = () => {
                       type="text"
                       value={formData.full_name}
                       onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
+                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-2 text-sm text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
                       placeholder="John Doe"
                       maxLength={100}
                     />
@@ -214,7 +214,7 @@ const Users = () => {
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
+                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-2 text-sm text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
                       placeholder="teacher@example.com"
                       maxLength={255}
                     />
@@ -227,7 +227,7 @@ const Users = () => {
                       type="password"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
+                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-2 text-sm text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
                       placeholder="Initial password"
                       minLength={6}
                     />
@@ -240,7 +240,7 @@ const Users = () => {
                       type="text"
                       value={formData.contact_number}
                       onChange={(e) => setFormData({ ...formData, contact_number: e.target.value })}
-                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
+                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-2 text-sm text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
                       placeholder="+1234567890"
                       maxLength={20}
                     />
@@ -253,7 +253,7 @@ const Users = () => {
                       type="text"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 text-sm text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
+                      className="w-full rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-2 text-sm text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus:border-[hsl(var(--dashboard-gold)/0.5)] focus:outline-none"
                       placeholder="Mathematics, Physics, etc."
                       maxLength={100}
                     />

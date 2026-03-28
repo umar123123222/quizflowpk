@@ -179,7 +179,7 @@ const OwnerDashboard = () => {
                 <button
                   key={action.title}
                   onClick={action.onClick}
-                  className="group flex items-center gap-4 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-4 text-left transition-all duration-200 hover:border-[hsl(var(--dashboard-gold))]"
+                  className="group flex items-center gap-4 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-dark-card))] p-4 text-left transition-all duration-200 hover:border-[hsl(var(--dashboard-gold))]"
                 >
                   <div
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md"
@@ -193,10 +193,10 @@ const OwnerDashboard = () => {
                     />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-[hsl(var(--dashboard-text)/.9)] group-hover:text-[hsl(var(--dashboard-gold))] transition-colors">
+                    <p className="text-sm font-medium text-white/90 group-hover:text-[hsl(var(--dashboard-gold))] transition-colors">
                       {action.title}
                     </p>
-                    <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.5)] mt-0.5">
+                    <p className="font-mono text-[10px] text-white/50 mt-0.5">
                       {action.subtitle}
                     </p>
                   </div>

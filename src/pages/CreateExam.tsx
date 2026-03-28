@@ -557,7 +557,7 @@ const CreateExam = () => {
                         placeholder="2"
                         min={0.5}
                         step={0.5}
-                        className="h-8 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                        className="h-8 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -572,7 +572,7 @@ const CreateExam = () => {
                         placeholder="5"
                         min={0.5}
                         step={0.5}
-                        className="h-8 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                        className="h-8 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                       />
                     </div>
                   </div>
@@ -607,7 +607,7 @@ const CreateExam = () => {
                       }, 0);
 
                   return (
-                    <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] p-3 space-y-1">
+                    <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-3 space-y-1">
                       <div className="flex items-center gap-4 flex-wrap">
                         <span className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)]">
                           Total: <span className="text-[hsl(var(--dashboard-gold))] font-bold">{Math.round(computedTotal * 100) / 100}</span>
@@ -746,7 +746,7 @@ const CreateExam = () => {
                               placeholder={`${q.type === "mcq" ? (defaultMcqMarks || 1) : (defaultTextMarks || 1)}`}
                               min={0.5}
                               step={0.5}
-                              className="w-16 h-7 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-xs text-center focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                              className="w-16 h-7 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-xs text-center focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                             />
                             <span className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.45)]">marks</span>
                           </div>
@@ -768,7 +768,7 @@ const CreateExam = () => {
                       value={q.text}
                       onChange={(e) => updateQuestion(qIndex, "text", e.target.value)}
                       placeholder="Enter your question..."
-                      className="mb-4 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                      className="mb-4 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                     />
 
                     {q.type === "mcq" ? (
@@ -796,7 +796,7 @@ const CreateExam = () => {
                                 value={opt}
                                 onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
                                 placeholder={`Option ${optionLabels[oIndex]}`}
-                                className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                                className="flex-1 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                               />
                             </div>
                           ))}
@@ -815,7 +815,7 @@ const CreateExam = () => {
                           onChange={(e) => updateQuestion(qIndex, "correctAnswer", e.target.value)}
                           placeholder="Enter the expected answer for reference..."
                           rows={3}
-                          className="w-full rounded-md bg-[hsl(var(--dashboard-bg))] border border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                          className="w-full rounded-md bg-[hsl(var(--dashboard-card))] border border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
                         />
                         <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.4)]">
                           Students will type their answer in a text field
@@ -850,7 +850,7 @@ const CreateExam = () => {
               <Button
                 onClick={handleSaveDraft}
                 disabled={savingDraft || saving}
-                className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-6 py-3 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)] font-bold transition-all hover:border-white/30 hover:text-[hsl(var(--dashboard-text)/.9)] disabled:opacity-50"
+                className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-6 py-3 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)] font-bold transition-all hover:border-[hsl(var(--dashboard-gold)/.3)] hover:text-[hsl(var(--dashboard-text)/.9)] disabled:opacity-50"
               >
                 <Save className="h-3.5 w-3.5" />
                 {savingDraft ? "Saving..." : "Save Draft"}
@@ -905,7 +905,7 @@ const CreateExam = () => {
                         startTime
                           ? "border-[hsl(var(--dashboard-gold)/0.5)] text-[hsl(var(--dashboard-text)/.9)]"
                           : "border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.4)]",
-                        "bg-[hsl(var(--dashboard-bg))]"
+                        "bg-[hsl(var(--dashboard-card))]"
                       )}>
                         <CalendarClock className="inline h-3.5 w-3.5 mr-2 opacity-50" />
                         {startTime ? format(startTime, "PPP") : "Pick start date"}
@@ -925,7 +925,7 @@ const CreateExam = () => {
                     <select
                       value={startHour}
                       onChange={(e) => setStartHour(e.target.value)}
-                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-2 py-1.5 font-mono text-xs text-[hsl(var(--dashboard-text)/.8)]"
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-[hsl(var(--dashboard-text)/.8)]"
                     >
                       {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0")).map((h) => (
                         <option key={h} value={h}>{h}</option>
@@ -935,7 +935,7 @@ const CreateExam = () => {
                     <select
                       value={startMinute}
                       onChange={(e) => setStartMinute(e.target.value)}
-                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-2 py-1.5 font-mono text-xs text-[hsl(var(--dashboard-text)/.8)]"
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-[hsl(var(--dashboard-text)/.8)]"
                     >
                       {["00", "15", "30", "45"].map((m) => (
                         <option key={m} value={m}>{m}</option>
@@ -954,7 +954,7 @@ const CreateExam = () => {
                         endTime
                           ? "border-[hsl(var(--dashboard-gold)/0.5)] text-[hsl(var(--dashboard-text)/.9)]"
                           : "border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.4)]",
-                        "bg-[hsl(var(--dashboard-bg))]"
+                        "bg-[hsl(var(--dashboard-card))]"
                       )}>
                         <CalendarClock className="inline h-3.5 w-3.5 mr-2 opacity-50" />
                         {endTime ? format(endTime, "PPP") : "Pick end date"}
@@ -974,7 +974,7 @@ const CreateExam = () => {
                     <select
                       value={endHour}
                       onChange={(e) => setEndHour(e.target.value)}
-                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-2 py-1.5 font-mono text-xs text-[hsl(var(--dashboard-text)/.8)]"
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-[hsl(var(--dashboard-text)/.8)]"
                     >
                       {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0")).map((h) => (
                         <option key={h} value={h}>{h}</option>
@@ -984,7 +984,7 @@ const CreateExam = () => {
                     <select
                       value={endMinute}
                       onChange={(e) => setEndMinute(e.target.value)}
-                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-2 py-1.5 font-mono text-xs text-[hsl(var(--dashboard-text)/.8)]"
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-[hsl(var(--dashboard-text)/.8)]"
                     >
                       {["00", "15", "30", "45"].map((m) => (
                         <option key={m} value={m}>{m}</option>
@@ -1008,7 +1008,7 @@ const CreateExam = () => {
                   className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-all ${
                     noSchedule
                       ? "border-[#e09615] bg-[#e09615]"
-                      : "border-white/25 bg-transparent hover:border-white/40"
+                      : "border-[hsl(var(--dashboard-text)/.25)] bg-transparent hover:border-[hsl(var(--dashboard-gold)/.4)]"
                   }`}
                 >
                   {noSchedule && (
@@ -1051,12 +1051,12 @@ const CreateExam = () => {
                   className={`rounded-lg border p-4 text-left transition-all ${
                     resultVisibility === "immediate"
                       ? "border-[#e09615] bg-[#e09615]/10"
-                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] hover:border-white/20"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-[hsl(var(--dashboard-text)/.2)]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
-                      resultVisibility === "immediate" ? "border-[#e09615]" : "border-white/25"
+                      resultVisibility === "immediate" ? "border-[#e09615]" : "border-[hsl(var(--dashboard-text)/.25)]"
                     }`}>
                       {resultVisibility === "immediate" && (
                         <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#e09615' }} />
@@ -1081,12 +1081,12 @@ const CreateExam = () => {
                   className={`rounded-lg border p-4 text-left transition-all ${
                     resultVisibility === "after_exam_ends"
                       ? "border-[#e09615] bg-[#e09615]/10"
-                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] hover:border-white/20"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-[hsl(var(--dashboard-text)/.2)]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
-                      resultVisibility === "after_exam_ends" ? "border-[#e09615]" : "border-white/25"
+                      resultVisibility === "after_exam_ends" ? "border-[#e09615]" : "border-[hsl(var(--dashboard-text)/.25)]"
                     }`}>
                       {resultVisibility === "after_exam_ends" && (
                         <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#e09615' }} />
@@ -1158,7 +1158,7 @@ const CreateExam = () => {
             <input
               readOnly
               value={examLink}
-              className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-3 py-2 font-mono text-xs text-[hsl(var(--dashboard-text)/.8)] outline-none"
+              className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-2 font-mono text-xs text-[hsl(var(--dashboard-text)/.8)] outline-none"
             />
             <button
               onClick={copyLink}
