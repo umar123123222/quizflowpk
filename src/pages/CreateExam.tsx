@@ -219,17 +219,20 @@ const CreateExam = () => {
       // Insert questions
       const questionRows = questions.map((q, i) => ({
         exam_id: examId!,
+        question_type: q.type,
         question_text: q.text.trim(),
-        option_a: q.options[0].trim(),
-        option_b: q.options[1].trim(),
-        option_c: q.options[2].trim(),
-        option_d: q.options[3].trim(),
-        correct_answer: q.correctAnswer,
+        option_a: q.type === "mcq" ? q.options[0].trim() : null,
+        option_b: q.type === "mcq" ? q.options[1].trim() : null,
+        option_c: q.type === "mcq" ? q.options[2].trim() : null,
+        option_d: q.type === "mcq" ? q.options[3].trim() : null,
+        correct_answer: q.type === "mcq" ? q.correctAnswer : (q.correctAnswer.trim() || null),
         order_index: i,
-        options: q.options.map((o, idx) => ({
-          label: String.fromCharCode(65 + idx),
-          text: o.trim(),
-        })),
+        options: q.type === "mcq"
+          ? q.options.map((o, idx) => ({
+              label: String.fromCharCode(65 + idx),
+              text: o.trim(),
+            }))
+          : [],
       }));
 
       const { error: qError } = await supabase.from("questions").insert(questionRows);
