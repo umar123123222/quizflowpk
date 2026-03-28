@@ -342,21 +342,13 @@ const CreateExam = () => {
         const code = savedExamCode || examId;
         const link = `${window.location.origin}/exam/${code}`;
         setShowPublishDialog(false);
+        
+        // Copy link to clipboard automatically
+        try { await navigator.clipboard.writeText(link); } catch {}
+        
         toast({
           title: "🎉 Exam published successfully!",
-          description: `"${title}" is now live.`,
-          action: (
-            <button
-              onClick={async () => {
-                await navigator.clipboard.writeText(link);
-                toast({ title: "Link copied!", description: "Exam link copied to clipboard." });
-              }}
-              className="ml-2 shrink-0 rounded-md border border-[hsl(var(--dashboard-gold)/0.4)] bg-[hsl(var(--dashboard-gold)/0.1)] px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] hover:bg-[hsl(var(--dashboard-gold)/0.2)] transition-colors"
-            >
-              <Copy className="inline h-3 w-3 mr-1" />
-              Copy Link
-            </button>
-          ),
+          description: `"${title}" is live. Exam link copied to clipboard.`,
           duration: 5000,
         });
         setTimeout(() => navigate("/dashboard/owner/exams"), 2000);
