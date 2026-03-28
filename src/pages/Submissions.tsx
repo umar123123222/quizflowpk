@@ -201,13 +201,56 @@ const Submissions = () => {
 
           {/* Main */}
           <main className="flex-1 p-6 md:p-10">
-            <div className="mb-8">
-              <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/90">
-                Submissions
-              </h1>
-              <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-white/30 mt-2">
-                Student attempts across all exams
-              </p>
+            <div className="mb-8 flex items-start justify-between">
+              <div>
+                <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/90">
+                  Submissions
+                </h1>
+                <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-white/30 mt-2">
+                  Student attempts across all exams
+                </p>
+              </div>
+              {examsWithSubs.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0 border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] text-white/60 hover:text-white/90 font-mono text-[10px] tracking-wider uppercase"
+                  onClick={() => {
+                    const rows: string[][] = [["Exam", "Name", "Email", "Phone", "Score", "Violations", "Date"]];
+                    examsWithSubs.forEach((exam) => {
+                      exam.submissions.forEach((sub) => {
+                        const violations = sub.violations && sub.violations.length > 0
+                          ? sub.violations.map((v) => v.type).join("; ")
+                          : "None";
+                        const date = sub.submitted_at
+                          ? new Date(sub.submitted_at).toLocaleString("en-US")
+                          : "—";
+                        rows.push([
+                          exam.title,
+                          sub.student.full_name,
+                          sub.student.email || "—",
+                          sub.student.phone || "—",
+                          sub.score !== null ? `${sub.score}%` : "—",
+                          violations,
+                          date,
+                        ]);
+                      });
+                    });
+                    const csv = rows.map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(",")).join("\n");
+                    const blob = new Blob([csv], { type: "text/csv" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `submissions_${new Date().toISOString().slice(0, 10)}.csv`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    toast({ title: "Exported", description: "CSV file downloaded successfully." });
+                  }}
+                >
+                  <Download className="h-3 w-3 mr-1.5" />
+                  Export CSV
+                </Button>
+              )}
             </div>
 
             {loading ? (
