@@ -260,13 +260,33 @@ const TakeExam = () => {
         question_type: q.question_type || "mcq",
       }));
 
-      // Apply seeded shuffle if enabled
-      if ((examData as any).shuffle_questions) {
-        const seed = getOrCreateSessionSeed(examData.id);
-        setQuestions(seededShuffle(questionsWithType, seed));
-      } else {
-        setQuestions(questionsWithType);
+      const seed = getOrCreateSessionSeed(examData.id);
+
+      // Apply seeded question shuffle if enabled
+      const orderedQuestions = (examData as any).shuffle_questions
+        ? seededShuffle(questionsWithType, seed)
+        : questionsWithType;
+
+      // Build option shuffle map if enabled
+      if ((examData as any).shuffle_options) {
+        const map: OptionShuffleMap = {};
+        const labels = ["A", "B", "C", "D"];
+        orderedQuestions.forEach((q: any, idx: number) => {
+          if (q.question_type === "mcq") {
+            const originalOptions = labels.filter((k) => q[`option_${k.toLowerCase()}`]);
+            // Use a unique seed per question (base seed + question index)
+            const shuffled = seededShuffle(originalOptions, seed + idx + 1);
+            const qMap: Record<string, string> = {};
+            shuffled.forEach((origKey, i) => {
+              qMap[labels[i]] = origKey; // displayKey -> originalKey
+            });
+            map[q.id] = qMap;
+          }
+        });
+        setOptionShuffleMap(map);
       }
+
+      setQuestions(orderedQuestions);
       setLoading(false);
     };
     fetchExam();
