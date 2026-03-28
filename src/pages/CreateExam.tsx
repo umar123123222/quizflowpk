@@ -17,6 +17,8 @@ import {
   LogOut,
   Link,
   Copy,
+  FileText,
+  ListChecks,
 } from "lucide-react";
 import {
   Dialog,
