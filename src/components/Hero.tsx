@@ -26,9 +26,9 @@ const Hero = () => {
             style={{ color: '#e8e3d5', fontFamily: "'Playfair Display', serif", fontWeight: 900, fontSize: 'clamp(3rem, 5vw, 5.5rem)', lineHeight: 1.1 }}
           >
             Build engaging quizzes{" "}
-            <span style={{ background: 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 35%, #c98a1a 65%, #c98a1a 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>in</span>
+            <span style={{ background: 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 60%, #c98a1a 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', display: 'inline' }}>in</span>
             <br />
-            <span style={{ background: 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 35%, #c98a1a 65%, #c98a1a 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>minutes</span>
+            <span style={{ background: 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 20%, #c98a1a 70%, #c98a1a 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>minutes</span>
           </h1>
 
           <p
