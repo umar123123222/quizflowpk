@@ -84,7 +84,11 @@ interface Exam {
   start_time: string | null;
   end_time: string | null;
   shuffle_questions?: boolean;
+  shuffle_options?: boolean;
 }
+
+// Maps shuffled display key -> original key, per question
+type OptionShuffleMap = Record<string, Record<string, string>>;
 
 // Seeded PRNG (mulberry32)
 function seededRandom(seed: number) {
