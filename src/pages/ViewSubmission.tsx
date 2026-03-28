@@ -489,7 +489,9 @@ const ViewSubmission = () => {
             <div className="text-sm text-muted-foreground">
               {isReviewed ? (
                 <span className="text-green-500 font-medium">✓ Result published</span>
-              ) : allTextGraded ? (
+              ) : hasExceededMarks ? (
+                <span className="text-destructive font-medium">Some scores exceed maximum marks</span>
+              ) : canPublish ? (
                 <span className="text-green-500 font-medium">All text answers graded — ready to publish</span>
               ) : (
                 <span>
@@ -502,7 +504,7 @@ const ViewSubmission = () => {
             </div>
             <Button
               onClick={handleSaveGrades}
-              disabled={saving || !allTextGraded || isReviewed}
+              disabled={saving || !canPublish || isReviewed}
               className="gap-2"
             >
               <Save className="h-4 w-4" />
