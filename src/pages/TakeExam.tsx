@@ -21,6 +21,7 @@ interface FormFieldSettings {
   email_required: boolean;
   phone_visible: boolean;
   phone_required: boolean;
+  field_order: string[];
 }
 
 const buildStudentInfoSchema = (fs: FormFieldSettings | null) => {
