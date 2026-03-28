@@ -16,8 +16,22 @@ interface Exam {
   is_published: boolean | null;
   time_limit: number | null;
   code: string;
+  start_time?: string | null;
+  end_time?: string | null;
   teacher_name?: string;
 }
+
+const getScheduleStatus = (exam: Exam): { label: string; color: string } | null => {
+  if (!exam.start_time && !exam.end_time) return null;
+  const now = new Date();
+  if (exam.start_time && new Date(exam.start_time) > now) {
+    return { label: "Scheduled", color: "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]" };
+  }
+  if (exam.end_time && new Date(exam.end_time) < now) {
+    return { label: "Ended", color: "bg-red-500/15 text-red-400" };
+  }
+  return { label: "Live", color: "bg-emerald-500/15 text-emerald-400" };
+};
 
 const ExamsList = () => {
   const { user, role, signOut } = useAuth();
