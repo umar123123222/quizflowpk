@@ -248,7 +248,7 @@ const ViewSubmission = () => {
     );
   }
 
-  const isReviewed = submissionData?.answers?._reviewed === true;
+  const isReviewed = submissionData?.answers?._reviewed === true && !isEditing;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
