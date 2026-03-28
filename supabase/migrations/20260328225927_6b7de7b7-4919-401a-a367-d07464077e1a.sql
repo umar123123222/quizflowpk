@@ -1,0 +1,1 @@
+ALTER TABLE public.submissions ADD COLUMN pass_fail text DEFAULT NULL;

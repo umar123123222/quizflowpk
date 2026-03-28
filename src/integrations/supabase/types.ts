@@ -401,6 +401,7 @@ export type Database = {
           answers: Json | null
           exam_id: string
           id: string
+          pass_fail: string | null
           score: number | null
           student_id: string
           submitted_at: string | null
@@ -410,6 +411,7 @@ export type Database = {
           answers?: Json | null
           exam_id: string
           id?: string
+          pass_fail?: string | null
           score?: number | null
           student_id: string
           submitted_at?: string | null
@@ -419,6 +421,7 @@ export type Database = {
           answers?: Json | null
           exam_id?: string
           id?: string
+          pass_fail?: string | null
           score?: number | null
           student_id?: string
           submitted_at?: string | null
