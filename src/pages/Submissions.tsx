@@ -410,9 +410,24 @@ const Submissions = () => {
                             )}
                           </div>
                         </div>
-                        <span className="font-mono text-[10px] tracking-wider uppercase text-white/30">
-                          {exam.submissions.length} submission{exam.submissions.length !== 1 ? "s" : ""}
-                        </span>
+                        <div className="flex items-center gap-3">
+                          <span className="font-mono text-[10px] tracking-wider uppercase text-white/30">
+                            {exam.submissions.length} submission{exam.submissions.length !== 1 ? "s" : ""}
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-[10px] font-mono tracking-wider uppercase text-white/40 hover:text-[hsl(var(--dashboard-gold))] hover:bg-[hsl(var(--dashboard-gold)/0.08)]"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setReattemptDialogExamId(exam.id);
+                              setReattemptEmails([""]);
+                            }}
+                          >
+                            <RotateCcw className="h-3 w-3 mr-1" />
+                            Allow Reattempt
+                          </Button>
+                        </div>
                       </button>
 
                       {/* Submissions table */}
