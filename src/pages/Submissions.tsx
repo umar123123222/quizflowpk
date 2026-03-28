@@ -543,17 +543,23 @@ const Submissions = () => {
                                       </span>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                      <span
-                                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
-                                          exam.hasTextQuestions
-                                            ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
-                                            : (sub.score ?? 0) >= 50
-                                            ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
-                                            : "bg-destructive/15 text-destructive"
-                                        }`}
-                                      >
-                                        {exam.hasTextQuestions ? "Pending Review" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail"}
-                                      </span>
+                                      {(() => {
+                                        const isPending = exam.hasTextQuestions && !sub.isReviewed;
+                                        const isEvaluated = exam.hasTextQuestions && sub.isReviewed;
+                                        const statusLabel = isPending ? "Pending Review" : isEvaluated ? "Evaluated" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail";
+                                        const statusClass = isPending
+                                          ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
+                                          : isEvaluated
+                                          ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
+                                          : (sub.score ?? 0) >= 50
+                                          ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
+                                          : "bg-destructive/15 text-destructive";
+                                        return (
+                                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${statusClass}`}>
+                                            {statusLabel}
+                                          </span>
+                                        );
+                                      })()}
                                     </TableCell>
                                     <TableCell>
                                       {sub.violations && sub.violations.length > 0 ? (
