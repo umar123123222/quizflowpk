@@ -28,7 +28,7 @@ const Hero = () => {
             Build engaging quizzes{" "}
             <span style={{ color: '#1E3A5F' }}>in</span>
             <br />
-            <span><span style={{ color: '#1E3A5F' }}>minu</span><span style={{ color: '#c98a1a' }}>tes</span></span>
+            <span style={{ background: 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 35%, #c98a1a 65%, #c98a1a 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>minutes</span>
           </h1>
 
           <p
