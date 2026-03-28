@@ -9,7 +9,11 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye } from "lucide-react";
+import { Eye, CalendarClock } from "lucide-react";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import {
   ArrowLeft,
   Plus,
@@ -59,6 +63,12 @@ const CreateExam = () => {
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
   const [resultVisibility, setResultVisibility] = useState<"immediate" | "after_exam_ends">("immediate");
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
+  const [startTime, setStartTime] = useState<Date | undefined>(undefined);
+  const [startHour, setStartHour] = useState("09");
+  const [startMinute, setStartMinute] = useState("00");
+  const [endTime, setEndTime] = useState<Date | undefined>(undefined);
+  const [endHour, setEndHour] = useState("17");
+  const [endMinute, setEndMinute] = useState("00");
   const [saving, setSaving] = useState(false);
   const [savedExamCode, setSavedExamCode] = useState<string | null>(null);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
@@ -81,6 +91,18 @@ const CreateExam = () => {
           setTitle(exam.title);
           setTimeLimit(exam.time_limit ?? 30);
           setResultVisibility((exam as any).result_visibility || "immediate");
+          if ((exam as any).start_time) {
+            const st = new Date((exam as any).start_time);
+            setStartTime(st);
+            setStartHour(st.getHours().toString().padStart(2, "0"));
+            setStartMinute(st.getMinutes().toString().padStart(2, "0"));
+          }
+          if ((exam as any).end_time) {
+            const et = new Date((exam as any).end_time);
+            setEndTime(et);
+            setEndHour(et.getHours().toString().padStart(2, "0"));
+            setEndMinute(et.getMinutes().toString().padStart(2, "0"));
+          }
           if (exam.code) setSavedExamCode(exam.code);
         }
         const { data: qs } = await supabase
@@ -150,6 +172,13 @@ const CreateExam = () => {
     setQuestions((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const buildDatetime = (date: Date | undefined, hour: string, minute: string): string | null => {
+    if (!date) return null;
+    const d = new Date(date);
+    d.setHours(parseInt(hour), parseInt(minute), 0, 0);
+    return d.toISOString();
+  };
+
   const handleSave = async () => {
     if (!title.trim()) {
       toast({ title: "Title required", description: "Please enter an exam title.", variant: "destructive" });
@@ -194,7 +223,13 @@ const CreateExam = () => {
         // Update existing exam
         const { error: examError } = await supabase
           .from("exams")
-          .update({ title: title.trim(), time_limit: timeLimit || null, result_visibility: resultVisibility })
+          .update({
+            title: title.trim(),
+            time_limit: timeLimit || null,
+            result_visibility: resultVisibility,
+            start_time: buildDatetime(startTime, startHour, startMinute),
+            end_time: buildDatetime(endTime, endHour, endMinute),
+          } as any)
           .eq("id", editId);
         if (examError) throw examError;
 
@@ -206,6 +241,8 @@ const CreateExam = () => {
             title: title.trim(),
             time_limit: timeLimit || null,
             result_visibility: resultVisibility,
+            start_time: buildDatetime(startTime, startHour, startMinute),
+            end_time: buildDatetime(endTime, endHour, endMinute),
             created_by: user!.id,
             is_published: true,
           };
@@ -386,6 +423,124 @@ const CreateExam = () => {
                   </p>
                 </button>
               </div>
+            </div>
+
+            {/* Exam Schedule */}
+            <div className="mb-8 space-y-3">
+              <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35 flex items-center gap-2">
+                <CalendarClock className="h-3.5 w-3.5" />
+                Exam Schedule (Optional)
+              </label>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {/* Start Date & Time */}
+                <div className="space-y-2">
+                  <label className="font-mono text-[9px] tracking-wider uppercase text-white/30">Start Date & Time</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className={cn(
+                        "w-full rounded-md border px-3 py-2 text-left font-mono text-xs",
+                        startTime
+                          ? "border-[hsl(var(--dashboard-gold)/0.5)] text-white/70"
+                          : "border-[hsl(var(--dashboard-border))] text-white/20",
+                        "bg-[hsl(var(--dashboard-card))]"
+                      )}>
+                        {startTime ? format(startTime, "PPP") : "Pick start date"}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={startTime}
+                        onSelect={setStartTime}
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <div className="flex gap-2">
+                    <select
+                      value={startHour}
+                      onChange={(e) => setStartHour(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-white/70"
+                    >
+                      {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0")).map((h) => (
+                        <option key={h} value={h}>{h}</option>
+                      ))}
+                    </select>
+                    <span className="text-white/30 self-center">:</span>
+                    <select
+                      value={startMinute}
+                      onChange={(e) => setStartMinute(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-white/70"
+                    >
+                      {["00", "15", "30", "45"].map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {startTime && (
+                    <button onClick={() => setStartTime(undefined)} className="font-mono text-[9px] text-white/20 hover:text-white/40 underline">
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                {/* End Date & Time */}
+                <div className="space-y-2">
+                  <label className="font-mono text-[9px] tracking-wider uppercase text-white/30">End Date & Time</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className={cn(
+                        "w-full rounded-md border px-3 py-2 text-left font-mono text-xs",
+                        endTime
+                          ? "border-[hsl(var(--dashboard-gold)/0.5)] text-white/70"
+                          : "border-[hsl(var(--dashboard-border))] text-white/20",
+                        "bg-[hsl(var(--dashboard-card))]"
+                      )}>
+                        {endTime ? format(endTime, "PPP") : "Pick end date"}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={endTime}
+                        onSelect={setEndTime}
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <div className="flex gap-2">
+                    <select
+                      value={endHour}
+                      onChange={(e) => setEndHour(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-white/70"
+                    >
+                      {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0")).map((h) => (
+                        <option key={h} value={h}>{h}</option>
+                      ))}
+                    </select>
+                    <span className="text-white/30 self-center">:</span>
+                    <select
+                      value={endMinute}
+                      onChange={(e) => setEndMinute(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-white/70"
+                    >
+                      {["00", "15", "30", "45"].map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {endTime && (
+                    <button onClick={() => setEndTime(undefined)} className="font-mono text-[9px] text-white/20 hover:text-white/40 underline">
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </div>
+              <p className="font-mono text-[9px] text-white/20">
+                Leave blank for no schedule restriction. Students can only access the exam within this window.
+              </p>
             </div>
 
             {/* Questions */}

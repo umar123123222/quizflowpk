@@ -10,7 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { User, Mail, Phone, Clock, CheckCircle, AlertTriangle, Maximize } from "lucide-react";
+import { User, Mail, Phone, Clock, CheckCircle, AlertTriangle, Maximize, CalendarClock } from "lucide-react";
+import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -80,6 +81,8 @@ interface Exam {
   time_limit: number | null;
   organization_id: string | null;
   result_visibility: string;
+  start_time: string | null;
+  end_time: string | null;
 }
 
 const TakeExam = () => {
@@ -142,7 +145,7 @@ const TakeExam = () => {
       setLoading(true);
       const { data: examData, error: examError } = await supabase
         .from("exams")
-        .select("id, title, description, time_limit, organization_id, result_visibility")
+        .select("id, title, description, time_limit, organization_id, result_visibility, start_time, end_time")
         .eq("code", code)
         .eq("is_published", true)
         .single();
@@ -152,7 +155,22 @@ const TakeExam = () => {
         setLoading(false);
         return;
       }
-      setExam(examData);
+
+      // Check schedule window
+      const now = new Date();
+      if ((examData as any).start_time && new Date((examData as any).start_time) > now) {
+        const startDate = new Date((examData as any).start_time);
+        setError(`This exam hasn't started yet. It begins on ${format(startDate, "PPP")} at ${format(startDate, "p")}.`);
+        setLoading(false);
+        return;
+      }
+      if ((examData as any).end_time && new Date((examData as any).end_time) < now) {
+        setError("This exam has ended and is no longer accepting submissions.");
+        setLoading(false);
+        return;
+      }
+
+      setExam(examData as any);
       setExamId(examData.id);
 
       // Fetch form settings for the org
@@ -559,11 +577,11 @@ const TakeExam = () => {
 
   // Submitted — full-screen success state
   if (submitted) {
-    const resultsDeferred = (exam as any)?.result_visibility === "after_exam_ends";
-    // For deferred results, check if the exam time window has passed
-    // The "exam window" = exam creation time + time_limit. Since we don't have a scheduled end time,
-    // we use the student's own start time + time_limit as proxy. If no time limit, results stay deferred.
-    const canShowDeferredResults = false; // Results stay hidden — students must wait
+    const resultsDeferred = exam?.result_visibility === "after_exam_ends";
+    // Check if the exam end time has passed
+    const canShowDeferredResults = resultsDeferred && exam?.end_time
+      ? new Date(exam.end_time) < new Date()
+      : false;
 
     const showScoreAndReview = !resultsDeferred || canShowDeferredResults;
 
