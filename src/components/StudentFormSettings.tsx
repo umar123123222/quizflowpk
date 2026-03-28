@@ -489,6 +489,15 @@ const StudentFormSettings = () => {
             </Button>
           </div>
         )}
+
+        <Button
+          onClick={() => saveMutation.mutate()}
+          disabled={saveMutation.isPending}
+          className="flex items-center gap-2 bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-mono text-[11px] tracking-wider uppercase font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
+        >
+          {saveMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+          {saveMutation.isPending ? "Saving..." : "Save Settings & Order"}
+        </Button>
       </div>
     </div>
   );
