@@ -3,11 +3,19 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert, Eye, Download, Search } from "lucide-react";
+import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert, Eye, Download, Search, RotateCcw, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
