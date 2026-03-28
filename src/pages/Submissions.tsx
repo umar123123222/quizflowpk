@@ -3,11 +3,19 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert, Eye, Download, Search } from "lucide-react";
+import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert, Eye, Download, Search, RotateCcw, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -44,7 +52,9 @@ const Submissions = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [scoreFilter, setScoreFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState("newest");
-
+  const [reattemptDialogExamId, setReattemptDialogExamId] = useState<string | null>(null);
+  const [reattemptEmails, setReattemptEmails] = useState<string[]>([""]);
+  const [savingReattempts, setSavingReattempts] = useState(false);
   const filteredExams = useMemo(() => {
     return examsWithSubs.map((exam) => {
       let subs = exam.submissions;
@@ -184,6 +194,44 @@ const Submissions = () => {
       else next.add(examId);
       return next;
     });
+  };
+
+  const handleSaveReattempts = async () => {
+    if (!reattemptDialogExamId || !user) return;
+    const validEmails = reattemptEmails
+      .map((e) => e.trim().toLowerCase())
+      .filter((e) => e && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+
+    if (validEmails.length === 0) {
+      toast({ title: "No valid emails", description: "Please enter at least one valid email.", variant: "destructive" });
+      return;
+    }
+
+    setSavingReattempts(true);
+    try {
+      // Delete old submissions for these students so they can retake
+      // Insert reattempt permissions (upsert to handle duplicates)
+      const rows = validEmails.map((email) => ({
+        exam_id: reattemptDialogExamId,
+        student_email: email,
+        granted_by: user.id,
+        used: false,
+      }));
+
+      const { error } = await supabase.from("exam_reattempts" as any).upsert(rows, {
+        onConflict: "exam_id,student_email",
+      });
+
+      if (error) throw error;
+
+      toast({ title: "Reattempts granted", description: `${validEmails.length} student(s) can now retake the exam.` });
+      setReattemptDialogExamId(null);
+      setReattemptEmails([""]);
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to save reattempts.", variant: "destructive" });
+    } finally {
+      setSavingReattempts(false);
+    }
   };
 
   const handleSignOut = async () => {
@@ -362,9 +410,24 @@ const Submissions = () => {
                             )}
                           </div>
                         </div>
-                        <span className="font-mono text-[10px] tracking-wider uppercase text-white/30">
-                          {exam.submissions.length} submission{exam.submissions.length !== 1 ? "s" : ""}
-                        </span>
+                        <div className="flex items-center gap-3">
+                          <span className="font-mono text-[10px] tracking-wider uppercase text-white/30">
+                            {exam.submissions.length} submission{exam.submissions.length !== 1 ? "s" : ""}
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-[10px] font-mono tracking-wider uppercase text-white/40 hover:text-[hsl(var(--dashboard-gold))] hover:bg-[hsl(var(--dashboard-gold)/0.08)]"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setReattemptDialogExamId(exam.id);
+                              setReattemptEmails([""]);
+                            }}
+                          >
+                            <RotateCcw className="h-3 w-3 mr-1" />
+                            Allow Reattempt
+                          </Button>
+                        </div>
                       </button>
 
                       {/* Submissions table */}
@@ -477,6 +540,69 @@ const Submissions = () => {
           </main>
         </div>
       </div>
+
+      {/* Reattempt Dialog */}
+      <Dialog open={!!reattemptDialogExamId} onOpenChange={(open) => { if (!open) setReattemptDialogExamId(null); }}>
+        <DialogContent className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl text-white/90 flex items-center gap-2">
+              <RotateCcw className="h-5 w-5 text-[hsl(var(--dashboard-gold))]" />
+              Allow Reattempt
+            </DialogTitle>
+            <DialogDescription className="text-white/40">
+              Enter the email addresses of students you want to allow to retake this exam.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 mt-2">
+            {reattemptEmails.map((email, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <Input
+                  type="email"
+                  placeholder="student@example.com"
+                  value={email}
+                  onChange={(e) => {
+                    const updated = [...reattemptEmails];
+                    updated[idx] = e.target.value;
+                    setReattemptEmails(updated);
+                  }}
+                  className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 font-mono text-xs"
+                />
+                {reattemptEmails.length > 1 && (
+                  <button
+                    onClick={() => setReattemptEmails((prev) => prev.filter((_, i) => i !== idx))}
+                    className="text-white/20 hover:text-destructive transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              onClick={() => setReattemptEmails((prev) => [...prev, ""])}
+              className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/30 hover:text-[hsl(var(--dashboard-gold))] transition-colors"
+            >
+              <Plus className="h-3 w-3" />
+              Add another email
+            </button>
+          </div>
+          <DialogFooter className="mt-4">
+            <Button
+              variant="outline"
+              onClick={() => setReattemptDialogExamId(null)}
+              className="border-[hsl(var(--dashboard-border))] text-white/60"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveReattempts}
+              disabled={savingReattempts}
+              className="bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
+            >
+              {savingReattempts ? "Saving..." : "Grant Reattempt"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 };
