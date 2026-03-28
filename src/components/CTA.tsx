@@ -14,8 +14,8 @@ const CTA = () => {
           }}
         >
           {/* Decorative circles */}
-          <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full" style={{ backgroundColor: 'rgba(232,200,122,0.05)' }} />
-          <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full" style={{ backgroundColor: 'rgba(232,200,122,0.05)' }} />
+          <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full" style={{ backgroundColor: 'rgba(245,158,11,0.05)' }} />
+          <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full" style={{ backgroundColor: 'rgba(245,158,11,0.05)' }} />
 
           <h2
             className="relative mb-4 text-3xl font-bold sm:text-4xl"
