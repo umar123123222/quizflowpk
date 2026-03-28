@@ -569,6 +569,11 @@ const Submissions = () => {
                                     <TableCell className="font-mono text-xs text-white/70">
                                       {sub.student.phone || "—"}
                                     </TableCell>
+                                    {role === "organization_owner" && (
+                                      <TableCell className="font-mono text-xs text-white/70">
+                                        {exam.teacher_name || "—"}
+                                      </TableCell>
+                                    )}
                                     <TableCell className="text-right">
                                       <span
                                         className={`font-mono text-sm font-bold ${
