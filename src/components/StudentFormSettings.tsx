@@ -408,26 +408,16 @@ const StudentFormSettings = () => {
           Name is always visible and required. Drag the ⠿ handle to reorder.
         </p>
 
-        <div className="flex items-center gap-3">
+        {!showAddForm && (
           <Button
-            onClick={() => saveMutation.mutate()}
-            disabled={saveMutation.isPending}
-            className="flex items-center gap-2 bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-mono text-[11px] tracking-wider uppercase font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
+            variant="outline"
+            size="sm"
+            onClick={() => setShowAddForm(true)}
+            className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase border-[hsl(var(--dashboard-border))] text-white/50 hover:text-white/80 hover:bg-[hsl(var(--dashboard-border))]"
           >
-            {saveMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            {saveMutation.isPending ? "Saving..." : "Save Settings & Order"}
+            <Plus className="h-3 w-3" /> Add Custom Field
           </Button>
-          {!showAddForm && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowAddForm(true)}
-              className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase border-[hsl(var(--dashboard-border))] text-white/50 hover:text-white/80 hover:bg-[hsl(var(--dashboard-border))]"
-            >
-              <Plus className="h-3 w-3" /> Add Custom Field
-            </Button>
-          )}
-        </div>
+        )}
 
         {/* Add custom field form */}
         {showAddForm && (
