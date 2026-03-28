@@ -54,7 +54,7 @@ const OwnerDashboard = () => {
 
   const stats = [
     { label: "Total Exams", value: examCount, icon: FileText, accent: "var(--dashboard-gold)" },
-    { label: "Total Students", value: studentCount, icon: Users, accent: "var(--dashboard-blue)" },
+    { label: "Total Teachers", value: teacherCount, icon: Users, accent: "var(--dashboard-blue)" },
     { label: "Total Submissions", value: submissionCount, icon: ClipboardList, accent: "var(--dashboard-green)" },
   ];
 
