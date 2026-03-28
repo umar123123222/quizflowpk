@@ -394,23 +394,34 @@ const ViewSubmission = () => {
                         <p className="text-foreground">{q.student_answer || <span className="italic text-muted-foreground">Not answered</span>}</p>
                       </div>
                       {isTeacherOrOwner && (
-                        <div className="flex items-center gap-3 p-3 rounded-md bg-muted/50 border border-border">
-                          <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">
-                            Award marks:
-                          </label>
-                          <Input
-                            type="number"
-                            min={0}
-                            max={q.points}
-                            step="0.5"
-                            placeholder="0"
-                            value={textScores[q.id] ?? ""}
-                            onChange={(e) => {
-                              setTextScores((prev) => ({ ...prev, [q.id]: e.target.value }));
-                            }}
-                            className="w-20 h-8 text-sm text-center"
-                          />
-                          <span className="text-xs text-muted-foreground">/ {q.points}</span>
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-3 p-3 rounded-md bg-muted/50 border border-border">
+                            <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+                              Score:
+                            </label>
+                            <Input
+                              type="number"
+                              min={0}
+                              max={q.points}
+                              step="0.5"
+                              placeholder="0"
+                              value={textScores[q.id] ?? ""}
+                              onChange={(e) => {
+                                setTextScores((prev) => ({ ...prev, [q.id]: e.target.value }));
+                              }}
+                              className={`w-20 h-8 text-sm text-center ${
+                                textScores[q.id] !== undefined && textScores[q.id] !== "" && parseFloat(textScores[q.id]) > q.points
+                                  ? "border-destructive focus-visible:ring-destructive"
+                                  : ""
+                              }`}
+                            />
+                            <span className="text-xs text-muted-foreground font-medium">/ {q.points}</span>
+                          </div>
+                          {textScores[q.id] !== undefined && textScores[q.id] !== "" && parseFloat(textScores[q.id]) > q.points && (
+                            <p className="text-xs text-destructive font-medium pl-3">
+                              Score cannot exceed {q.points} marks for this question.
+                            </p>
+                          )}
                         </div>
                       )}
                     </div>
