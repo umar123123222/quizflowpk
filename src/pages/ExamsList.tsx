@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { FileText, LogOut, Loader2, Copy } from "lucide-react";
+import { FileText, LogOut, Loader2, Copy, Search, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
 
 interface Exam {
   id: string;
@@ -30,6 +31,25 @@ const ExamsList = () => {
   };
   const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "published" | "draft">("all");
+  const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+
+  const filteredExams = useMemo(() => {
+    let result = exams;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter((e) => e.title.toLowerCase().includes(q));
+    }
+    if (statusFilter === "published") result = result.filter((e) => e.is_published);
+    if (statusFilter === "draft") result = result.filter((e) => !e.is_published);
+    result = [...result].sort((a, b) => {
+      const da = new Date(a.created_at || 0).getTime();
+      const db = new Date(b.created_at || 0).getTime();
+      return sortOrder === "newest" ? db - da : da - db;
+    });
+    return result;
+  }, [exams, searchQuery, statusFilter, sortOrder]);
 
   useEffect(() => {
     const fetchExams = async () => {
@@ -111,8 +131,44 @@ const ExamsList = () => {
 
           {/* Main Content */}
           <main className="flex-1 p-6 md:p-10">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6">
               <h1 className="font-serif text-3xl md:text-4xl font-bold text-white/90">Exams</h1>
+            </div>
+
+            {/* Search & Filter Bar */}
+            <div className="flex flex-col sm:flex-row gap-3 mb-8">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/25" />
+                <Input
+                  placeholder="Search exams by name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/25 font-mono text-xs focus-visible:ring-[hsl(var(--dashboard-gold))]"
+                />
+              </div>
+              <div className="relative">
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as "all" | "published" | "draft")}
+                  className="appearance-none rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 pr-8 py-2 font-mono text-xs text-white/60 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--dashboard-gold))] h-10"
+                >
+                  <option value="all">All Status</option>
+                  <option value="published">Published</option>
+                  <option value="draft">Draft</option>
+                </select>
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/25 pointer-events-none" />
+              </div>
+              <div className="relative">
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value as "newest" | "oldest")}
+                  className="appearance-none rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 pr-8 py-2 font-mono text-xs text-white/60 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--dashboard-gold))] h-10"
+                >
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                </select>
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/25 pointer-events-none" />
+              </div>
             </div>
 
             {loading ? (
@@ -128,9 +184,14 @@ const ExamsList = () => {
                 <p className="font-mono text-[10px] text-white/25 mb-6">Create your first exam to get started</p>
                 <p className="font-mono text-[10px] text-white/25">Only teachers can create exams</p>
               </div>
+            ) : filteredExams.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <p className="text-sm text-white/50 mb-1">No exams match your filters</p>
+                <p className="font-mono text-[10px] text-white/25">Try adjusting your search or filters</p>
+              </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {exams.map((exam) => (
+                {filteredExams.map((exam) => (
                   <div
                     key={exam.id}
                     className="group rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] overflow-hidden transition-all duration-200 hover:border-[hsl(var(--dashboard-gold))]"
