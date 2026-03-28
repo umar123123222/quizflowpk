@@ -240,7 +240,7 @@ const CreateExam = () => {
       if (qError) throw qError;
 
       toast({ title: isEditMode ? "Exam updated!" : "Exam saved!", description: `"${title}" has been ${isEditMode ? "updated" : "created"} successfully.` });
-      setSavedExamId(examId);
+      setSavedExamCode(savedExamCode || "saved");
       setShowLinkDialog(true);
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Something went wrong.", variant: "destructive" });
