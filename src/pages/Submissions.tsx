@@ -246,6 +246,7 @@ const Submissions = () => {
           ...exam,
           teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
           hasTextQuestions: examsWithText.has(exam.id),
+          questions: questionsByExam.get(exam.id) || [],
           submissions,
         });
       }
