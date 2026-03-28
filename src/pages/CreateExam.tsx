@@ -228,6 +228,7 @@ const CreateExam = () => {
           .update({
             title: title.trim(),
             time_limit: timeLimit || null,
+            total_marks: totalMarks || null,
             result_visibility: resultVisibility,
             start_time: buildDatetime(startTime, startHour, startMinute),
             end_time: buildDatetime(endTime, endHour, endMinute),
