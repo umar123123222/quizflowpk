@@ -96,6 +96,8 @@
     --dashboard-blue: 217 91% 60%;
     --dashboard-green: 142 71% 45%;
     --dashboard-dark-card: 228 25% 12%;
+    --dashboard-text: 0 0% 100%;
+    --dashboard-text-muted: 220 15% 72%;
   }
 }
 
