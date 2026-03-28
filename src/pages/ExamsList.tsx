@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { FileText, LogOut, Loader2, Copy } from "lucide-react";
+import { FileText, LogOut, Loader2, Copy, Search, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
 
 interface Exam {
   id: string;
