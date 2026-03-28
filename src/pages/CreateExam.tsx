@@ -451,7 +451,7 @@ const CreateExam = () => {
             {/* Exam Details */}
             <div className="grid gap-4 sm:grid-cols-3 mb-8">
               <div className="space-y-2">
-                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text))] font-semibold">
                   Exam Title
                 </label>
                 <Input
@@ -462,7 +462,7 @@ const CreateExam = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text))] font-semibold">
                   Total Marks (Optional)
                 </label>
                 <Input
@@ -478,7 +478,7 @@ const CreateExam = () => {
                 </p>
               </div>
               <div className="space-y-2">
-                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text))] font-semibold">
                   Passing Percentage (Optional)
                 </label>
                 <Input
@@ -500,7 +500,7 @@ const CreateExam = () => {
                 </p>
               </div>
               <div className="space-y-2">
-                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text))] font-semibold">
                   Time Limit (minutes)
                 </label>
                 <Input
@@ -532,7 +532,7 @@ const CreateExam = () => {
                       : "border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.5)] hover:text-[hsl(var(--dashboard-text)/.7)]"
                   }`}
                 >
-                  <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "bg-white/15"}`}>
+                  <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}>
                     <div className={`absolute top-0.5 h-2 w-2 rounded-full bg-white transition-all ${customMarking ? "left-3.5" : "left-0.5"}`} />
                   </div>
                   Custom Marking
@@ -674,7 +674,7 @@ const CreateExam = () => {
                   <button
                     type="button"
                     onClick={() => setShuffleQuestions(!shuffleQuestions)}
-                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleQuestions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-white/15"}`}
+                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleQuestions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}
                   >
                     <div className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${shuffleQuestions ? "left-6" : "left-1"}`} />
                   </button>
@@ -688,7 +688,7 @@ const CreateExam = () => {
                   <button
                     type="button"
                     onClick={() => setShuffleOptions(!shuffleOptions)}
-                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleOptions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-white/15"}`}
+                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleOptions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}
                   >
                     <div className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${shuffleOptions ? "left-6" : "left-1"}`} />
                   </button>
@@ -696,7 +696,7 @@ const CreateExam = () => {
               </div>
             </div>
 
-            <div className="space-y-6 mb-8">
+            <div className="space-y-6 mb-8 rounded-xl bg-[hsl(var(--dashboard-questions-bg))] p-6 -mx-2">
               {questions.map((q, qIndex) => (
                 <div
                   key={q.id}
@@ -784,7 +784,7 @@ const CreateExam = () => {
                               <RadioGroupItem
                                 value={optionLabels[oIndex]}
                                 id={`q${qIndex}-opt${oIndex}`}
-                                className="border-white/20 text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[hsl(var(--dashboard-gold))]"
+                                className="border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[hsl(var(--dashboard-gold))]"
                               />
                               <Label
                                 htmlFor={`q${qIndex}-opt${oIndex}`}
@@ -807,7 +807,7 @@ const CreateExam = () => {
                       </>
                     ) : (
                       <div className="space-y-2">
-                        <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]">
+                        <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text))] font-semibold">
                           Model Answer (optional)
                         </label>
                         <textarea
@@ -897,7 +897,7 @@ const CreateExam = () => {
               <div className={`grid gap-4 sm:grid-cols-2 transition-opacity ${noSchedule ? "opacity-40 pointer-events-none" : ""}`}>
                 {/* Start Date & Time */}
                 <div className="space-y-2">
-                  <label className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.55)]">Start Date & Time</label>
+                  <label className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text))] font-semibold">Start Date & Time</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <button className={cn(
@@ -946,7 +946,7 @@ const CreateExam = () => {
 
                 {/* End Date & Time */}
                 <div className="space-y-2">
-                  <label className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.55)]">End Date & Time</label>
+                  <label className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text))] font-semibold">End Date & Time</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <button className={cn(
@@ -1050,7 +1050,7 @@ const CreateExam = () => {
                   onClick={() => setResultVisibility("immediate")}
                   className={`rounded-lg border p-4 text-left transition-all ${
                     resultVisibility === "immediate"
-                      ? "border-[#e09615] bg-[#e09615]/10"
+                      ? "border-2 border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/.08)]"
                       : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-[hsl(var(--dashboard-text)/.2)]"
                   }`}
                 >
@@ -1080,7 +1080,7 @@ const CreateExam = () => {
                   onClick={() => setResultVisibility("after_exam_ends")}
                   className={`rounded-lg border p-4 text-left transition-all ${
                     resultVisibility === "after_exam_ends"
-                      ? "border-[#e09615] bg-[#e09615]/10"
+                      ? "border-2 border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/.08)]"
                       : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-[hsl(var(--dashboard-text)/.2)]"
                   }`}
                 >
