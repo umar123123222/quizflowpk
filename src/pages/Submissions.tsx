@@ -390,7 +390,11 @@ const Submissions = () => {
                     const isOwner = role === "organization_owner";
                     // Find max question count across all exams for dynamic columns
                     const maxQs = Math.max(...examsWithSubs.map((e) => (e.questions || []).length), 0);
-                    const qHeaders = Array.from({ length: maxQs }, (_, i) => `Q${i + 1} - Question`);
+                    const qHeaders: string[] = [];
+                    for (let i = 0; i < maxQs; i++) {
+                      qHeaders.push(`Q${i + 1} - Question`);
+                      qHeaders.push(`Q${i + 1} - Student Answer`);
+                    }
                     const baseHeader = isOwner
                       ? ["Exam", "Teacher", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]
                       : ["Exam", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"];
@@ -406,6 +410,23 @@ const Submissions = () => {
                           ? new Date(sub.submitted_at).toLocaleString("en-US")
                           : "—";
                         const isPending = exam.hasTextQuestions && !sub.isReviewed;
+                        const qCols: string[] = [];
+                        sortedQs.forEach((q) => {
+                          qCols.push(q.question_text);
+                          const rawAns = sub.answers ? sub.answers[q.id] : null;
+                          if (!rawAns) {
+                            qCols.push("Not Answered");
+                          } else if (q.question_type === "text") {
+                            qCols.push(String(rawAns));
+                          } else {
+                            // MCQ: resolve option key to full text
+                            const opt = q.options.find((o) => o.key === rawAns);
+                            qCols.push(opt ? opt.text : String(rawAns));
+                          }
+                        });
+                        // Pad if fewer questions
+                        const padCount = (maxQs - sortedQs.length) * 2;
+                        for (let p = 0; p < padCount; p++) qCols.push("");
                         const row = [
                           exam.title,
                           ...(isOwner ? [exam.teacher_name || "—"] : []),
@@ -417,10 +438,7 @@ const Submissions = () => {
                           sub.passFail || "—",
                           violations,
                           date,
-                          // Question text columns
-                          ...sortedQs.map((q) => q.question_text),
-                          // Pad remaining columns if this exam has fewer questions
-                          ...Array.from({ length: maxQs - sortedQs.length }, () => ""),
+                          ...qCols,
                         ];
                         rows.push(row);
                       });
