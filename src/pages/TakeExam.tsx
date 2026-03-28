@@ -705,10 +705,19 @@ const TakeExam = () => {
               Full-Screen Exited!
             </DialogTitle>
             <DialogDescription className="text-base pt-2">
-              You have exited full-screen. Please return to full-screen immediately or your exam will be submitted.
-              <span className="block mt-2 font-semibold text-destructive">There will be no second chance.</span>
+              You have exited full-screen. Return to full-screen immediately or your exam will be auto-submitted.
             </DialogDescription>
           </DialogHeader>
+          <div className="flex items-center justify-center py-4">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-16 h-16 rounded-full border-4 border-destructive flex items-center justify-center">
+                <span className="text-3xl font-bold text-destructive font-mono">{fsCountdown}</span>
+              </div>
+              <p className="text-sm text-muted-foreground font-medium">
+                Return to full-screen in <span className="text-destructive font-bold">{fsCountdown}</span>...
+              </p>
+            </div>
+          </div>
           <DialogFooter>
             <Button onClick={handleReEnterFullscreen} className="w-full gap-2">
               <Maximize className="h-4 w-4" />
