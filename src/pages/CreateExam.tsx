@@ -586,11 +586,69 @@ const CreateExam = () => {
               </p>
             </div>
 
-            {/* Questions */}
-            <div className="mb-4">
-              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/30 mb-4">
-                Questions
-              </p>
+            {/* Custom Marking Toggle */}
+            <div className="mb-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/30">
+                    Questions
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCustomMarking(!customMarking)}
+                  className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase transition-all ${
+                    customMarking
+                      ? "border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.1)] text-[hsl(var(--dashboard-gold))]"
+                      : "border-[hsl(var(--dashboard-border))] text-white/30 hover:text-white/50"
+                  }`}
+                >
+                  <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "bg-white/15"}`}>
+                    <div className={`absolute top-0.5 h-2 w-2 rounded-full bg-white transition-all ${customMarking ? "left-3.5" : "left-0.5"}`} />
+                  </div>
+                  Custom Marking
+                </button>
+              </div>
+
+              {customMarking && (
+                <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-4 space-y-3">
+                  <p className="font-mono text-[9px] tracking-wider uppercase text-white/25">
+                    Default marks per question type (can be overridden individually)
+                  </p>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="font-mono text-[9px] tracking-wider uppercase text-white/35 flex items-center gap-1.5">
+                        <ListChecks className="h-3 w-3" />
+                        MCQ Default Marks
+                      </label>
+                      <Input
+                        type="number"
+                        value={defaultMcqMarks}
+                        onChange={(e) => setDefaultMcqMarks(e.target.value ? Number(e.target.value) : "")}
+                        placeholder="2"
+                        min={0.5}
+                        step={0.5}
+                        className="h-8 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="font-mono text-[9px] tracking-wider uppercase text-white/35 flex items-center gap-1.5">
+                        <FileText className="h-3 w-3" />
+                        Text Default Marks
+                      </label>
+                      <Input
+                        type="number"
+                        value={defaultTextMarks}
+                        onChange={(e) => setDefaultTextMarks(e.target.value ? Number(e.target.value) : "")}
+                        placeholder="5"
+                        min={0.5}
+                        step={0.5}
+                        className="h-8 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-6 mb-8">
