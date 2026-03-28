@@ -157,7 +157,7 @@ const ExamsList = () => {
                   placeholder="Search exams by name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/45 font-mono text-xs focus-visible:ring-[hsl(var(--dashboard-gold))]"
+                  className="pl-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 font-mono text-xs focus-visible:ring-[hsl(var(--dashboard-gold))]"
                 />
               </div>
               <div className="relative">

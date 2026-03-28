@@ -419,7 +419,7 @@ const CreateExam = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Midterm Mathematics"
-                  className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/40 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                  className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                 />
               </div>
               <div className="space-y-2">
@@ -432,7 +432,7 @@ const CreateExam = () => {
                   onChange={(e) => setTotalMarks(e.target.value ? Number(e.target.value) : "")}
                   placeholder={`Default: ${questions.length} (1 per question)`}
                   min={1}
-                  className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/40 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                  className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                 />
                 <p className="font-mono text-[9px] text-white/45">
                   Leave empty to use 1 mark per question
@@ -448,7 +448,7 @@ const CreateExam = () => {
                   onChange={(e) => setTimeLimit(e.target.value ? Number(e.target.value) : "")}
                   placeholder="30"
                   min={1}
-                  className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/40 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                  className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                 />
               </div>
             </div>
@@ -659,7 +659,7 @@ const CreateExam = () => {
                         placeholder="2"
                         min={0.5}
                         step={0.5}
-                        className="h-8 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/40 text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                        className="h-8 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -674,7 +674,7 @@ const CreateExam = () => {
                         placeholder="5"
                         min={0.5}
                         step={0.5}
-                        className="h-8 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/40 text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                        className="h-8 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                       />
                     </div>
                   </div>
@@ -812,7 +812,7 @@ const CreateExam = () => {
                               placeholder={`${q.type === "mcq" ? (defaultMcqMarks || 1) : (defaultTextMarks || 1)}`}
                               min={0.5}
                               step={0.5}
-                              className="w-16 h-7 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/40 text-xs text-center focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                              className="w-16 h-7 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 text-xs text-center focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                             />
                             <span className="font-mono text-[9px] text-white/45">marks</span>
                           </div>
@@ -834,7 +834,7 @@ const CreateExam = () => {
                       value={q.text}
                       onChange={(e) => updateQuestion(qIndex, "text", e.target.value)}
                       placeholder="Enter your question..."
-                      className="mb-4 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/40 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                      className="mb-4 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                     />
 
                     {q.type === "mcq" ? (
@@ -862,7 +862,7 @@ const CreateExam = () => {
                                 value={opt}
                                 onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
                                 placeholder={`Option ${optionLabels[oIndex]}`}
-                                className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/40 text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                                className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                               />
                             </div>
                           ))}
@@ -881,7 +881,7 @@ const CreateExam = () => {
                           onChange={(e) => updateQuestion(qIndex, "correctAnswer", e.target.value)}
                           placeholder="Enter the expected answer for reference..."
                           rows={3}
-                          className="w-full rounded-md bg-[hsl(var(--dashboard-bg))] border border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/40 text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                          className="w-full rounded-md bg-[hsl(var(--dashboard-bg))] border border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
                         />
                         <p className="font-mono text-[9px] text-white/40">
                           Students will type their answer in a text field

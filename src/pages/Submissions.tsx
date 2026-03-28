@@ -413,7 +413,7 @@ const Submissions = () => {
                     placeholder="Search by name, email, or phone..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 h-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/45 font-mono text-xs"
+                    className="pl-9 h-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 font-mono text-xs"
                   />
                 </div>
                 <select
@@ -639,7 +639,7 @@ const Submissions = () => {
                     updated[idx] = e.target.value;
                     setReattemptEmails(updated);
                   }}
-                  className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/40 font-mono text-xs"
+                  className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 font-mono text-xs"
                 />
                 {reattemptEmails.length > 1 && (
                   <button
