@@ -64,6 +64,7 @@ export type Database = {
           start_time: string | null
           time_limit: number | null
           title: string
+          total_marks: number | null
         }
         Insert: {
           code?: string
@@ -79,6 +80,7 @@ export type Database = {
           start_time?: string | null
           time_limit?: number | null
           title: string
+          total_marks?: number | null
         }
         Update: {
           code?: string
@@ -94,6 +96,7 @@ export type Database = {
           start_time?: string | null
           time_limit?: number | null
           title?: string
+          total_marks?: number | null
         }
         Relationships: [
           {

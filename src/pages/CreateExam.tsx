@@ -60,6 +60,7 @@ const CreateExam = () => {
   const isEditMode = Boolean(editId);
 
   const [title, setTitle] = useState("");
+  const [totalMarks, setTotalMarks] = useState<number | "">(""); 
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
   const [resultVisibility, setResultVisibility] = useState<"immediate" | "after_exam_ends">("immediate");
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
@@ -89,6 +90,7 @@ const CreateExam = () => {
           .single();
         if (exam) {
           setTitle(exam.title);
+          setTotalMarks((exam as any).total_marks ?? "");
           setTimeLimit(exam.time_limit ?? 30);
           setResultVisibility((exam as any).result_visibility || "immediate");
           if ((exam as any).start_time) {
@@ -226,6 +228,7 @@ const CreateExam = () => {
           .update({
             title: title.trim(),
             time_limit: timeLimit || null,
+            total_marks: totalMarks || null,
             result_visibility: resultVisibility,
             start_time: buildDatetime(startTime, startHour, startMinute),
             end_time: buildDatetime(endTime, endHour, endMinute),
@@ -240,6 +243,7 @@ const CreateExam = () => {
         const insertData: any = {
             title: title.trim(),
             time_limit: timeLimit || null,
+            total_marks: totalMarks || null,
             result_visibility: resultVisibility,
             start_time: buildDatetime(startTime, startHour, startMinute),
             end_time: buildDatetime(endTime, endHour, endMinute),
@@ -352,7 +356,7 @@ const CreateExam = () => {
             </div>
 
             {/* Exam Details */}
-            <div className="grid gap-4 sm:grid-cols-2 mb-8">
+            <div className="grid gap-4 sm:grid-cols-3 mb-8">
               <div className="space-y-2">
                 <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35">
                   Exam Title
@@ -363,6 +367,22 @@ const CreateExam = () => {
                   placeholder="e.g. Midterm Mathematics"
                   className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                 />
+              </div>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35">
+                  Total Marks (Optional)
+                </label>
+                <Input
+                  type="number"
+                  value={totalMarks}
+                  onChange={(e) => setTotalMarks(e.target.value ? Number(e.target.value) : "")}
+                  placeholder={`Default: ${questions.length} (1 per question)`}
+                  min={1}
+                  className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                />
+                <p className="font-mono text-[9px] text-white/25">
+                  Leave empty to use 1 mark per question
+                </p>
               </div>
               <div className="space-y-2">
                 <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35">
