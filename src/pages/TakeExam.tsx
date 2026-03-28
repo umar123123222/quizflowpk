@@ -51,7 +51,7 @@ const buildStudentInfoSchema = (fs: FormFieldSettings | null) => {
   return z.object(shape);
 };
 
-type StudentInfo = z.infer<typeof studentInfoSchema>;
+type StudentInfo = { fullName: string; email?: string; phone?: string };
 
 interface Question {
   id: string;
