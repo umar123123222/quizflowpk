@@ -196,6 +196,44 @@ const Submissions = () => {
     });
   };
 
+  const handleSaveReattempts = async () => {
+    if (!reattemptDialogExamId || !user) return;
+    const validEmails = reattemptEmails
+      .map((e) => e.trim().toLowerCase())
+      .filter((e) => e && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+
+    if (validEmails.length === 0) {
+      toast({ title: "No valid emails", description: "Please enter at least one valid email.", variant: "destructive" });
+      return;
+    }
+
+    setSavingReattempts(true);
+    try {
+      // Delete old submissions for these students so they can retake
+      // Insert reattempt permissions (upsert to handle duplicates)
+      const rows = validEmails.map((email) => ({
+        exam_id: reattemptDialogExamId,
+        student_email: email,
+        granted_by: user.id,
+        used: false,
+      }));
+
+      const { error } = await supabase.from("exam_reattempts" as any).upsert(rows, {
+        onConflict: "exam_id,student_email",
+      });
+
+      if (error) throw error;
+
+      toast({ title: "Reattempts granted", description: `${validEmails.length} student(s) can now retake the exam.` });
+      setReattemptDialogExamId(null);
+      setReattemptEmails([""]);
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to save reattempts.", variant: "destructive" });
+    } finally {
+      setSavingReattempts(false);
+    }
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
