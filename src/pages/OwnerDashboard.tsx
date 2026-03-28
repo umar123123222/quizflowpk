@@ -30,11 +30,11 @@ const OwnerDashboard = () => {
     },
   });
 
-  const { data: studentCount = 0 } = useQuery({
-    queryKey: ["studentCount"],
+  const { data: teacherCount = 0 } = useQuery({
+    queryKey: ["teacherCount"],
     queryFn: async () => {
       const { count, error } = await supabase
-        .from("students")
+        .from("organization_teachers")
         .select("*", { count: "exact", head: true });
       if (error) throw error;
       return count ?? 0;
