@@ -41,13 +41,13 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center opacity-0 animate-fade-up [animation-delay:300ms]">
-            <Button asChild size="lg" className="text-base px-8 py-6 border-0 font-medium" style={{ backgroundColor: '#e8c87a', color: '#0a0d14', borderRadius: '8px' }}>
+            <Button asChild size="lg" className="text-base border-0 font-medium" style={{ background: 'linear-gradient(to right, #1e2a3a 70%, #e8a020 100%)', color: '#ffffff', borderRadius: '8px', padding: '0.85rem 2rem' }}>
               <Link to="/signup">
                 Get Started Free
                 <ArrowRight className="ml-1 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild size="lg" className="text-base px-8 py-6 font-medium" style={{ backgroundColor: 'transparent', color: '#e8e3d5', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px' }}>
+            <Button asChild size="lg" className="text-base border-0 font-medium" style={{ backgroundColor: '#1e2d40', color: '#ffffff', borderRadius: '8px', padding: '0.85rem 2rem' }}>
               <Link to="/login">
                 See How It Works
               </Link>
