@@ -151,7 +151,12 @@ const CreateExam = () => {
       toast({ title: "Title required", description: "Please enter an exam title.", variant: "destructive" });
       return;
     }
-    if (questions.some((q) => !q.text.trim() || q.options.some((o) => !o.trim()))) {
+    const hasIncomplete = questions.some((q) => {
+      if (!q.text.trim()) return true;
+      if (q.type === "mcq" && q.options.some((o) => !o.trim())) return true;
+      return false;
+    });
+    if (hasIncomplete) {
       toast({ title: "Incomplete questions", description: "Fill in all question texts and options.", variant: "destructive" });
       return;
     }
