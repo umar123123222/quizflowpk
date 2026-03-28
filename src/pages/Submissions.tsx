@@ -168,16 +168,26 @@ const Submissions = () => {
       const examIds = exams.map((e) => e.id);
       const { data: allQuestions } = await supabase
         .from("questions")
-        .select("id, exam_id, question_text, question_type, order_index")
+        .select("id, exam_id, question_text, question_type, order_index, options, option_a, option_b, option_c, option_d")
         .in("exam_id", examIds)
         .order("order_index", { ascending: true });
       const examsWithText = new Set(
         (allQuestions || []).filter((q) => q.question_type === "text").map((q) => q.exam_id)
       );
       const questionsByExam = new Map<string, ExamQuestion[]>();
-      (allQuestions || []).forEach((q) => {
+      (allQuestions || []).forEach((q: any) => {
         if (!questionsByExam.has(q.exam_id)) questionsByExam.set(q.exam_id, []);
-        questionsByExam.get(q.exam_id)!.push({ id: q.id, question_text: q.question_text, order_index: q.order_index });
+        // Build options array from either JSON options or legacy option_a/b/c/d
+        let opts: { key: string; text: string }[] = [];
+        if (q.options && Array.isArray(q.options) && q.options.length > 0) {
+          opts = q.options.map((o: any) => ({ key: o.key || o.label, text: o.text || o.label || String(o) }));
+        } else {
+          if (q.option_a) opts.push({ key: "A", text: q.option_a });
+          if (q.option_b) opts.push({ key: "B", text: q.option_b });
+          if (q.option_c) opts.push({ key: "C", text: q.option_c });
+          if (q.option_d) opts.push({ key: "D", text: q.option_d });
+        }
+        questionsByExam.get(q.exam_id)!.push({ id: q.id, question_text: q.question_text, order_index: q.order_index, question_type: q.question_type || "mcq", options: opts });
       });
 
       // Get submissions with student info for all exams
