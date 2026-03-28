@@ -28,17 +28,17 @@ const ThemeToggle = ({ variant = "dashboard" }: ThemeToggleProps) => {
         onClick={toggle}
         className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-mono tracking-[0.12em] uppercase transition-colors"
         style={{
-          borderColor: "rgba(232,227,213,0.15)",
-          color: "rgba(232,227,213,0.6)",
-          backgroundColor: "rgba(255,255,255,0.04)",
+          borderColor: isDark ? "rgba(232,227,213,0.15)" : "#d0d4de",
+          color: isDark ? "rgba(232,227,213,0.6)" : "#6b7494",
+          backgroundColor: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = "#F59E0B";
-          e.currentTarget.style.color = "#F59E0B";
+          e.currentTarget.style.borderColor = "#e09615";
+          e.currentTarget.style.color = "#e09615";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = "rgba(232,227,213,0.15)";
-          e.currentTarget.style.color = "rgba(232,227,213,0.6)";
+          e.currentTarget.style.borderColor = isDark ? "rgba(232,227,213,0.15)" : "#d0d4de";
+          e.currentTarget.style.color = isDark ? "rgba(232,227,213,0.6)" : "#6b7494";
         }}
       >
         {isDark ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
