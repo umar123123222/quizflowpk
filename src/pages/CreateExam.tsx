@@ -425,6 +425,124 @@ const CreateExam = () => {
               </div>
             </div>
 
+            {/* Exam Schedule */}
+            <div className="mb-8 space-y-3">
+              <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35 flex items-center gap-2">
+                <CalendarClock className="h-3.5 w-3.5" />
+                Exam Schedule (Optional)
+              </label>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {/* Start Date & Time */}
+                <div className="space-y-2">
+                  <label className="font-mono text-[9px] tracking-wider uppercase text-white/30">Start Date & Time</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className={cn(
+                        "w-full rounded-md border px-3 py-2 text-left font-mono text-xs",
+                        startTime
+                          ? "border-[hsl(var(--dashboard-gold)/0.5)] text-white/70"
+                          : "border-[hsl(var(--dashboard-border))] text-white/20",
+                        "bg-[hsl(var(--dashboard-card))]"
+                      )}>
+                        {startTime ? format(startTime, "PPP") : "Pick start date"}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={startTime}
+                        onSelect={setStartTime}
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <div className="flex gap-2">
+                    <select
+                      value={startHour}
+                      onChange={(e) => setStartHour(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-white/70"
+                    >
+                      {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0")).map((h) => (
+                        <option key={h} value={h}>{h}</option>
+                      ))}
+                    </select>
+                    <span className="text-white/30 self-center">:</span>
+                    <select
+                      value={startMinute}
+                      onChange={(e) => setStartMinute(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-white/70"
+                    >
+                      {["00", "15", "30", "45"].map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {startTime && (
+                    <button onClick={() => setStartTime(undefined)} className="font-mono text-[9px] text-white/20 hover:text-white/40 underline">
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                {/* End Date & Time */}
+                <div className="space-y-2">
+                  <label className="font-mono text-[9px] tracking-wider uppercase text-white/30">End Date & Time</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className={cn(
+                        "w-full rounded-md border px-3 py-2 text-left font-mono text-xs",
+                        endTime
+                          ? "border-[hsl(var(--dashboard-gold)/0.5)] text-white/70"
+                          : "border-[hsl(var(--dashboard-border))] text-white/20",
+                        "bg-[hsl(var(--dashboard-card))]"
+                      )}>
+                        {endTime ? format(endTime, "PPP") : "Pick end date"}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={endTime}
+                        onSelect={setEndTime}
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <div className="flex gap-2">
+                    <select
+                      value={endHour}
+                      onChange={(e) => setEndHour(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-white/70"
+                    >
+                      {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0")).map((h) => (
+                        <option key={h} value={h}>{h}</option>
+                      ))}
+                    </select>
+                    <span className="text-white/30 self-center">:</span>
+                    <select
+                      value={endMinute}
+                      onChange={(e) => setEndMinute(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-2 py-1.5 font-mono text-xs text-white/70"
+                    >
+                      {["00", "15", "30", "45"].map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {endTime && (
+                    <button onClick={() => setEndTime(undefined)} className="font-mono text-[9px] text-white/20 hover:text-white/40 underline">
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </div>
+              <p className="font-mono text-[9px] text-white/20">
+                Leave blank for no schedule restriction. Students can only access the exam within this window.
+              </p>
+            </div>
+
             {/* Questions */}
             <div className="mb-4">
               <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/30 mb-4">
