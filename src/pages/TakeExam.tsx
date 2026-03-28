@@ -72,6 +72,8 @@ const TakeExam = () => {
   const hasAutoSubmitted = useRef(false);
   const fullscreenExitCount = useRef(0);
   const [showFullscreenWarning, setShowFullscreenWarning] = useState(false);
+  const [fsCountdown, setFsCountdown] = useState(5);
+  const fsCountdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const tabSwitchCount = useRef(0);
   const [showTabSwitchWarning, setShowTabSwitchWarning] = useState(false);
   const isSubmittingRef = useRef(false);
