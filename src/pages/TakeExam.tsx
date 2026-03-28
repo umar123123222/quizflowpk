@@ -53,7 +53,6 @@ const TakeExam = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [alreadySubmitted, setAlreadySubmitted] = useState(false);
   const [score, setScore] = useState<number | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
