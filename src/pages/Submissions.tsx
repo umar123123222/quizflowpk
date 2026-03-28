@@ -169,7 +169,7 @@ const Submissions = () => {
       const examIds = exams.map((e) => e.id);
       const { data: allQuestions } = await supabase
         .from("questions")
-        .select("id, exam_id, question_text, question_type, order_index, options, option_a, option_b, option_c, option_d")
+        .select("id, exam_id, question_text, question_type, order_index, correct_answer, options, option_a, option_b, option_c, option_d")
         .in("exam_id", examIds)
         .order("order_index", { ascending: true });
       const examsWithText = new Set(
