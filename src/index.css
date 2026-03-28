@@ -58,6 +58,8 @@
     --dashboard-dark-card: 228 30% 16%;
     --dashboard-text: 228 27% 7%;
     --dashboard-text-muted: 228 16% 50%;
+    --dashboard-questions-bg: 228 20% 96%;
+    --dashboard-toggle-off: 228 15% 85%;
   }
 
   .dark {
