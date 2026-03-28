@@ -1335,15 +1335,22 @@ const TakeExam = () => {
                       const value = origKey ? (q as any)[`option_${origKey.toLowerCase()}`] : null;
                       return { key: displayKey, value };
                     }).filter((opt) => opt.value);
-                    return opts.map((opt) => (
-                      <div key={opt.key} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors cursor-pointer">
-                        <RadioGroupItem value={opt.key} id={`${q.id}-${opt.key}`} />
-                        <Label htmlFor={`${q.id}-${opt.key}`} className="cursor-pointer flex-1 text-sm">
-                          <span className="font-semibold text-primary mr-2">{opt.key}.</span>
-                          {opt.value}
-                        </Label>
-                      </div>
-                    ));
+                    return opts.map((opt) => {
+                      const isSelected = answers[q.id] === opt.key;
+                      return (
+                        <div key={opt.key} className={`flex items-center space-x-3 p-3 rounded-lg border transition-colors cursor-pointer ${
+                          isSelected
+                            ? "border-[#e09615] bg-[#e09615]/5 shadow-sm"
+                            : "border-[hsl(220_27%_92%)] hover:border-[#e09615]/40"
+                        }`}>
+                          <RadioGroupItem value={opt.key} id={`${q.id}-${opt.key}`} className="border-[#e09615]/50 text-[#e09615] data-[state=checked]:border-[#e09615]" />
+                          <Label htmlFor={`${q.id}-${opt.key}`} className="cursor-pointer flex-1 text-sm">
+                            <span className="font-semibold text-primary mr-2">{opt.key}.</span>
+                            {opt.value}
+                          </Label>
+                        </div>
+                      );
+                    });
                   })()}
                 </RadioGroup>
               )}
