@@ -36,6 +36,7 @@ interface ExamWithSubmissions {
     submitted_at: string | null;
     violations: Array<{ type: string; timestamp: string }> | null;
     isReviewed?: boolean;
+    passFail?: string | null;
     attemptLabel?: string;
     student: {
       full_name: string;
@@ -195,6 +196,7 @@ const Submissions = () => {
               submitted_at: s.submitted_at,
               violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
               isReviewed: answersObj?._reviewed === true,
+              passFail: (s as any).pass_fail as string | null,
               attemptLabel: undefined as string | undefined,
               student: studentMap.get(s.student_id) || {
                 full_name: "Unknown",
@@ -356,7 +358,7 @@ const Submissions = () => {
                   size="sm"
                   className="shrink-0 border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] text-white/75 hover:text-white/95 font-mono text-[10px] tracking-wider uppercase"
                   onClick={() => {
-                    const rows: string[][] = [["Exam", "Name", "Email", "Phone", "Score", "Status", "Violations", "Date"]];
+                    const rows: string[][] = [["Exam", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]];
                     examsWithSubs.forEach((exam) => {
                       exam.submissions.forEach((sub) => {
                         const violations = sub.violations && sub.violations.length > 0
@@ -365,13 +367,15 @@ const Submissions = () => {
                         const date = sub.submitted_at
                           ? new Date(sub.submitted_at).toLocaleString("en-US")
                           : "—";
+                        const isPending = exam.hasTextQuestions && !sub.isReviewed;
                         rows.push([
                           exam.title,
                           sub.student.full_name + (sub.attemptLabel ? ` (${sub.attemptLabel})` : ""),
                           sub.student.email || "—",
                           sub.student.phone || "—",
                           sub.score !== null ? `${sub.score}%` : "—",
-                          exam.hasTextQuestions ? (sub.isReviewed ? "Published" : "Pending Review") : (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
+                          isPending ? "Pending Review" : "Published",
+                          sub.passFail || "—",
                           violations,
                           date,
                         ]);
@@ -536,6 +540,7 @@ const Submissions = () => {
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Phone</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-right">Score</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-center">Status</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-center">Result</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Violations</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-right">Date</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-center">Details</TableHead>
@@ -578,17 +583,29 @@ const Submissions = () => {
                                       {(() => {
                                         const isPending = exam.hasTextQuestions && !sub.isReviewed;
                                         const isEvaluated = exam.hasTextQuestions && sub.isReviewed;
-                                        const statusLabel = isPending ? "Pending Review" : isEvaluated ? "Published" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail";
+                                        const statusLabel = isPending ? "Pending Review" : isEvaluated ? "Published" : "Published";
                                         const statusClass = isPending
                                           ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
-                                          : isEvaluated
-                                          ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
-                                          : (sub.score ?? 0) >= 50
-                                          ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
-                                          : "bg-destructive/15 text-destructive";
+                                          : "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]";
                                         return (
                                           <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${statusClass}`}>
                                             {statusLabel}
+                                          </span>
+                                        );
+                                      })()}
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                      {(() => {
+                                        const pf = sub.passFail;
+                                        if (!pf) return <span className="text-xs text-white/30">—</span>;
+                                        const isPass = pf === "PASS";
+                                        return (
+                                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
+                                            isPass
+                                              ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
+                                              : "bg-destructive/15 text-destructive"
+                                          }`}>
+                                            {pf}
                                           </span>
                                         );
                                       })()}
