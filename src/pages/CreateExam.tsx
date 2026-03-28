@@ -793,48 +793,153 @@ const CreateExam = () => {
         <DialogContent className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/95 sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="font-serif text-xl text-white/95 flex items-center gap-2">
-              <Send className="h-5 w-5" style={{ color: '#e09615' }} />
+              <CalendarClock className="h-5 w-5" style={{ color: '#e09615' }} />
               Publish Exam
             </DialogTitle>
             <DialogDescription className="text-white/60">
-              Review before publishing
+              Step {publishStep} of 2 — {publishStep === 1 ? "Exam Schedule" : "Confirm & Publish"}
             </DialogDescription>
           </DialogHeader>
 
+          {/* Step indicator */}
+          <div className="flex gap-2 mt-1">
+            <div className="flex-1 h-1 rounded-full" style={{ backgroundColor: '#e09615' }} />
+            <div className={`flex-1 h-1 rounded-full transition-colors ${publishStep >= 2 ? "" : "bg-white/10"}`} style={publishStep >= 2 ? { backgroundColor: '#e09615' } : {}} />
+          </div>
+
           {publishStep === 1 && (
-            <div className="space-y-4 mt-2">
-              <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] p-4 space-y-3">
-                <h3 className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/50">Exam Summary</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-white/50">Title</span>
-                    <span className="text-white/90 font-medium">{title || "—"}</span>
+            <div className="space-y-5 mt-2">
+              <h3 className="font-mono text-[11px] tracking-[0.15em] uppercase font-semibold" style={{ color: '#e09615' }}>
+                Exam Schedule
+              </h3>
+
+              <div className={`grid gap-4 sm:grid-cols-2 transition-opacity ${noSchedule ? "opacity-40 pointer-events-none" : ""}`}>
+                {/* Start Date & Time */}
+                <div className="space-y-2">
+                  <label className="font-mono text-[9px] tracking-wider uppercase text-white/55">Start Date & Time</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className={cn(
+                        "w-full rounded-md border px-3 py-2 text-left font-mono text-xs",
+                        startTime
+                          ? "border-[hsl(var(--dashboard-gold)/0.5)] text-white/90"
+                          : "border-[hsl(var(--dashboard-border))] text-white/40",
+                        "bg-[hsl(var(--dashboard-bg))]"
+                      )}>
+                        <CalendarClock className="inline h-3.5 w-3.5 mr-2 opacity-50" />
+                        {startTime ? format(startTime, "PPP") : "Pick start date"}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={startTime}
+                        onSelect={setStartTime}
+                        initialFocus
+                        className={cn("p-3 pointer-events-auto")}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <div className="flex gap-2">
+                    <select
+                      value={startHour}
+                      onChange={(e) => setStartHour(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-2 py-1.5 font-mono text-xs text-white/80"
+                    >
+                      {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0")).map((h) => (
+                        <option key={h} value={h}>{h}</option>
+                      ))}
+                    </select>
+                    <span className="text-white/50 self-center">:</span>
+                    <select
+                      value={startMinute}
+                      onChange={(e) => setStartMinute(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-2 py-1.5 font-mono text-xs text-white/80"
+                    >
+                      {["00", "15", "30", "45"].map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/50">Questions</span>
-                    <span className="text-white/90 font-medium">{questions.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/50">Total Marks</span>
-                    <span className="text-white/90 font-medium">
-                      {typeof totalMarks === "number" ? totalMarks : `${questions.length} (1 per question)`}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/50">Time Limit</span>
-                    <span className="text-white/90 font-medium">{timeLimit ? `${timeLimit} min` : "None"}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/50">MCQs</span>
-                    <span className="text-white/90 font-medium">{questions.filter(q => q.type === "mcq").length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/50">Text Questions</span>
-                    <span className="text-white/90 font-medium">{questions.filter(q => q.type === "text").length}</span>
+                </div>
+
+                {/* End Date & Time */}
+                <div className="space-y-2">
+                  <label className="font-mono text-[9px] tracking-wider uppercase text-white/55">End Date & Time</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className={cn(
+                        "w-full rounded-md border px-3 py-2 text-left font-mono text-xs",
+                        endTime
+                          ? "border-[hsl(var(--dashboard-gold)/0.5)] text-white/90"
+                          : "border-[hsl(var(--dashboard-border))] text-white/40",
+                        "bg-[hsl(var(--dashboard-bg))]"
+                      )}>
+                        <CalendarClock className="inline h-3.5 w-3.5 mr-2 opacity-50" />
+                        {endTime ? format(endTime, "PPP") : "Pick end date"}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={endTime}
+                        onSelect={setEndTime}
+                        initialFocus
+                        className={cn("p-3 pointer-events-auto")}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <div className="flex gap-2">
+                    <select
+                      value={endHour}
+                      onChange={(e) => setEndHour(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-2 py-1.5 font-mono text-xs text-white/80"
+                    >
+                      {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0")).map((h) => (
+                        <option key={h} value={h}>{h}</option>
+                      ))}
+                    </select>
+                    <span className="text-white/50 self-center">:</span>
+                    <select
+                      value={endMinute}
+                      onChange={(e) => setEndMinute(e.target.value)}
+                      className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-2 py-1.5 font-mono text-xs text-white/80"
+                    >
+                      {["00", "15", "30", "45"].map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>
-              <div className="flex gap-3">
+
+              {/* No schedule checkbox */}
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div
+                  onClick={() => {
+                    const next = !noSchedule;
+                    setNoSchedule(next);
+                    if (next) {
+                      setStartTime(undefined);
+                      setEndTime(undefined);
+                    }
+                  }}
+                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-all ${
+                    noSchedule
+                      ? "border-[#e09615] bg-[#e09615]"
+                      : "border-white/25 bg-transparent hover:border-white/40"
+                  }`}
+                >
+                  {noSchedule && (
+                    <CheckCircle className="h-3.5 w-3.5 text-[#0a0d14]" />
+                  )}
+                </div>
+                <span className="text-sm text-white/70 group-hover:text-white/90 transition-colors">
+                  No schedule — keep exam always available
+                </span>
+              </label>
+
+              <div className="flex gap-3 pt-1">
                 <button
                   onClick={() => setShowPublishDialog(false)}
                   className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-white/50 hover:text-white/70 transition-colors"
