@@ -43,6 +43,7 @@ const ViewSubmission = () => {
   const [customFieldLabels, setCustomFieldLabels] = useState<Record<string, string>>({});
   const [textScores, setTextScores] = useState<Record<string, string>>({});
   const [submissionData, setSubmissionData] = useState<{ id: string; exam_id: string; answers: Record<string, any> } | null>(null);
+  const [publishedAt, setPublishedAt] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchSubmission = async () => {
