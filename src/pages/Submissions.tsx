@@ -538,6 +538,7 @@ const Submissions = () => {
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Phone</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-right">Score</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-center">Status</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-center">Result</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Violations</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-right">Date</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-center">Details</TableHead>
