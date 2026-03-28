@@ -345,6 +345,17 @@ const Submissions = () => {
                                         {sub.score !== null ? `${sub.score}%` : "—"}
                                       </span>
                                     </TableCell>
+                                    <TableCell className="text-center">
+                                      <span
+                                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
+                                          (sub.score ?? 0) >= 50
+                                            ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
+                                            : "bg-destructive/15 text-destructive"
+                                        }`}
+                                      >
+                                        {(sub.score ?? 0) >= 50 ? "Pass" : "Fail"}
+                                      </span>
+                                    </TableCell>
                                     <TableCell>
                                       {sub.violations && sub.violations.length > 0 ? (
                                         <div className="space-y-1">
