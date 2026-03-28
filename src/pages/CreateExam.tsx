@@ -28,18 +28,22 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
+type QuestionType = "mcq" | "text";
+
 interface Question {
   id: string;
+  type: QuestionType;
   text: string;
   options: [string, string, string, string];
-  correctAnswer: string; // "A" | "B" | "C" | "D"
+  correctAnswer: string;
 }
 
-const createEmptyQuestion = (): Question => ({
+const createEmptyQuestion = (type: QuestionType = "mcq"): Question => ({
   id: crypto.randomUUID(),
+  type,
   text: "",
   options: ["", "", "", ""],
-  correctAnswer: "A",
+  correctAnswer: type === "mcq" ? "A" : "",
 });
 
 const CreateExam = () => {
