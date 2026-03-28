@@ -30,6 +30,7 @@ interface ExamQuestion {
   question_text: string;
   order_index: number;
   question_type: string;
+  correct_answer: string | null;
   options: { key: string; text: string }[];
 }
 
