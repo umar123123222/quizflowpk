@@ -725,6 +725,67 @@ const TakeExam = () => {
     );
   }
 
+  // Reattempt granted state
+  if (reattemptGranted && !alreadySubmitted) {
+    const handleStartReattempt = async () => {
+      if (!reattemptId || !pendingStudentData) return;
+      // Mark reattempt as used
+      await supabase
+        .from("exam_reattempts" as any)
+        .update({ used: true })
+        .eq("id", reattemptId);
+      // Start fresh attempt
+      setReattemptGranted(false);
+      setStudentInfo(pendingStudentData);
+      try {
+        document.documentElement.requestFullscreen?.();
+      } catch (e) {}
+    };
+
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
+        <div className="w-full max-w-md space-y-5">
+          {/* Green reattempt banner */}
+          <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-5 text-center space-y-3">
+            <CheckCircle className="h-10 w-10 text-green-500 mx-auto" />
+            <h2 className="text-lg font-bold text-foreground">Reattempt Granted</h2>
+            <p className="text-sm text-green-400">
+              Your instructor has granted you permission to reattempt this exam.
+            </p>
+            <Button
+              onClick={handleStartReattempt}
+              className="mt-2 text-white font-semibold"
+              style={{ backgroundColor: "#e09615" }}
+            >
+              Start Reattempt
+            </Button>
+          </div>
+
+          {/* Previous attempt summary */}
+          {prevSubmission && (
+            <Card className="border border-border">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-medium text-muted-foreground">Previous Attempt</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Score</span>
+                  <span className="font-bold">{prevSubmission.earnedPoints} / {prevSubmission.totalPoints}</span>
+                </div>
+                {prevSubmission.score !== null && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Percentage</span>
+                    <span className="font-bold">{prevSubmission.score}%</span>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   // Already submitted state
   if (alreadySubmitted) {
     const ps = prevSubmission;
