@@ -54,7 +54,8 @@ const Submissions = () => {
         subs = subs.filter(
           (s) =>
             s.student.full_name.toLowerCase().includes(q) ||
-            (s.student.email && s.student.email.toLowerCase().includes(q))
+            (s.student.email && s.student.email.toLowerCase().includes(q)) ||
+            (s.student.phone && s.student.phone.toLowerCase().includes(q))
         );
       }
 
