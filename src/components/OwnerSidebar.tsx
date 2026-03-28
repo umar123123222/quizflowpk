@@ -46,7 +46,7 @@ export function OwnerSidebar() {
     : "U";
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-[hsl(var(--dashboard-border))]">
+    <Sidebar collapsible="icon" className="border-r border-[hsl(228,20%,22%)]" style={{ backgroundColor: '#1e2235' }}>
       <SidebarHeader className="px-5 py-6">
         <Logo showText={!collapsed} />
       </SidebarHeader>
@@ -66,14 +66,14 @@ export function OwnerSidebar() {
                         className={() =>
                           `group relative flex items-center gap-3 rounded-md px-3 py-2 font-mono text-xs tracking-wider uppercase transition-all duration-200 ${
                             isActive
-                              ? "border-l-2 border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.08)] text-[hsl(var(--dashboard-gold))]"
-                              : "border-l-2 border-transparent text-sidebar-foreground hover:text-[hsl(var(--dashboard-gold))] hover:bg-[hsl(var(--dashboard-gold)/0.04)]"
+                              ? "bg-[#e09615] text-white border-l-2 border-[#e09615]"
+                              : "border-l-2 border-transparent text-[#6b7494] hover:text-[#e09615] hover:bg-[rgba(224,150,21,0.04)]"
                           }`
                         }
                       >
                         <span
                           className={`h-1.5 w-1.5 rounded-full shrink-0 ${
-                            isActive ? "bg-[hsl(var(--dashboard-gold))]" : "bg-sidebar-foreground/30 group-hover:bg-[hsl(var(--dashboard-gold)/0.5)]"
+                            isActive ? "bg-white" : "bg-[#6b7494]/30 group-hover:bg-[rgba(224,150,21,0.5)]"
                           }`}
                         />
                         {!collapsed && <span>{item.title}</span>}
@@ -87,17 +87,17 @@ export function OwnerSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="px-4 py-4 border-t border-[hsl(var(--dashboard-border))]">
+      <SidebarFooter className="px-4 py-4 border-t border-[hsl(228,20%,22%)]">
         <div className="flex items-center gap-3 mb-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--dashboard-gold)/0.15)] font-mono text-xs font-medium text-[hsl(var(--dashboard-gold))]">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgba(224,150,21,0.15)] font-mono text-xs font-medium text-[#e09615]">
             {initials}
           </div>
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-white/90 truncate">
+              <p className="text-xs font-medium text-white truncate">
                 {user?.user_metadata?.full_name || "Owner"}
               </p>
-              <p className="font-mono text-[10px] text-sidebar-foreground/50 truncate">
+              <p className="font-mono text-[10px] text-[#4a5070] truncate">
                 {user?.email}
               </p>
             </div>
@@ -105,7 +105,7 @@ export function OwnerSidebar() {
         </div>
         <button
           onClick={handleSignOut}
-          className="flex w-full items-center justify-center gap-2 rounded-md border border-[hsl(var(--dashboard-border))] px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/60 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-white/75"
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-[hsl(228,20%,22%)] px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase text-white/60 transition-colors hover:border-[rgba(224,150,21,0.4)] hover:text-white/75"
         >
           <LogOut className="h-3 w-3" />
           {!collapsed && <span>Sign out</span>}
