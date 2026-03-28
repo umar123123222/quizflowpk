@@ -143,6 +143,25 @@ const TakeExam = () => {
       setExam(examData);
       setExamId(examData.id);
 
+      // Fetch form settings for the org
+      if (examData.organization_id) {
+        const { data: fs } = await supabase
+          .from("organization_form_settings")
+          .select("*")
+          .eq("organization_id", examData.organization_id)
+          .single();
+        if (fs) {
+          setFormSettings({
+            name_visible: fs.name_visible,
+            name_required: fs.name_required,
+            email_visible: fs.email_visible,
+            email_required: fs.email_required,
+            phone_visible: fs.phone_visible,
+            phone_required: fs.phone_required,
+          });
+        }
+      }
+
       const { data: questionsData } = await supabase
         .from("questions")
         .select("id, question_text, question_type, option_a, option_b, option_c, option_d, order_index")
