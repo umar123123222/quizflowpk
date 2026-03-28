@@ -154,8 +154,10 @@ const TakeExam = () => {
       try { document.exitFullscreen(); } catch (e) {}
     }
 
-    // Register student
+    // Register student - generate ID client-side to avoid needing SELECT after insert
+    const studentId = crypto.randomUUID();
     const studentInsert: any = {
+      id: studentId,
       full_name: studentInfo.fullName,
       email: studentInfo.email,
       phone: studentInfo.phone,
@@ -165,15 +167,13 @@ const TakeExam = () => {
       studentInsert.organization_id = exam.organization_id;
     }
 
-    const { data: studentData, error: studentError } = await supabase
+    const { error: studentError } = await supabase
       .from("students")
-      .insert(studentInsert)
-      .select("id")
-      .single();
+      .insert(studentInsert);
 
-    if (studentError || !studentData) {
+    if (studentError) {
       console.error("Student registration error:", studentError);
-      toast({ title: "Error", description: `Failed to register student: ${studentError?.message || "Unknown error"} (code: ${studentError?.code || "N/A"}, details: ${studentError?.details || "N/A"})`, variant: "destructive" });
+      toast({ title: "Error", description: `Failed to register student: ${studentError.message}`, variant: "destructive" });
       setSubmitting(false);
       return;
     }
