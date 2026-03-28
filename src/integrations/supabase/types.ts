@@ -61,6 +61,8 @@ export type Database = {
           is_published: boolean | null
           organization_id: string | null
           result_visibility: string
+          shuffle_options: boolean
+          shuffle_questions: boolean
           start_time: string | null
           time_limit: number | null
           title: string
@@ -77,6 +79,8 @@ export type Database = {
           is_published?: boolean | null
           organization_id?: string | null
           result_visibility?: string
+          shuffle_options?: boolean
+          shuffle_questions?: boolean
           start_time?: string | null
           time_limit?: number | null
           title: string
@@ -93,6 +97,8 @@ export type Database = {
           is_published?: boolean | null
           organization_id?: string | null
           result_visibility?: string
+          shuffle_options?: boolean
+          shuffle_questions?: boolean
           start_time?: string | null
           time_limit?: number | null
           title?: string

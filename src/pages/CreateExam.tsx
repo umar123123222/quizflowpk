@@ -85,6 +85,8 @@ const CreateExam = () => {
   const [showPublishDialog, setShowPublishDialog] = useState(false);
   const [publishStep, setPublishStep] = useState(1);
   const [noSchedule, setNoSchedule] = useState(true);
+  const [shuffleQuestions, setShuffleQuestions] = useState(false);
+  const [shuffleOptions, setShuffleOptions] = useState(false);
   const [loadingExam, setLoadingExam] = useState(false);
 
   const examLink = savedExamCode ? `${window.location.origin}/exam/${savedExamCode}` : "";
@@ -117,6 +119,8 @@ const CreateExam = () => {
             setEndHour(et.getHours().toString().padStart(2, "0"));
             setEndMinute(et.getMinutes().toString().padStart(2, "0"));
           }
+          if ((exam as any).shuffle_questions) setShuffleQuestions(true);
+          if ((exam as any).shuffle_options) setShuffleOptions(true);
           if (exam.code) setSavedExamCode(exam.code);
         }
         const { data: qs } = await supabase
@@ -288,6 +292,8 @@ const CreateExam = () => {
             start_time: buildDatetime(startTime, startHour, startMinute),
             end_time: buildDatetime(endTime, endHour, endMinute),
             is_published: publish,
+            shuffle_questions: shuffleQuestions,
+            shuffle_options: shuffleOptions,
           } as any)
           .eq("id", editId);
         if (examError) throw examError;
@@ -302,6 +308,8 @@ const CreateExam = () => {
           end_time: buildDatetime(endTime, endHour, endMinute),
           created_by: user!.id,
           is_published: publish,
+          shuffle_questions: shuffleQuestions,
+          shuffle_options: shuffleOptions,
         };
         if (orgId) insertData.organization_id = orgId;
 
@@ -622,6 +630,42 @@ const CreateExam = () => {
                   );
                 })()
               )}
+            </div>
+
+            {/* Shuffle Settings */}
+            <div className="mb-6 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-4 space-y-3">
+              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/50">
+                Shuffle Settings
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <p className="text-sm text-white/90">Shuffle Question Order</p>
+                    <p className="font-mono text-[9px] text-white/40">Each student receives questions in a different random order</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShuffleQuestions(!shuffleQuestions)}
+                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleQuestions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-white/15"}`}
+                  >
+                    <div className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${shuffleQuestions ? "left-6" : "left-1"}`} />
+                  </button>
+                </div>
+                <div className="h-px bg-[hsl(var(--dashboard-border))]" />
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <p className="text-sm text-white/90">Shuffle MCQ Options</p>
+                    <p className="font-mono text-[9px] text-white/40">Answer choices are randomized per student for each MCQ question</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShuffleOptions(!shuffleOptions)}
+                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleOptions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-white/15"}`}
+                  >
+                    <div className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${shuffleOptions ? "left-6" : "left-1"}`} />
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div className="space-y-6 mb-8">
