@@ -330,19 +330,37 @@ const TakeExam = () => {
       if (!document.fullscreenElement && !isSubmittingRef.current && !hasAutoSubmitted.current) {
         fullscreenExitCount.current += 1;
         addViolation("Full-screen exited");
-        if (fullscreenExitCount.current >= 2) {
-          addViolation("Auto-submitted: repeated full-screen exit");
-          isSubmittingRef.current = true;
-          toast({ title: "Exam Auto-Submitted", description: "You exited full-screen a second time. Your exam has been submitted.", variant: "destructive" });
-          handleSubmitExam();
-        } else {
-          setShowFullscreenWarning(true);
-        }
+        setShowFullscreenWarning(true);
+        setFsCountdown(5);
+
+        // Clear any existing countdown
+        if (fsCountdownRef.current) clearInterval(fsCountdownRef.current);
+
+        let count = 5;
+        fsCountdownRef.current = setInterval(() => {
+          count -= 1;
+          setFsCountdown(count);
+          if (count <= 0) {
+            if (fsCountdownRef.current) clearInterval(fsCountdownRef.current);
+            fsCountdownRef.current = null;
+            // Auto-submit due to violation
+            if (!isSubmittingRef.current && !hasAutoSubmitted.current) {
+              addViolation("Auto-submitted: full-screen exit timeout");
+              isSubmittingRef.current = true;
+              setShowFullscreenWarning(false);
+              toast({ title: "Exam Auto-Submitted", description: "You did not return to full-screen in time. Your exam has been submitted.", variant: "destructive" });
+              handleSubmitExam();
+            }
+          }
+        }, 1000);
       }
     };
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
-    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      if (fsCountdownRef.current) clearInterval(fsCountdownRef.current);
+    };
   }, [studentInfo, submitted, handleSubmitExam, toast]);
 
   // Tab switch / visibility detection
