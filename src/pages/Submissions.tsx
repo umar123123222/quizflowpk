@@ -30,6 +30,7 @@ interface ExamQuestion {
   question_text: string;
   order_index: number;
   question_type: string;
+  correct_answer: string | null;
   options: { key: string; text: string }[];
 }
 
@@ -168,7 +169,7 @@ const Submissions = () => {
       const examIds = exams.map((e) => e.id);
       const { data: allQuestions } = await supabase
         .from("questions")
-        .select("id, exam_id, question_text, question_type, order_index, options, option_a, option_b, option_c, option_d")
+        .select("id, exam_id, question_text, question_type, order_index, correct_answer, options, option_a, option_b, option_c, option_d")
         .in("exam_id", examIds)
         .order("order_index", { ascending: true });
       const examsWithText = new Set(
@@ -187,7 +188,7 @@ const Submissions = () => {
           if (q.option_c) opts.push({ key: "C", text: q.option_c });
           if (q.option_d) opts.push({ key: "D", text: q.option_d });
         }
-        questionsByExam.get(q.exam_id)!.push({ id: q.id, question_text: q.question_text, order_index: q.order_index, question_type: q.question_type || "mcq", options: opts });
+        questionsByExam.get(q.exam_id)!.push({ id: q.id, question_text: q.question_text, order_index: q.order_index, question_type: q.question_type || "mcq", correct_answer: q.correct_answer || null, options: opts });
       });
 
       // Get submissions with student info for all exams
@@ -394,6 +395,7 @@ const Submissions = () => {
                     for (let i = 0; i < maxQs; i++) {
                       qHeaders.push(`Q${i + 1} - Question`);
                       qHeaders.push(`Q${i + 1} - Student Answer`);
+                      qHeaders.push(`Q${i + 1} - Correct Answer`);
                     }
                     const baseHeader = isOwner
                       ? ["Exam", "Teacher", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]
@@ -413,19 +415,26 @@ const Submissions = () => {
                         const qCols: string[] = [];
                         sortedQs.forEach((q) => {
                           qCols.push(q.question_text);
+                          // Student answer
                           const rawAns = sub.answers ? sub.answers[q.id] : null;
                           if (!rawAns) {
                             qCols.push("Not Answered");
                           } else if (q.question_type === "text") {
                             qCols.push(String(rawAns));
                           } else {
-                            // MCQ: resolve option key to full text
                             const opt = q.options.find((o) => o.key === rawAns);
                             qCols.push(opt ? opt.text : String(rawAns));
                           }
+                          // Correct answer
+                          if (q.question_type === "text") {
+                            qCols.push("Manual Review");
+                          } else {
+                            const correctOpt = q.options.find((o) => o.key === q.correct_answer);
+                            qCols.push(correctOpt ? correctOpt.text : (q.correct_answer || "—"));
+                          }
                         });
-                        // Pad if fewer questions
-                        const padCount = (maxQs - sortedQs.length) * 2;
+                        // Pad if fewer questions (3 cols per question)
+                        const padCount = (maxQs - sortedQs.length) * 3;
                         for (let p = 0; p < padCount; p++) qCols.push("");
                         const row = [
                           exam.title,
