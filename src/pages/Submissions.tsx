@@ -216,7 +216,7 @@ const Submissions = () => {
                   size="sm"
                   className="shrink-0 border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] text-white/60 hover:text-white/90 font-mono text-[10px] tracking-wider uppercase"
                   onClick={() => {
-                    const rows: string[][] = [["Exam", "Name", "Email", "Phone", "Score", "Violations", "Date"]];
+                    const rows: string[][] = [["Exam", "Name", "Email", "Phone", "Score", "Status", "Violations", "Date"]];
                     examsWithSubs.forEach((exam) => {
                       exam.submissions.forEach((sub) => {
                         const violations = sub.violations && sub.violations.length > 0
