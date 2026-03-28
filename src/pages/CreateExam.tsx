@@ -532,7 +532,7 @@ const CreateExam = () => {
                       : "border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.5)] hover:text-[hsl(var(--dashboard-text)/.7)]"
                   }`}
                 >
-                  <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "bg-white/15"}`}>
+                  <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}>
                     <div className={`absolute top-0.5 h-2 w-2 rounded-full bg-white transition-all ${customMarking ? "left-3.5" : "left-0.5"}`} />
                   </div>
                   Custom Marking
@@ -674,7 +674,7 @@ const CreateExam = () => {
                   <button
                     type="button"
                     onClick={() => setShuffleQuestions(!shuffleQuestions)}
-                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleQuestions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-white/15"}`}
+                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleQuestions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}
                   >
                     <div className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${shuffleQuestions ? "left-6" : "left-1"}`} />
                   </button>
@@ -688,7 +688,7 @@ const CreateExam = () => {
                   <button
                     type="button"
                     onClick={() => setShuffleOptions(!shuffleOptions)}
-                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleOptions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-white/15"}`}
+                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleOptions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}
                   >
                     <div className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${shuffleOptions ? "left-6" : "left-1"}`} />
                   </button>
@@ -784,7 +784,7 @@ const CreateExam = () => {
                               <RadioGroupItem
                                 value={optionLabels[oIndex]}
                                 id={`q${qIndex}-opt${oIndex}`}
-                                className="border-white/20 text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[hsl(var(--dashboard-gold))]"
+                                className="border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[hsl(var(--dashboard-gold))]"
                               />
                               <Label
                                 htmlFor={`q${qIndex}-opt${oIndex}`}
@@ -1050,7 +1050,7 @@ const CreateExam = () => {
                   onClick={() => setResultVisibility("immediate")}
                   className={`rounded-lg border p-4 text-left transition-all ${
                     resultVisibility === "immediate"
-                      ? "border-[#e09615] bg-[#e09615]/10"
+                      ? "border-2 border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/.08)]"
                       : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-[hsl(var(--dashboard-text)/.2)]"
                   }`}
                 >
@@ -1080,7 +1080,7 @@ const CreateExam = () => {
                   onClick={() => setResultVisibility("after_exam_ends")}
                   className={`rounded-lg border p-4 text-left transition-all ${
                     resultVisibility === "after_exam_ends"
-                      ? "border-[#e09615] bg-[#e09615]/10"
+                      ? "border-2 border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/.08)]"
                       : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-[hsl(var(--dashboard-text)/.2)]"
                   }`}
                 >
