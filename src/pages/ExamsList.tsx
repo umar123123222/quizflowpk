@@ -39,7 +39,7 @@ const ExamsList = () => {
         // Teachers only see their own exams
         const { data, error } = await supabase
           .from("exams")
-          .select("id, title, description, created_at, is_published, time_limit")
+          .select("id, title, description, created_at, is_published, time_limit, code")
           .eq("created_by", user.id)
           .order("created_at", { ascending: false });
         if (!error && data) setExams(data);
