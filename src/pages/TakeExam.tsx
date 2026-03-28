@@ -215,9 +215,9 @@ const TakeExam = () => {
     const studentInsert: any = {
       id: studentId,
       full_name: studentInfo.fullName,
-      email: studentInfo.email,
-      phone: studentInfo.phone,
     };
+    if (studentInfo.email) studentInsert.email = studentInfo.email;
+    if (studentInfo.phone) studentInsert.phone = studentInfo.phone;
     if (exam.organization_id) {
       studentInsert.organization_id = exam.organization_id;
     }
