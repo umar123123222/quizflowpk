@@ -274,7 +274,22 @@ const CreateExam = () => {
       // Calculate points per question
       const getQuestionPoints = (q: Question): number => {
         if (customMarking) {
-          if (q.marks !== "" && q.marks > 0) return q.marks;
+          // If this question has explicit marks, use them
+          if (q.marks !== "" && typeof q.marks === "number" && q.marks > 0) return q.marks;
+
+          // If total marks is set, distribute remaining among unassigned
+          if (typeof totalMarks === "number" && totalMarks > 0) {
+            const assigned = questions.reduce((sum, qq) => {
+              if (qq.marks !== "" && typeof qq.marks === "number" && qq.marks > 0) return sum + qq.marks;
+              return sum;
+            }, 0);
+            const unassignedCount = questions.filter((qq) => qq.marks === "" || qq.marks === 0).length;
+            if (unassignedCount > 0) {
+              const remaining = totalMarks - assigned;
+              return Math.round((remaining / unassignedCount) * 100) / 100;
+            }
+          }
+
           // Fall back to default per type
           const defaultVal = q.type === "mcq" ? defaultMcqMarks : defaultTextMarks;
           return typeof defaultVal === "number" && defaultVal > 0 ? defaultVal : 1;
@@ -648,6 +663,81 @@ const CreateExam = () => {
                     </div>
                   </div>
                 </div>
+              )}
+
+              {/* Live marks summary */}
+              {customMarking && (
+                (() => {
+                  const total = typeof totalMarks === "number" && totalMarks > 0 ? totalMarks : null;
+                  const assigned = questions.reduce((sum, q) => {
+                    if (q.marks !== "" && typeof q.marks === "number" && q.marks > 0) return sum + q.marks;
+                    return sum;
+                  }, 0);
+                  const unassigned = questions.filter((q) => q.marks === "" || q.marks === 0);
+                  const unassignedMcq = unassigned.filter((q) => q.type === "mcq").length;
+                  const unassignedText = unassigned.filter((q) => q.type === "text").length;
+                  const unassignedCount = unassigned.length;
+
+                  // Calculate what unassigned questions will get
+                  let remaining = total ? total - assigned : 0;
+                  const defaultDistributed = unassignedCount > 0 && total ? remaining / unassignedCount : 0;
+                  const perEach = defaultDistributed > 0 ? Math.round(defaultDistributed * 100) / 100 : 0;
+
+                  // If no total marks set, show computed total from defaults
+                  const computedTotal = total
+                    ? total
+                    : questions.reduce((sum, q) => {
+                        if (q.marks !== "" && typeof q.marks === "number" && q.marks > 0) return sum + q.marks;
+                        const def = q.type === "mcq" ? (typeof defaultMcqMarks === "number" ? defaultMcqMarks : 1) : (typeof defaultTextMarks === "number" ? defaultTextMarks : 1);
+                        return sum + def;
+                      }, 0);
+
+                  return (
+                    <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] p-3 space-y-1">
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className="font-mono text-[10px] tracking-wider uppercase text-white/50">
+                          Total: <span className="text-[hsl(var(--dashboard-gold))] font-bold">{Math.round(computedTotal * 100) / 100}</span>
+                        </span>
+                        <span className="text-white/10">|</span>
+                        <span className="font-mono text-[10px] tracking-wider uppercase text-white/50">
+                          Assigned: <span className="text-white/70 font-bold">{Math.round(assigned * 100) / 100}</span>
+                        </span>
+                        {total && unassignedCount > 0 && (
+                          <>
+                            <span className="text-white/10">|</span>
+                            <span className="font-mono text-[10px] tracking-wider uppercase text-white/50">
+                              Remaining: <span className="text-white/70 font-bold">{Math.round(remaining * 100) / 100}</span>
+                              {" → "}
+                              <span className="text-white/40">
+                                {unassignedMcq > 0 && unassignedText > 0
+                                  ? `${unassignedCount} questions (${perEach} each)`
+                                  : unassignedMcq > 0
+                                  ? `${unassignedMcq} MCQ${unassignedMcq > 1 ? "s" : ""} (${perEach} each)`
+                                  : `${unassignedText} Text (${perEach} each)`
+                                }
+                              </span>
+                            </span>
+                          </>
+                        )}
+                        {!total && unassignedCount > 0 && (
+                          <>
+                            <span className="text-white/10">|</span>
+                            <span className="font-mono text-[10px] tracking-wider text-white/25">
+                              {unassignedMcq > 0 && <span>{unassignedMcq} MCQ × {typeof defaultMcqMarks === "number" ? defaultMcqMarks : 1}</span>}
+                              {unassignedMcq > 0 && unassignedText > 0 && <span>{" + "}</span>}
+                              {unassignedText > 0 && <span>{unassignedText} Text × {typeof defaultTextMarks === "number" ? defaultTextMarks : 1}</span>}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      {total && remaining < 0 && (
+                        <p className="font-mono text-[9px] text-destructive">
+                          ⚠ Assigned marks exceed total by {Math.abs(Math.round(remaining * 100) / 100)}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })()
               )}
             </div>
 
