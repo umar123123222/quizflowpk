@@ -51,7 +51,7 @@ const buildStudentInfoSchema = (fs: FormFieldSettings | null) => {
   return z.object(shape);
 };
 
-type StudentInfo = { fullName: string; email?: string; phone?: string };
+type StudentInfo = { fullName: string; email?: string; phone?: string; customFields?: Record<string, string> };
 
 interface Question {
   id: string;
