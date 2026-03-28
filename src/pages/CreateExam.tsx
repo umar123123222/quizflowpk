@@ -119,6 +119,8 @@ const CreateExam = () => {
             setEndHour(et.getHours().toString().padStart(2, "0"));
             setEndMinute(et.getMinutes().toString().padStart(2, "0"));
           }
+          if ((exam as any).shuffle_questions) setShuffleQuestions(true);
+          if ((exam as any).shuffle_options) setShuffleOptions(true);
           if (exam.code) setSavedExamCode(exam.code);
         }
         const { data: qs } = await supabase
