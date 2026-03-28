@@ -45,7 +45,7 @@ const Hero = () => {
               to="/signup"
               className="inline-flex items-center gap-2 text-base transition-transform duration-200 hover:-translate-y-px"
               style={{
-                backgroundColor: '#e8c87a',
+                backgroundColor: '#F59E0B',
                 color: '#0a0d14',
                 borderRadius: '8px',
                 padding: '0.85rem 2rem',
