@@ -212,7 +212,7 @@ const TakeExam = () => {
     // Submit
     const { error: subError } = await supabase.from("submissions").insert({
       exam_id: id,
-      student_id: studentData.id,
+      student_id: studentId,
       answers: answers,
       score: calculatedScore,
       violations: violationsRef.current,
