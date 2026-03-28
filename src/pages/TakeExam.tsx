@@ -79,6 +79,7 @@ interface Exam {
   description: string | null;
   time_limit: number | null;
   organization_id: string | null;
+  result_visibility: string;
 }
 
 const TakeExam = () => {
