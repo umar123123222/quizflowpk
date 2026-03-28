@@ -731,8 +731,13 @@ const CreateExam = () => {
                         )}
                       </div>
                       {total && remaining < 0 && (
-                        <p className="font-mono text-[9px] text-destructive">
-                          ⚠ Assigned marks exceed total by {Math.abs(Math.round(remaining * 100) / 100)}
+                        <p className="font-mono text-[10px] text-destructive font-bold">
+                          ⚠ Assigned marks ({Math.round(assigned * 100) / 100}) exceed total exam marks ({total}). Please adjust.
+                        </p>
+                      )}
+                      {!total && (
+                        <p className="font-mono text-[10px] text-[hsl(var(--dashboard-gold))]">
+                          ⚠ Set "Total Marks" above to enable automatic distribution of remaining marks.
                         </p>
                       )}
                     </div>
