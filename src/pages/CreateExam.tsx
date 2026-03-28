@@ -56,6 +56,7 @@ const CreateExam = () => {
 
   const [title, setTitle] = useState("");
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
+  const [resultVisibility, setResultVisibility] = useState<"immediate" | "after_exam_ends">("immediate");
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
   const [saving, setSaving] = useState(false);
   const [savedExamCode, setSavedExamCode] = useState<string | null>(null);
