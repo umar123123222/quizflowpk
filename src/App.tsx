@@ -19,6 +19,7 @@ import Submissions from "./pages/Submissions.tsx";
 import ViewSubmission from "./pages/ViewSubmission.tsx";
 import Settings from "./pages/Settings.tsx";
 import Users from "./pages/Users.tsx";
+import StudentForm from "./pages/StudentForm.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
