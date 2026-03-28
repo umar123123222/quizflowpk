@@ -195,6 +195,21 @@ const Submissions = () => {
               submitted_at: s.submitted_at,
               violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
               isReviewed: answersObj?._reviewed === true,
+              attemptLabel: undefined as string | undefined,
+              student: studentMap.get(s.student_id) || {
+                full_name: "Unknown",
+                email: null,
+                phone: null,
+              },
+              _studentId: s.student_id,
+            };
+          });
+            return {
+              id: s.id,
+              score: s.score,
+              submitted_at: s.submitted_at,
+              violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
+              isReviewed: answersObj?._reviewed === true,
               student: studentMap.get(s.student_id) || {
                 full_name: "Unknown",
                 email: null,
