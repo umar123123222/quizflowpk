@@ -332,6 +332,18 @@ const TakeExam = () => {
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
   const onStudentSubmit = async (data: StudentInfo) => {
+    // Validate custom required fields
+    for (const cf of customFieldDefs) {
+      if (cf.is_required && !customFieldValues[cf.id]?.trim()) {
+        toast({
+          title: "Required Field",
+          description: `Please fill in "${cf.field_label}"`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     // Check if student already submitted this exam (only if email provided)
     if (examId && data.email) {
       const { data: existingStudents } = await supabase
@@ -359,7 +371,7 @@ const TakeExam = () => {
       }
     }
 
-    setStudentInfo(data);
+    setStudentInfo({ ...data, customFields: customFieldValues });
     // Request fullscreen when exam starts
     try {
       document.documentElement.requestFullscreen?.();
