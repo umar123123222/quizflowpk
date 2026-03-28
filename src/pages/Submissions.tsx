@@ -31,6 +31,7 @@ interface ExamQuestion {
   order_index: number;
   question_type: string;
   correct_answer: string | null;
+  points: number;
   options: { key: string; text: string }[];
 }
 
@@ -169,7 +170,7 @@ const Submissions = () => {
       const examIds = exams.map((e) => e.id);
       const { data: allQuestions } = await supabase
         .from("questions")
-        .select("id, exam_id, question_text, question_type, order_index, correct_answer, options, option_a, option_b, option_c, option_d")
+        .select("id, exam_id, question_text, question_type, order_index, correct_answer, points, options, option_a, option_b, option_c, option_d")
         .in("exam_id", examIds)
         .order("order_index", { ascending: true });
       const examsWithText = new Set(
@@ -188,7 +189,7 @@ const Submissions = () => {
           if (q.option_c) opts.push({ key: "C", text: q.option_c });
           if (q.option_d) opts.push({ key: "D", text: q.option_d });
         }
-        questionsByExam.get(q.exam_id)!.push({ id: q.id, question_text: q.question_text, order_index: q.order_index, question_type: q.question_type || "mcq", correct_answer: q.correct_answer || null, options: opts });
+        questionsByExam.get(q.exam_id)!.push({ id: q.id, question_text: q.question_text, order_index: q.order_index, question_type: q.question_type || "mcq", correct_answer: q.correct_answer || null, points: q.points ?? 1, options: opts });
       });
 
       // Get submissions with student info for all exams
@@ -397,14 +398,16 @@ const Submissions = () => {
                       qHeaders.push(`Q${i + 1} - Student Answer`);
                       qHeaders.push(`Q${i + 1} - Correct Answer`);
                       qHeaders.push(`Q${i + 1} - Status`);
+                      qHeaders.push(`Q${i + 1} - Marks`);
                     }
                     const baseHeader = isOwner
-                      ? ["Exam", "Teacher", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]
-                      : ["Exam", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"];
-                    const header = [...baseHeader, ...qHeaders];
+                      ? ["Exam", "Teacher", "Name", "Email", "Phone", "Violations", "Date"]
+                      : ["Exam", "Name", "Email", "Phone", "Violations", "Date"];
+                    const header = [...baseHeader, ...qHeaders, "Total Score", "Total Marks", "Percentage", "Pass/Fail"];
                     const rows: string[][] = [header];
                     examsWithSubs.forEach((exam) => {
                       const sortedQs = [...(exam.questions || [])].sort((a, b) => a.order_index - b.order_index);
+                      const totalMarks = sortedQs.reduce((s, q) => s + q.points, 0);
                       exam.submissions.forEach((sub) => {
                         const violations = sub.violations && sub.violations.length > 0
                           ? sub.violations.map((v) => v.type).join("; ")
@@ -412,8 +415,9 @@ const Submissions = () => {
                         const date = sub.submitted_at
                           ? new Date(sub.submitted_at).toLocaleString("en-US")
                           : "—";
-                        const isPending = exam.hasTextQuestions && !sub.isReviewed;
+                        const textScores = sub.answers?._textScores as Record<string, number> | undefined;
                         const qCols: string[] = [];
+                        let earnedTotal = 0;
                         sortedQs.forEach((q) => {
                           qCols.push(q.question_text);
                           // Student answer
@@ -430,32 +434,36 @@ const Submissions = () => {
                           if (q.question_type === "text") {
                             qCols.push("Manual Review");
                             qCols.push("Manual Review");
+                            const awarded = textScores ? (textScores[q.id] ?? 0) : 0;
+                            earnedTotal += awarded;
+                            qCols.push(textScores ? `${awarded} / ${q.points}` : `— / ${q.points}`);
                           } else {
                             const correctOpt = q.options.find((o) => o.key === q.correct_answer);
                             qCols.push(correctOpt ? correctOpt.text : (q.correct_answer || "—"));
-                            // Status
-                            if (!rawAns) {
-                              qCols.push("Wrong");
-                            } else {
-                              qCols.push(rawAns === q.correct_answer ? "Correct" : "Wrong");
-                            }
+                            const isCorrect = rawAns && rawAns === q.correct_answer;
+                            qCols.push(!rawAns ? "Wrong" : (isCorrect ? "Correct" : "Wrong"));
+                            const awarded = isCorrect ? q.points : 0;
+                            earnedTotal += awarded;
+                            qCols.push(`${awarded} / ${q.points}`);
                           }
                         });
-                        // Pad if fewer questions (4 cols per question)
-                        const padCount = (maxQs - sortedQs.length) * 4;
+                        // Pad if fewer questions (5 cols per question)
+                        const padCount = (maxQs - sortedQs.length) * 5;
                         for (let p = 0; p < padCount; p++) qCols.push("");
+                        const pct = totalMarks > 0 ? Math.round((earnedTotal / totalMarks) * 100) : 0;
                         const row = [
                           exam.title,
                           ...(isOwner ? [exam.teacher_name || "—"] : []),
                           sub.student.full_name + (sub.attemptLabel ? ` (${sub.attemptLabel})` : ""),
                           sub.student.email || "—",
                           sub.student.phone || "—",
-                          sub.score !== null ? `${sub.score}%` : "—",
-                          isPending ? "Pending Review" : "Published",
-                          sub.passFail || "—",
                           violations,
                           date,
                           ...qCols,
+                          `${earnedTotal}`,
+                          `${totalMarks}`,
+                          `${pct}%`,
+                          sub.passFail || "—",
                         ];
                         rows.push(row);
                       });
