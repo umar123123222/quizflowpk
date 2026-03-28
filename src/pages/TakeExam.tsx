@@ -784,16 +784,19 @@ const TakeExam = () => {
                       </div>
                     ) : (
                       <>
-                        {[
-                          { key: "A", value: q.option_a },
-                          { key: "B", value: q.option_b },
-                          { key: "C", value: q.option_c },
-                          { key: "D", value: q.option_d },
-                        ]
-                          .filter((opt) => opt.value)
-                          .map((opt) => {
-                            const isStudentAnswer = q.student_answer === opt.key;
-                            const isCorrectAnswer = q.correct_answer === opt.key;
+                        {(() => {
+                          const labels = ["A", "B", "C", "D"];
+                          const qMap = optionShuffleMap[q.id];
+                          // Build options in shuffled display order if map exists
+                          const opts = labels.map((displayKey) => {
+                            const origKey = qMap ? qMap[displayKey] : displayKey;
+                            const value = origKey ? (q as any)[`option_${origKey.toLowerCase()}`] : null;
+                            return { displayKey, origKey, value };
+                          }).filter((opt) => opt.value);
+
+                          return opts.map((opt) => {
+                            const isStudentAnswer = q.student_answer === opt.origKey;
+                            const isCorrectAnswer = q.correct_answer === opt.origKey;
                             let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2";
                             if (isCorrectAnswer) {
                               classes += " border-primary bg-primary/10 text-foreground";
@@ -803,14 +806,15 @@ const TakeExam = () => {
                               classes += " border-border text-muted-foreground";
                             }
                             return (
-                              <div key={opt.key} className={classes}>
-                                <span className="font-semibold">{opt.key}.</span>
+                              <div key={opt.displayKey} className={classes}>
+                                <span className="font-semibold">{opt.displayKey}.</span>
                                 <span className="flex-1">{opt.value}</span>
                                 {isCorrectAnswer && <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0" />}
                                 {isStudentAnswer && !q.is_correct && <span className="text-xs text-destructive font-medium">Your answer</span>}
                               </div>
                             );
-                          })}
+                          });
+                        })()}
                         {!q.student_answer && (
                           <p className="text-xs text-muted-foreground italic">Not answered</p>
                         )}
