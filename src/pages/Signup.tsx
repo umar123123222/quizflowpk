@@ -10,6 +10,7 @@ import { Building2, GraduationCap, Eye, EyeOff } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -50,7 +51,10 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-secondary/30 px-4">
+    <div className="relative flex min-h-screen items-center justify-center bg-secondary/30 px-4">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle variant="landing" />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4">

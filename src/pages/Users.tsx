@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { LogOut, Loader2, Users as UsersIcon, Plus, X } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { useToast } from "@/hooks/use-toast";
 import {
   Table,
@@ -152,6 +153,7 @@ const Users = () => {
               </span>
             </div>
             <div className="flex items-center gap-3">
+              <ThemeToggle />
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(var(--dashboard-gold))] font-mono text-[12px] font-bold text-[hsl(var(--dashboard-bg))]">
                 {user?.user_metadata?.full_name
                   ? user.user_metadata.full_name.split(" ").map((n: string) => n[0]).join("").toUpperCase()

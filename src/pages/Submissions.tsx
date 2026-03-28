@@ -4,6 +4,7 @@ import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert, Eye, Download, Search, RotateCcw, Plus, X } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -353,6 +354,7 @@ const Submissions = () => {
               </span>
             </div>
             <div className="flex items-center gap-3">
+              <ThemeToggle />
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(var(--dashboard-gold))] font-mono text-[12px] font-bold text-[hsl(var(--dashboard-bg))]">
                 {user?.user_metadata?.full_name
                   ? user.user_metadata.full_name
