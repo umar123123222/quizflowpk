@@ -472,6 +472,9 @@ const TakeExam = () => {
     }>;
   } | null>(null);
   const [showPrevReview, setShowPrevReview] = useState(false);
+  const [reattemptGranted, setReattemptGranted] = useState(false);
+  const [reattemptId, setReattemptId] = useState<string | null>(null);
+  const [pendingStudentData, setPendingStudentData] = useState<StudentInfo | null>(null);
 
   const onStudentSubmit = async (data: StudentInfo) => {
     // Validate custom required fields
@@ -502,6 +505,62 @@ const TakeExam = () => {
           .in("student_id", studentIds);
 
         if (existingSubs && existingSubs.length > 0) {
+          // Fetch previous submission details first (needed for both paths)
+          const subId = existingSubs[0].id;
+          const [subRes, examRes2] = await Promise.all([
+            supabase.from("submissions").select("score, submitted_at, answers, exam_id").eq("id", subId).single(),
+            supabase.from("exams").select("result_visibility, end_time").eq("id", examId).single(),
+          ]);
+          const subDetail = subRes.data;
+          const examInfo = examRes2.data;
+
+          let prevSubData: typeof prevSubmission = null;
+          if (subDetail) {
+            const answersObj = (subDetail.answers as Record<string, any>) || {};
+            const isReviewed = answersObj._reviewed === true;
+            const visibility = (examInfo as any)?.result_visibility || "immediate";
+            const examEnded = (examInfo as any)?.end_time ? new Date((examInfo as any).end_time) < new Date() : true;
+            let canReview = visibility === "immediate" || (visibility === "after_exam_ends" && examEnded);
+
+            const { data: fullQs } = await supabase
+              .from("questions")
+              .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index, points")
+              .eq("exam_id", subDetail.exam_id)
+              .order("order_index", { ascending: true });
+
+            const allQs = fullQs || [];
+            const hasTextQuestions = allQs.some((q: any) => q.question_type === "text");
+            const totalPoints = allQs.reduce((s: number, q: any) => s + (q.points ?? 1), 0);
+            if (hasTextQuestions && !isReviewed) canReview = false;
+
+            let mcqEarned = 0;
+            const textScores = answersObj._textScores as Record<string, number> | undefined;
+            let textEarned = 0;
+            const questionResults = allQs.map((q: any) => {
+              const studentAnswer = answersObj[q.id] || null;
+              const qType = q.question_type || "mcq";
+              const qPoints = q.points ?? 1;
+              const isCorrect = qType === "mcq" ? studentAnswer === q.correct_answer : false;
+              if (qType !== "text") {
+                if (isCorrect) mcqEarned += qPoints;
+              } else if (textScores && textScores[q.id] !== undefined) {
+                textEarned += textScores[q.id];
+              }
+              return {
+                id: q.id, question_text: q.question_text, question_type: qType,
+                student_answer: studentAnswer, correct_answer: q.correct_answer, is_correct: isCorrect,
+                option_a: q.option_a, option_b: q.option_b, option_c: q.option_c, option_d: q.option_d,
+                points: qPoints,
+              };
+            });
+            const earnedPoints = mcqEarned + (isReviewed ? textEarned : 0);
+            prevSubData = {
+              score: subDetail.score, submitted_at: subDetail.submitted_at,
+              totalPoints, earnedPoints, isReviewed, hasTextQuestions, canReview,
+              questions: questionResults,
+            };
+          }
+
           // Check if student has been granted a reattempt
           const { data: reattempt } = await supabase
             .from("exam_reattempts" as any)
@@ -511,88 +570,15 @@ const TakeExam = () => {
             .eq("used", false)
             .maybeSingle();
 
+          setPrevSubmission(prevSubData);
+
           if (reattempt) {
-            // Mark reattempt as used
-            await supabase
-              .from("exam_reattempts" as any)
-              .update({ used: true })
-              .eq("id", (reattempt as any).id);
+            // Show reattempt banner instead of auto-consuming
+            setReattemptGranted(true);
+            setReattemptId((reattempt as any).id);
+            setPendingStudentData({ ...data, customFields: customFieldValues });
+            return;
           } else {
-            // Fetch the previous submission details
-            const subId = existingSubs[0].id;
-            const [subRes, examRes2] = await Promise.all([
-              supabase.from("submissions").select("score, submitted_at, answers, exam_id").eq("id", subId).single(),
-              supabase.from("exams").select("result_visibility, end_time").eq("id", examId).single(),
-            ]);
-            const subDetail = subRes.data;
-            const examInfo = examRes2.data;
-
-            if (subDetail) {
-              const answersObj = (subDetail.answers as Record<string, any>) || {};
-              const isReviewed = answersObj._reviewed === true;
-
-              // Determine if answer review is available
-              const visibility = (examInfo as any)?.result_visibility || "immediate";
-              const examEnded = (examInfo as any)?.end_time ? new Date((examInfo as any).end_time) < new Date() : true;
-              const hasTextQs2 = false; // will be set below
-              let canReview = visibility === "immediate" || (visibility === "after_exam_ends" && examEnded);
-
-              // Fetch full questions for answer review
-              const { data: fullQs } = await supabase
-                .from("questions")
-                .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index, points")
-                .eq("exam_id", subDetail.exam_id)
-                .order("order_index", { ascending: true });
-
-              const allQs = fullQs || [];
-              const hasTextQuestions = allQs.some((q: any) => q.question_type === "text");
-              const totalPoints = allQs.reduce((s: number, q: any) => s + (q.points ?? 1), 0);
-
-              // If has text questions and not reviewed, can't show review
-              if (hasTextQuestions && !isReviewed) canReview = false;
-
-              // Compute earned points & build question results
-              let mcqEarned = 0;
-              const textScores = answersObj._textScores as Record<string, number> | undefined;
-              let textEarned = 0;
-              const questionResults = allQs.map((q: any) => {
-                const studentAnswer = answersObj[q.id] || null;
-                const qType = q.question_type || "mcq";
-                const qPoints = q.points ?? 1;
-                const isCorrect = qType === "mcq" ? studentAnswer === q.correct_answer : false;
-                if (qType !== "text") {
-                  if (isCorrect) mcqEarned += qPoints;
-                } else if (textScores && textScores[q.id] !== undefined) {
-                  textEarned += textScores[q.id];
-                }
-                return {
-                  id: q.id,
-                  question_text: q.question_text,
-                  question_type: qType,
-                  student_answer: studentAnswer,
-                  correct_answer: q.correct_answer,
-                  is_correct: isCorrect,
-                  option_a: q.option_a,
-                  option_b: q.option_b,
-                  option_c: q.option_c,
-                  option_d: q.option_d,
-                  points: qPoints,
-                };
-              });
-              const earnedPoints = mcqEarned + (isReviewed ? textEarned : 0);
-
-              setPrevSubmission({
-                score: subDetail.score,
-                submitted_at: subDetail.submitted_at,
-                totalPoints,
-                earnedPoints,
-                isReviewed,
-                hasTextQuestions,
-                canReview,
-                questions: questionResults,
-              });
-            }
-
             setAlreadySubmitted(true);
             toast({
               title: "Already Submitted",
@@ -735,6 +721,67 @@ const TakeExam = () => {
             <h2 className="text-xl font-bold">{error}</h2>
           </CardContent>
         </Card>
+      </div>
+    );
+  }
+
+  // Reattempt granted state
+  if (reattemptGranted && !alreadySubmitted) {
+    const handleStartReattempt = async () => {
+      if (!reattemptId || !pendingStudentData) return;
+      // Mark reattempt as used
+      await supabase
+        .from("exam_reattempts" as any)
+        .update({ used: true })
+        .eq("id", reattemptId);
+      // Start fresh attempt
+      setReattemptGranted(false);
+      setStudentInfo(pendingStudentData);
+      try {
+        document.documentElement.requestFullscreen?.();
+      } catch (e) {}
+    };
+
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
+        <div className="w-full max-w-md space-y-5">
+          {/* Green reattempt banner */}
+          <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-5 text-center space-y-3">
+            <CheckCircle className="h-10 w-10 text-green-500 mx-auto" />
+            <h2 className="text-lg font-bold text-foreground">Reattempt Granted</h2>
+            <p className="text-sm text-green-400">
+              Your instructor has granted you permission to reattempt this exam.
+            </p>
+            <Button
+              onClick={handleStartReattempt}
+              className="mt-2 text-white font-semibold"
+              style={{ backgroundColor: "#e09615" }}
+            >
+              Start Reattempt
+            </Button>
+          </div>
+
+          {/* Previous attempt summary */}
+          {prevSubmission && (
+            <Card className="border border-border">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-medium text-muted-foreground">Previous Attempt</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Score</span>
+                  <span className="font-bold">{prevSubmission.earnedPoints} / {prevSubmission.totalPoints}</span>
+                </div>
+                {prevSubmission.score !== null && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Percentage</span>
+                    <span className="font-bold">{prevSubmission.score}%</span>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
     );
   }
