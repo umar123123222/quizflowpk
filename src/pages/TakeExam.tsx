@@ -448,6 +448,14 @@ const TakeExam = () => {
   };
 
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
+  const [prevSubmission, setPrevSubmission] = useState<{
+    score: number | null;
+    submitted_at: string | null;
+    totalPoints: number;
+    earnedPoints: number;
+    isReviewed: boolean;
+    hasTextQuestions: boolean;
+  } | null>(null);
 
   const onStudentSubmit = async (data: StudentInfo) => {
     // Validate custom required fields
