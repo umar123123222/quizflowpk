@@ -493,12 +493,14 @@ const Submissions = () => {
                                     <TableCell className="text-center">
                                       <span
                                         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
-                                          (sub.score ?? 0) >= 50
+                                          exam.hasTextQuestions
+                                            ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
+                                            : (sub.score ?? 0) >= 50
                                             ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
                                             : "bg-destructive/15 text-destructive"
                                         }`}
                                       >
-                                        {(sub.score ?? 0) >= 50 ? "Pass" : "Fail"}
+                                        {exam.hasTextQuestions ? "Pending Review" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail"}
                                       </span>
                                     </TableCell>
                                     <TableCell>

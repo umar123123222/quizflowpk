@@ -577,13 +577,14 @@ const TakeExam = () => {
 
   // Submitted — full-screen success state
   if (submitted) {
+    const hasTextQuestions = questions.some((q) => q.question_type === "text");
     const resultsDeferred = exam?.result_visibility === "after_exam_ends";
     // Check if the exam end time has passed
     const canShowDeferredResults = resultsDeferred && exam?.end_time
       ? new Date(exam.end_time) < new Date()
       : false;
 
-    const showScoreAndReview = !resultsDeferred || canShowDeferredResults;
+    const showScoreAndReview = !hasTextQuestions && (!resultsDeferred || canShowDeferredResults);
 
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -602,7 +603,17 @@ const TakeExam = () => {
               </p>
             </div>
 
-            {showScoreAndReview ? (
+            {hasTextQuestions ? (
+              <div className="space-y-4 mt-4">
+                <div className="border border-border rounded-lg p-5 bg-muted/30">
+                  <Clock className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <p className="text-foreground font-semibold text-lg">Pending Review</p>
+                  <p className="text-muted-foreground text-sm mt-2">
+                    Your responses have been submitted and are awaiting instructor review. You will receive your results once your answers have been evaluated.
+                  </p>
+                </div>
+              </div>
+            ) : showScoreAndReview ? (
               <>
                 <div className="flex items-center justify-center gap-6 mt-2">
                   <div className="text-center">
@@ -615,9 +626,6 @@ const TakeExam = () => {
                     <p className="text-xs text-muted-foreground mt-1">Score</p>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground italic border border-border rounded-lg p-3 bg-muted/30">
-                  Your result will be reviewed by your instructor.
-                </p>
                 <Button
                   variant={showResults ? "outline" : "default"}
                   className="w-full"
