@@ -577,11 +577,11 @@ const TakeExam = () => {
 
   // Submitted — full-screen success state
   if (submitted) {
-    const resultsDeferred = (exam as any)?.result_visibility === "after_exam_ends";
-    // For deferred results, check if the exam time window has passed
-    // The "exam window" = exam creation time + time_limit. Since we don't have a scheduled end time,
-    // we use the student's own start time + time_limit as proxy. If no time limit, results stay deferred.
-    const canShowDeferredResults = false; // Results stay hidden — students must wait
+    const resultsDeferred = exam?.result_visibility === "after_exam_ends";
+    // Check if the exam end time has passed
+    const canShowDeferredResults = resultsDeferred && exam?.end_time
+      ? new Date(exam.end_time) < new Date()
+      : false;
 
     const showScoreAndReview = !resultsDeferred || canShowDeferredResults;
 
