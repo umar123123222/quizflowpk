@@ -477,6 +477,28 @@ const CreateExam = () => {
               </div>
               <div className="space-y-2">
                 <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/55">
+                  Passing Percentage (Optional)
+                </label>
+                <Input
+                  type="number"
+                  value={passingPercentage}
+                  onChange={(e) => {
+                    const val = e.target.value ? Number(e.target.value) : "";
+                    if (val === "" || (typeof val === "number" && val >= 1 && val <= 100)) {
+                      setPassingPercentage(val);
+                    }
+                  }}
+                  placeholder="Default: 50%"
+                  min={1}
+                  max={100}
+                  className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 placeholder:text-white/50 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                />
+                <p className="font-mono text-[9px] text-white/45">
+                  Students scoring at or above this percentage will be marked as Pass. Default is 50% if left empty.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/55">
                   Time Limit (minutes)
                 </label>
                 <Input
