@@ -14,8 +14,8 @@ const Hero = () => {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-3xl text-center">
           <div
-            className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium opacity-0 animate-fade-up"
-            style={{ backgroundColor: 'rgba(232,200,122,0.1)', color: '#e8c87a' }}
+            className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium opacity-0 animate-fade-up"
+            style={{ backgroundColor: 'rgba(255,255,255,0.92)', color: '#1a1d2e', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.3)' }}
           >
             <Sparkles className="h-4 w-4" />
             The smartest way to create quizzes
