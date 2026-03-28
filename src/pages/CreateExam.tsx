@@ -850,7 +850,7 @@ const CreateExam = () => {
               <Button
                 onClick={handleSaveDraft}
                 disabled={savingDraft || saving}
-                className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-6 py-3 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)] font-bold transition-all hover:border-white/30 hover:text-[hsl(var(--dashboard-text)/.9)] disabled:opacity-50"
+                className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-6 py-3 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)] font-bold transition-all hover:border-[hsl(var(--dashboard-gold)/.3)] hover:text-[hsl(var(--dashboard-text)/.9)] disabled:opacity-50"
               >
                 <Save className="h-3.5 w-3.5" />
                 {savingDraft ? "Saving..." : "Save Draft"}
@@ -1008,7 +1008,7 @@ const CreateExam = () => {
                   className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-all ${
                     noSchedule
                       ? "border-[#e09615] bg-[#e09615]"
-                      : "border-white/25 bg-transparent hover:border-white/40"
+                      : "border-[hsl(var(--dashboard-text)/.25)] bg-transparent hover:border-[hsl(var(--dashboard-gold)/.4)]"
                   }`}
                 >
                   {noSchedule && (
@@ -1051,12 +1051,12 @@ const CreateExam = () => {
                   className={`rounded-lg border p-4 text-left transition-all ${
                     resultVisibility === "immediate"
                       ? "border-[#e09615] bg-[#e09615]/10"
-                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] hover:border-white/20"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] hover:border-[hsl(var(--dashboard-text)/.2)]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
-                      resultVisibility === "immediate" ? "border-[#e09615]" : "border-white/25"
+                      resultVisibility === "immediate" ? "border-[#e09615]" : "border-[hsl(var(--dashboard-text)/.25)]"
                     }`}>
                       {resultVisibility === "immediate" && (
                         <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#e09615' }} />
@@ -1081,12 +1081,12 @@ const CreateExam = () => {
                   className={`rounded-lg border p-4 text-left transition-all ${
                     resultVisibility === "after_exam_ends"
                       ? "border-[#e09615] bg-[#e09615]/10"
-                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] hover:border-white/20"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] hover:border-[hsl(var(--dashboard-text)/.2)]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
-                      resultVisibility === "after_exam_ends" ? "border-[#e09615]" : "border-white/25"
+                      resultVisibility === "after_exam_ends" ? "border-[#e09615]" : "border-[hsl(var(--dashboard-text)/.25)]"
                     }`}>
                       {resultVisibility === "after_exam_ends" && (
                         <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#e09615' }} />
