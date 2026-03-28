@@ -80,6 +80,8 @@ interface Exam {
   time_limit: number | null;
   organization_id: string | null;
   result_visibility: string;
+  start_time: string | null;
+  end_time: string | null;
 }
 
 const TakeExam = () => {
