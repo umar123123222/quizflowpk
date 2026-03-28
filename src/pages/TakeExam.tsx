@@ -113,6 +113,7 @@ const TakeExam = () => {
     option_b: string | null;
     option_c: string | null;
     option_d: string | null;
+    points: number;
   }>>([]);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
