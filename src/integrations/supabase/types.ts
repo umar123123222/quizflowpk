@@ -99,6 +99,7 @@ export type Database = {
           created_at: string | null
           email_required: boolean
           email_visible: boolean
+          field_order: Json | null
           id: string
           name_required: boolean
           name_visible: boolean
@@ -111,6 +112,7 @@ export type Database = {
           created_at?: string | null
           email_required?: boolean
           email_visible?: boolean
+          field_order?: Json | null
           id?: string
           name_required?: boolean
           name_visible?: boolean
@@ -123,6 +125,7 @@ export type Database = {
           created_at?: string | null
           email_required?: boolean
           email_visible?: boolean
+          field_order?: Json | null
           id?: string
           name_required?: boolean
           name_visible?: boolean
