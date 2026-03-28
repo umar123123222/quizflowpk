@@ -25,11 +25,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+interface ExamQuestion {
+  id: string;
+  question_text: string;
+  order_index: number;
+}
+
 interface ExamWithSubmissions {
   id: string;
   title: string;
   teacher_name?: string;
   hasTextQuestions?: boolean;
+  questions?: ExamQuestion[];
   submissions: {
     id: string;
     score: number | null;
@@ -38,6 +45,7 @@ interface ExamWithSubmissions {
     isReviewed?: boolean;
     passFail?: string | null;
     attemptLabel?: string;
+    answers?: Record<string, any>;
     student: {
       full_name: string;
       email: string | null;
