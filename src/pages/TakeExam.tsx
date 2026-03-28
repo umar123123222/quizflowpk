@@ -250,29 +250,6 @@ const TakeExam = () => {
   };
 
   const onStudentSubmit = async (data: StudentInfo) => {
-    // Check if student already submitted this exam (by email or phone + exam_id)
-    if (examId) {
-      const { data: existingStudents } = await supabase
-        .from("students")
-        .select("id")
-        .eq("email", data.email);
-
-      if (existingStudents && existingStudents.length > 0) {
-        const studentIds = existingStudents.map((s) => s.id);
-        const { data: existingSubs } = await supabase
-          .from("submissions")
-          .select("id")
-          .eq("exam_id", examId)
-          .in("student_id", studentIds);
-
-        if (existingSubs && existingSubs.length > 0) {
-          setAlreadySubmitted(true);
-          setStudentInfo(data);
-          return;
-        }
-      }
-    }
-
     setStudentInfo(data);
     // Request fullscreen when exam starts
     try {
