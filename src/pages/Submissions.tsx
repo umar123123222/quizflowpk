@@ -371,7 +371,7 @@ const Submissions = () => {
                           sub.student.email || "—",
                           sub.student.phone || "—",
                           sub.score !== null ? `${sub.score}%` : "—",
-                          exam.hasTextQuestions ? (sub.isReviewed ? "Evaluated" : "Pending Review") : (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
+                          exam.hasTextQuestions ? (sub.isReviewed ? "Published" : "Pending Review") : (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
                           violations,
                           date,
                         ]);
@@ -578,7 +578,7 @@ const Submissions = () => {
                                       {(() => {
                                         const isPending = exam.hasTextQuestions && !sub.isReviewed;
                                         const isEvaluated = exam.hasTextQuestions && sub.isReviewed;
-                                        const statusLabel = isPending ? "Pending Review" : isEvaluated ? "Evaluated" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail";
+                                        const statusLabel = isPending ? "Pending Review" : isEvaluated ? "Published" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail";
                                         const statusClass = isPending
                                           ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
                                           : isEvaluated
