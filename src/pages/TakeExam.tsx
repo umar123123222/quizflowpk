@@ -86,6 +86,7 @@ interface Exam {
   end_time: string | null;
   shuffle_questions?: boolean;
   shuffle_options?: boolean;
+  passing_percentage?: number | null;
 }
 
 // Maps shuffled display key -> original key, per question
