@@ -421,7 +421,7 @@ const TakeExam = () => {
     setQuestionResults(results);
     setSubmitted(true);
     setSubmitting(false);
-  }, [studentInfo, exam, examId, answers, submitting, submitted, toast]);
+  }, [studentInfo, exam, examId, answers, optionShuffleMap, submitting, submitted, toast]);
 
   // Auto-submit when timer hits zero
   useEffect(() => {
