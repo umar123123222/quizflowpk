@@ -172,6 +172,13 @@ const CreateExam = () => {
     setQuestions((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const buildDatetime = (date: Date | undefined, hour: string, minute: string): string | null => {
+    if (!date) return null;
+    const d = new Date(date);
+    d.setHours(parseInt(hour), parseInt(minute), 0, 0);
+    return d.toISOString();
+  };
+
   const handleSave = async () => {
     if (!title.trim()) {
       toast({ title: "Title required", description: "Please enter an exam title.", variant: "destructive" });
