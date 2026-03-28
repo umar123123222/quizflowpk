@@ -716,6 +716,7 @@ const CreateExam = () => {
                           </button>
                         )}
                       </div>
+                    </div>
 
                     {/* Question text */}
                     <Input
