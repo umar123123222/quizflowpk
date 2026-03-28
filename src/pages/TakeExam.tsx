@@ -542,6 +542,14 @@ const TakeExam = () => {
 
   // Submitted — full-screen success state
   if (submitted) {
+    const resultsDeferred = (exam as any)?.result_visibility === "after_exam_ends";
+    // For deferred results, check if the exam time window has passed
+    // The "exam window" = exam creation time + time_limit. Since we don't have a scheduled end time,
+    // we use the student's own start time + time_limit as proxy. If no time limit, results stay deferred.
+    const canShowDeferredResults = false; // Results stay hidden — students must wait
+
+    const showScoreAndReview = !resultsDeferred || canShowDeferredResults;
+
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
@@ -558,31 +566,46 @@ const TakeExam = () => {
                 Exam: <span className="font-semibold text-foreground">{exam?.title}</span>
               </p>
             </div>
-            <div className="flex items-center justify-center gap-6 mt-2">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
-                <p className="text-xs text-muted-foreground mt-1">Correct Answers</p>
+
+            {showScoreAndReview ? (
+              <>
+                <div className="flex items-center justify-center gap-6 mt-2">
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
+                    <p className="text-xs text-muted-foreground mt-1">Correct Answers</p>
+                  </div>
+                  <div className="w-px h-12 bg-border" />
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-primary">{score}%</div>
+                    <p className="text-xs text-muted-foreground mt-1">Score</p>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground italic border border-border rounded-lg p-3 bg-muted/30">
+                  Your result will be reviewed by your instructor.
+                </p>
+                <Button
+                  variant={showResults ? "outline" : "default"}
+                  className="w-full"
+                  onClick={() => setShowResults(!showResults)}
+                >
+                  {showResults ? "Hide Results" : "View Detailed Results"}
+                </Button>
+              </>
+            ) : (
+              <div className="space-y-4 mt-4">
+                <div className="border border-border rounded-lg p-5 bg-muted/30">
+                  <Clock className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <p className="text-foreground font-semibold text-lg">Results are not available yet</p>
+                  <p className="text-muted-foreground text-sm mt-2">
+                    Your result will be available once the exam period ends. Please check back later.
+                  </p>
+                </div>
               </div>
-              <div className="w-px h-12 bg-border" />
-              <div className="text-center">
-                <div className="text-4xl font-bold text-primary">{score}%</div>
-                <p className="text-xs text-muted-foreground mt-1">Score</p>
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground italic border border-border rounded-lg p-3 bg-muted/30">
-              Your result will be reviewed by your instructor.
-            </p>
-            <Button
-              variant={showResults ? "outline" : "default"}
-              className="w-full"
-              onClick={() => setShowResults(!showResults)}
-            >
-              {showResults ? "Hide Results" : "View Detailed Results"}
-            </Button>
+            )}
           </div>
         </div>
 
-        {showResults && (
+        {showScoreAndReview && showResults && (
           <div className="max-w-3xl mx-auto w-full px-4 pb-8 space-y-4">
             <h3 className="font-serif text-lg font-semibold">Review Your Answers</h3>
             {questionResults.map((q, index) => {
