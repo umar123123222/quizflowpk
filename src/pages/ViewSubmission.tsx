@@ -495,34 +495,48 @@ const ViewSubmission = () => {
           })}
         </div>
 
-        {/* Publish Result Button */}
+        {/* Publish Result / Published Badge */}
         {hasTextQuestions && isTeacherOrOwner && (
-          <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t border-border py-4 -mx-4 px-4 flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
-              {isReviewed ? (
-                <span className="text-green-500 font-medium">✓ Result published</span>
-              ) : hasExceededMarks ? (
-                <span className="text-destructive font-medium">Some scores exceed maximum marks</span>
-              ) : canPublish ? (
-                <span className="text-green-500 font-medium">All text answers graded — ready to publish</span>
-              ) : (
-                <span>
-                  {questionResults.filter((q) => q.question_type === "text" && textScores[q.id] !== undefined && textScores[q.id] !== "").length}
-                  {" / "}
-                  {questionResults.filter((q) => q.question_type === "text").length}
-                  {" text answers graded"}
-                </span>
-              )}
+          isReviewed ? (
+            <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t border-border py-4 -mx-4 px-4 flex items-center justify-center">
+              <div className="flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/10 px-5 py-3">
+                <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-green-500">Result Published</p>
+                  {publishedAt && (
+                    <p className="text-xs text-green-500/70">
+                      Published on {new Date(publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })} at {new Date(publishedAt).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
-            <Button
-              onClick={handleSaveGrades}
-              disabled={saving || !canPublish || isReviewed}
-              className="gap-2"
-            >
-              <Save className="h-4 w-4" />
-              {saving ? "Publishing..." : isReviewed ? "Published" : "Publish Result"}
-            </Button>
-          </div>
+          ) : (
+            <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t border-border py-4 -mx-4 px-4 flex items-center justify-between">
+              <div className="text-sm text-muted-foreground">
+                {hasExceededMarks ? (
+                  <span className="text-destructive font-medium">Some scores exceed maximum marks</span>
+                ) : canPublish ? (
+                  <span className="text-green-500 font-medium">All text answers graded — ready to publish</span>
+                ) : (
+                  <span>
+                    {questionResults.filter((q) => q.question_type === "text" && textScores[q.id] !== undefined && textScores[q.id] !== "").length}
+                    {" / "}
+                    {questionResults.filter((q) => q.question_type === "text").length}
+                    {" text answers graded"}
+                  </span>
+                )}
+              </div>
+              <Button
+                onClick={handleSaveGrades}
+                disabled={saving || !canPublish}
+                className="gap-2"
+              >
+                <Save className="h-4 w-4" />
+                {saving ? "Publishing..." : "Publish Result"}
+              </Button>
+            </div>
+          )
         )}
       </div>
     </div>
