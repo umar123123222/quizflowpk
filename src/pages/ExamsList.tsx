@@ -31,6 +31,25 @@ const ExamsList = () => {
   };
   const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "published" | "draft">("all");
+  const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+
+  const filteredExams = useMemo(() => {
+    let result = exams;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter((e) => e.title.toLowerCase().includes(q));
+    }
+    if (statusFilter === "published") result = result.filter((e) => e.is_published);
+    if (statusFilter === "draft") result = result.filter((e) => !e.is_published);
+    result = [...result].sort((a, b) => {
+      const da = new Date(a.created_at || 0).getTime();
+      const db = new Date(b.created_at || 0).getTime();
+      return sortOrder === "newest" ? db - da : da - db;
+    });
+    return result;
+  }, [exams, searchQuery, statusFilter, sortOrder]);
 
   useEffect(() => {
     const fetchExams = async () => {
