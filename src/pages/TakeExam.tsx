@@ -520,51 +520,66 @@ const TakeExam = () => {
           } else {
             // Fetch the previous submission details
             const subId = existingSubs[0].id;
-            const { data: subDetail } = await supabase
-              .from("submissions")
-              .select("score, submitted_at, answers, exam_id")
-              .eq("id", subId)
-              .single();
+            const [subRes, examRes2] = await Promise.all([
+              supabase.from("submissions").select("score, submitted_at, answers, exam_id").eq("id", subId).single(),
+              supabase.from("exams").select("result_visibility, end_time").eq("id", examId).single(),
+            ]);
+            const subDetail = subRes.data;
+            const examInfo = examRes2.data;
 
             if (subDetail) {
               const answersObj = (subDetail.answers as Record<string, any>) || {};
               const isReviewed = answersObj._reviewed === true;
 
-              // Fetch questions to compute points
-              const { data: qs } = await supabase
-                .from("questions")
-                .select("id, question_type, points")
-                .eq("exam_id", subDetail.exam_id);
+              // Determine if answer review is available
+              const visibility = (examInfo as any)?.result_visibility || "immediate";
+              const examEnded = (examInfo as any)?.end_time ? new Date((examInfo as any).end_time) < new Date() : true;
+              const hasTextQs2 = false; // will be set below
+              let canReview = visibility === "immediate" || (visibility === "after_exam_ends" && examEnded);
 
-              const allQs = qs || [];
+              // Fetch full questions for answer review
+              const { data: fullQs } = await supabase
+                .from("questions")
+                .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index, points")
+                .eq("exam_id", subDetail.exam_id)
+                .order("order_index", { ascending: true });
+
+              const allQs = fullQs || [];
               const hasTextQuestions = allQs.some((q: any) => q.question_type === "text");
               const totalPoints = allQs.reduce((s: number, q: any) => s + (q.points ?? 1), 0);
 
-              // Compute earned points
-              let earnedPoints = 0;
-              if (isReviewed || !hasTextQuestions) {
-                // MCQ points from score percentage
-                const mcqQs = allQs.filter((q: any) => q.question_type !== "text");
-                const mcqTotal = mcqQs.reduce((s: number, q: any) => s + (q.points ?? 1), 0);
+              // If has text questions and not reviewed, can't show review
+              if (hasTextQuestions && !isReviewed) canReview = false;
 
-                // Fetch full questions for correct answer comparison
-                const { data: fullQs } = await supabase
-                  .from("questions")
-                  .select("id, question_type, correct_answer, points")
-                  .eq("exam_id", subDetail.exam_id);
-
-                let mcqEarned = 0;
-                const textScores = answersObj._textScores as Record<string, number> | undefined;
-                let textEarned = 0;
-                (fullQs || []).forEach((q: any) => {
-                  if (q.question_type !== "text") {
-                    if (answersObj[q.id] === q.correct_answer) mcqEarned += (q.points ?? 1);
-                  } else if (textScores && textScores[q.id] !== undefined) {
-                    textEarned += textScores[q.id];
-                  }
-                });
-                earnedPoints = mcqEarned + (isReviewed ? textEarned : 0);
-              }
+              // Compute earned points & build question results
+              let mcqEarned = 0;
+              const textScores = answersObj._textScores as Record<string, number> | undefined;
+              let textEarned = 0;
+              const questionResults = allQs.map((q: any) => {
+                const studentAnswer = answersObj[q.id] || null;
+                const qType = q.question_type || "mcq";
+                const qPoints = q.points ?? 1;
+                const isCorrect = qType === "mcq" ? studentAnswer === q.correct_answer : false;
+                if (qType !== "text") {
+                  if (isCorrect) mcqEarned += qPoints;
+                } else if (textScores && textScores[q.id] !== undefined) {
+                  textEarned += textScores[q.id];
+                }
+                return {
+                  id: q.id,
+                  question_text: q.question_text,
+                  question_type: qType,
+                  student_answer: studentAnswer,
+                  correct_answer: q.correct_answer,
+                  is_correct: isCorrect,
+                  option_a: q.option_a,
+                  option_b: q.option_b,
+                  option_c: q.option_c,
+                  option_d: q.option_d,
+                  points: qPoints,
+                };
+              });
+              const earnedPoints = mcqEarned + (isReviewed ? textEarned : 0);
 
               setPrevSubmission({
                 score: subDetail.score,
@@ -573,6 +588,8 @@ const TakeExam = () => {
                 earnedPoints,
                 isReviewed,
                 hasTextQuestions,
+                canReview,
+                questions: questionResults,
               });
             }
 
