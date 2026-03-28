@@ -14,6 +14,7 @@ interface Exam {
   created_at: string | null;
   is_published: boolean | null;
   time_limit: number | null;
+  code: string;
   teacher_name?: string;
 }
 
@@ -22,8 +23,8 @@ const ExamsList = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const copyExamLink = async (examId: string) => {
-    const link = `${window.location.origin}/exam/${examId}`;
+  const copyExamLink = async (code: string) => {
+    const link = `${window.location.origin}/exam/${code}`;
     await navigator.clipboard.writeText(link);
     toast({ title: "Link copied!", description: "Shareable exam link copied to clipboard." });
   };
@@ -38,7 +39,7 @@ const ExamsList = () => {
         // Teachers only see their own exams
         const { data, error } = await supabase
           .from("exams")
-          .select("id, title, description, created_at, is_published, time_limit")
+          .select("id, title, description, created_at, is_published, time_limit, code")
           .eq("created_by", user.id)
           .order("created_at", { ascending: false });
         if (!error && data) setExams(data);
@@ -53,7 +54,7 @@ const ExamsList = () => {
         if (org) {
           const { data, error } = await supabase
             .from("exams")
-            .select("id, title, description, created_at, is_published, time_limit, created_by")
+            .select("id, title, description, created_at, is_published, time_limit, code, created_by")
             .eq("organization_id", org.id)
             .order("created_at", { ascending: false });
 
@@ -184,7 +185,7 @@ const ExamsList = () => {
                           </button>
                         )}
                         <button
-                          onClick={() => copyExamLink(exam.id)}
+                          onClick={() => copyExamLink(exam.code)}
                           title="Copy shareable link"
                           className={`flex items-center justify-center rounded-md border border-[hsl(var(--dashboard-border))] px-2.5 py-1.5 text-white/30 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-gold))] ${role === "organization_owner" ? "flex-1" : ""}`}
                         >

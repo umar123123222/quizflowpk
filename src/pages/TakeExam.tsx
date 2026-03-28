@@ -42,8 +42,9 @@ interface Exam {
 }
 
 const TakeExam = () => {
-  const { id } = useParams<{ id: string }>();
+  const { code } = useParams<{ code: string }>();
   const { toast } = useToast();
+  const [examId, setExamId] = useState<string | null>(null);
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [exam, setExam] = useState<Exam | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -88,15 +89,15 @@ const TakeExam = () => {
     defaultValues: { fullName: "", email: "", phone: "" },
   });
 
-  // Fetch exam & questions
+  // Fetch exam & questions by code
   useEffect(() => {
-    if (!id) return;
+    if (!code) return;
     const fetchExam = async () => {
       setLoading(true);
       const { data: examData, error: examError } = await supabase
         .from("exams")
         .select("id, title, description, time_limit, organization_id")
-        .eq("id", id)
+        .eq("code", code)
         .eq("is_published", true)
         .single();
 
@@ -106,11 +107,12 @@ const TakeExam = () => {
         return;
       }
       setExam(examData);
+      setExamId(examData.id);
 
       const { data: questionsData } = await supabase
         .from("questions")
         .select("id, question_text, question_type, option_a, option_b, option_c, option_d, order_index")
-        .eq("exam_id", id)
+        .eq("exam_id", examData.id)
         .order("order_index", { ascending: true });
 
       const questionsWithType = (questionsData || []).map((q: any) => ({
@@ -122,7 +124,7 @@ const TakeExam = () => {
       setLoading(false);
     };
     fetchExam();
-  }, [id]);
+  }, [code]);
 
   // Start timer when student submits info
   useEffect(() => {
@@ -147,7 +149,7 @@ const TakeExam = () => {
   }, [timeLeft, submitted]);
 
   const handleSubmitExam = useCallback(async () => {
-    if (!studentInfo || !exam || !id || submitting || submitted) return;
+    if (!studentInfo || !exam || !examId || submitting || submitted) return;
     isSubmittingRef.current = true;
     setSubmitting(true);
     // Exit fullscreen on submit
@@ -182,7 +184,7 @@ const TakeExam = () => {
     const { data: fullQuestions } = await supabase
       .from("questions")
         .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index")
-        .eq("exam_id", id)
+        .eq("exam_id", examId)
       .order("order_index", { ascending: true });
 
     const sorted = fullQuestions || [];
@@ -211,7 +213,7 @@ const TakeExam = () => {
 
     // Submit
     const { error: subError } = await supabase.from("submissions").insert({
-      exam_id: id,
+      exam_id: examId,
       student_id: studentId,
       answers: answers,
       score: calculatedScore,
@@ -230,7 +232,7 @@ const TakeExam = () => {
     setQuestionResults(results);
     setSubmitted(true);
     setSubmitting(false);
-  }, [studentInfo, exam, id, answers, submitting, submitted, toast]);
+  }, [studentInfo, exam, examId, answers, submitting, submitted, toast]);
 
   // Auto-submit when timer hits zero
   useEffect(() => {
@@ -249,7 +251,7 @@ const TakeExam = () => {
 
   const onStudentSubmit = async (data: StudentInfo) => {
     // Check if student already submitted this exam (by email or phone + exam_id)
-    if (id) {
+    if (examId) {
       const { data: existingStudents } = await supabase
         .from("students")
         .select("id")
@@ -260,7 +262,7 @@ const TakeExam = () => {
         const { data: existingSubs } = await supabase
           .from("submissions")
           .select("id")
-          .eq("exam_id", id)
+          .eq("exam_id", examId)
           .in("student_id", studentIds);
 
         if (existingSubs && existingSubs.length > 0) {

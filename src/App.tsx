@@ -42,7 +42,7 @@ const App = () => (
             <Route path="/dashboard/owner/users" element={<ProtectedRoute allowedRole="organization_owner"><Users /></ProtectedRoute>} />
             <Route path="/dashboard/teacher" element={<ProtectedRoute allowedRole="teacher"><TeacherDashboard /></ProtectedRoute>} />
             <Route path="/dashboard/teacher/settings" element={<ProtectedRoute allowedRole="teacher"><Settings /></ProtectedRoute>} />
-            <Route path="/exam/:id" element={<TakeExam />} />
+            <Route path="/exam/:code" element={<TakeExam />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

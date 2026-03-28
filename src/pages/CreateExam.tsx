@@ -58,11 +58,11 @@ const CreateExam = () => {
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
   const [saving, setSaving] = useState(false);
-  const [savedExamId, setSavedExamId] = useState<string | null>(null);
+  const [savedExamCode, setSavedExamCode] = useState<string | null>(null);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [loadingExam, setLoadingExam] = useState(false);
 
-  const examLink = (savedExamId || editId) ? `${window.location.origin}/exam/${savedExamId || editId}` : "";
+  const examLink = savedExamCode ? `${window.location.origin}/exam/${savedExamCode}` : "";
 
   // Load existing exam data in edit mode
   useEffect(() => {
@@ -78,6 +78,7 @@ const CreateExam = () => {
         if (exam) {
           setTitle(exam.title);
           setTimeLimit(exam.time_limit ?? 30);
+          if (exam.code) setSavedExamCode(exam.code);
         }
         const { data: qs } = await supabase
           .from("questions")
@@ -209,11 +210,12 @@ const CreateExam = () => {
         const { data: exam, error: examError } = await supabase
           .from("exams")
           .insert(insertData)
-          .select("id")
+          .select("id, code")
           .single();
 
         if (examError || !exam) throw examError || new Error("Failed to create exam");
         examId = exam.id;
+        setSavedExamCode(exam.code);
       }
 
       // Insert questions
@@ -239,7 +241,7 @@ const CreateExam = () => {
       if (qError) throw qError;
 
       toast({ title: isEditMode ? "Exam updated!" : "Exam saved!", description: `"${title}" has been ${isEditMode ? "updated" : "created"} successfully.` });
-      setSavedExamId(examId);
+      setSavedExamCode(savedExamCode || "saved");
       setShowLinkDialog(true);
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Something went wrong.", variant: "destructive" });
