@@ -958,29 +958,88 @@ const CreateExam = () => {
           )}
 
           {publishStep === 2 && (
-            <div className="space-y-4 mt-2">
-              <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-4 space-y-3">
-                <div className="flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-medium text-white/90">Are you sure?</p>
-                    <p className="text-xs text-white/50 mt-1">
-                      Once published, students will be able to access and take this exam immediately. Make sure all questions and settings are correct.
-                    </p>
+            <div className="space-y-5 mt-2">
+              <h3 className="font-mono text-[11px] tracking-[0.15em] uppercase font-semibold" style={{ color: '#e09615' }}>
+                Result Visibility
+              </h3>
+
+              <div className="grid gap-3">
+                <button
+                  type="button"
+                  onClick={() => setResultVisibility("immediate")}
+                  className={`rounded-lg border p-4 text-left transition-all ${
+                    resultVisibility === "immediate"
+                      ? "border-[#e09615] bg-[#e09615]/10"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] hover:border-white/20"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                      resultVisibility === "immediate" ? "border-[#e09615]" : "border-white/25"
+                    }`}>
+                      {resultVisibility === "immediate" && (
+                        <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#e09615' }} />
+                      )}
+                    </div>
+                    <div>
+                      <p className={`font-mono text-[11px] tracking-wider font-bold ${
+                        resultVisibility === "immediate" ? "text-[#e09615]" : "text-white/75"
+                      }`}>
+                        Immediately after submission
+                      </p>
+                      <p className="font-mono text-[9px] text-white/50 mt-1">
+                        Students see their score and answers right away
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setResultVisibility("after_exam_ends")}
+                  className={`rounded-lg border p-4 text-left transition-all ${
+                    resultVisibility === "after_exam_ends"
+                      ? "border-[#e09615] bg-[#e09615]/10"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] hover:border-white/20"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                      resultVisibility === "after_exam_ends" ? "border-[#e09615]" : "border-white/25"
+                    }`}>
+                      {resultVisibility === "after_exam_ends" && (
+                        <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#e09615' }} />
+                      )}
+                    </div>
+                    <div>
+                      <p className={`font-mono text-[11px] tracking-wider font-bold ${
+                        resultVisibility === "after_exam_ends" ? "text-[#e09615]" : "text-white/75"
+                      }`}>
+                        After exam time window ends
+                      </p>
+                      <p className="font-mono text-[9px] text-white/50 mt-1">
+                        Results hidden until the exam period is over
+                      </p>
+                    </div>
+                  </div>
+                </button>
               </div>
-              <div className="flex items-center gap-2 text-xs text-white/50">
-                <CheckCircle className="h-3.5 w-3.5 text-green-400" />
-                <span>{questions.length} question{questions.length > 1 ? "s" : ""} ready</span>
-              </div>
-              {questions.some(q => q.type === "text") && (
+
+              {/* Summary hints */}
+              <div className="space-y-1.5">
                 <div className="flex items-center gap-2 text-xs text-white/50">
-                  <AlertTriangle className="h-3.5 w-3.5 text-yellow-500" />
-                  <span>Text questions will require manual review</span>
+                  <CheckCircle className="h-3.5 w-3.5 text-green-400" />
+                  <span>{questions.length} question{questions.length > 1 ? "s" : ""} ready</span>
                 </div>
-              )}
-              <div className="flex gap-3">
+                {questions.some(q => q.type === "text") && (
+                  <div className="flex items-center gap-2 text-xs text-white/50">
+                    <AlertTriangle className="h-3.5 w-3.5 text-yellow-500" />
+                    <span>Text questions will require manual review</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-3 pt-1">
                 <button
                   onClick={() => setPublishStep(1)}
                   className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-white/50 hover:text-white/70 transition-colors"
@@ -993,7 +1052,8 @@ const CreateExam = () => {
                   className="flex-1 flex items-center justify-center gap-2 rounded-md py-2.5 font-mono text-[10px] tracking-wider uppercase font-bold transition-all hover:opacity-90 disabled:opacity-50"
                   style={{ backgroundColor: '#e09615', color: '#0a0d14' }}
                 >
-                  {saving ? "Publishing..." : "Publish Now"}
+                  <Send className="h-3.5 w-3.5" />
+                  {saving ? "Publishing..." : "Publish Exam"}
                 </button>
               </div>
             </div>
