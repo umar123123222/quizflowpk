@@ -149,7 +149,7 @@ const TakeExam = () => {
   }, [timeLeft, submitted]);
 
   const handleSubmitExam = useCallback(async () => {
-    if (!studentInfo || !exam || !id || submitting || submitted) return;
+    if (!studentInfo || !exam || !examId || submitting || submitted) return;
     isSubmittingRef.current = true;
     setSubmitting(true);
     // Exit fullscreen on submit
