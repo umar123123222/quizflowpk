@@ -91,6 +91,18 @@ const CreateExam = () => {
           setTitle(exam.title);
           setTimeLimit(exam.time_limit ?? 30);
           setResultVisibility((exam as any).result_visibility || "immediate");
+          if ((exam as any).start_time) {
+            const st = new Date((exam as any).start_time);
+            setStartTime(st);
+            setStartHour(st.getHours().toString().padStart(2, "0"));
+            setStartMinute(st.getMinutes().toString().padStart(2, "0"));
+          }
+          if ((exam as any).end_time) {
+            const et = new Date((exam as any).end_time);
+            setEndTime(et);
+            setEndHour(et.getHours().toString().padStart(2, "0"));
+            setEndMinute(et.getMinutes().toString().padStart(2, "0"));
+          }
           if (exam.code) setSavedExamCode(exam.code);
         }
         const { data: qs } = await supabase
