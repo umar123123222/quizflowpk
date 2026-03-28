@@ -358,30 +358,6 @@ const ViewSubmission = () => {
 
         {/* MCQ Summary for mixed exams */}
         {hasTextQuestions && (
-          <Card className="mb-6 border-l-4 border-l-primary">
-            <CardContent className="pt-5 pb-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-1">MCQ Score (Auto Evaluated)</h3>
-                  <p className="text-xs text-muted-foreground">
-                    {correctCount} out of {totalCount} multiple-choice questions answered correctly
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-primary">{correctCount} / {totalCount}</div>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {(() => {
-                      const mcqPoints = questionResults.filter(q => q.question_type !== "text").reduce((s, q) => s + (q.is_correct ? q.points : 0), 0);
-                      const mcqTotal = questionResults.filter(q => q.question_type !== "text").reduce((s, q) => s + q.points, 0);
-                      return `${mcqPoints} / ${mcqTotal} marks`;
-                    })()}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Questions */}
         <h2 className="font-serif text-xl font-semibold mb-4">
           {hasTextQuestions ? "Text Answers — Manual Scoring" : "Answer Review"}
