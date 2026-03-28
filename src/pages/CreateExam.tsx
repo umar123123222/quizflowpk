@@ -607,7 +607,7 @@ const CreateExam = () => {
                       }, 0);
 
                   return (
-                    <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] p-3 space-y-1">
+                    <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-3 space-y-1">
                       <div className="flex items-center gap-4 flex-wrap">
                         <span className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)]">
                           Total: <span className="text-[hsl(var(--dashboard-gold))] font-bold">{Math.round(computedTotal * 100) / 100}</span>
@@ -905,7 +905,7 @@ const CreateExam = () => {
                         startTime
                           ? "border-[hsl(var(--dashboard-gold)/0.5)] text-[hsl(var(--dashboard-text)/.9)]"
                           : "border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.4)]",
-                        "bg-[hsl(var(--dashboard-bg))]"
+                        "bg-[hsl(var(--dashboard-card))]"
                       )}>
                         <CalendarClock className="inline h-3.5 w-3.5 mr-2 opacity-50" />
                         {startTime ? format(startTime, "PPP") : "Pick start date"}
@@ -954,7 +954,7 @@ const CreateExam = () => {
                         endTime
                           ? "border-[hsl(var(--dashboard-gold)/0.5)] text-[hsl(var(--dashboard-text)/.9)]"
                           : "border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.4)]",
-                        "bg-[hsl(var(--dashboard-bg))]"
+                        "bg-[hsl(var(--dashboard-card))]"
                       )}>
                         <CalendarClock className="inline h-3.5 w-3.5 mr-2 opacity-50" />
                         {endTime ? format(endTime, "PPP") : "Pick end date"}
