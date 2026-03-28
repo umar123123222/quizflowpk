@@ -466,12 +466,14 @@ const ViewSubmission = () => {
           })}
         </div>
 
-        {/* Save Grades Button */}
+        {/* Publish Result Button */}
         {hasTextQuestions && isTeacherOrOwner && (
           <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t border-border py-4 -mx-4 px-4 flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
-              {allTextGraded ? (
-                <span className="text-green-500 font-medium">All text answers graded</span>
+              {isReviewed ? (
+                <span className="text-green-500 font-medium">✓ Result published</span>
+              ) : allTextGraded ? (
+                <span className="text-green-500 font-medium">All text answers graded — ready to publish</span>
               ) : (
                 <span>
                   {questionResults.filter((q) => q.question_type === "text" && textScores[q.id] !== undefined && textScores[q.id] !== "").length}
@@ -483,11 +485,11 @@ const ViewSubmission = () => {
             </div>
             <Button
               onClick={handleSaveGrades}
-              disabled={saving || !allTextGraded}
+              disabled={saving || !allTextGraded || isReviewed}
               className="gap-2"
             >
               <Save className="h-4 w-4" />
-              {saving ? "Saving..." : "Save & Finalize Grades"}
+              {saving ? "Publishing..." : isReviewed ? "Published" : "Publish Result"}
             </Button>
           </div>
         )}
