@@ -42,17 +42,33 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center opacity-0 animate-fade-up [animation-delay:300ms]">
-            <Button asChild size="lg" className="text-base border-0 font-semibold" style={{ background: 'linear-gradient(to right, #1e2d45 60%, #e8a020 100%)', color: '#ffffff', borderRadius: '10px', padding: '1rem 2rem' }}>
-              <Link to="/signup">
-                Get Started Free
-                <ArrowRight className="ml-1 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" className="text-base border-0 font-semibold" style={{ backgroundColor: '#1e2d45', color: '#ffffff', borderRadius: '10px', padding: '1rem 2rem' }}>
-              <Link to="/login">
-                See How It Works
-              </Link>
-            </Button>
+            <Link
+              to="/signup"
+              className="inline-flex items-center gap-2 text-base font-semibold"
+              style={{
+                background: 'linear-gradient(to right, #1e2d45 60%, #e8a020 100%)',
+                color: '#ffffff',
+                borderRadius: '10px',
+                padding: '1rem 2.2rem',
+                textDecoration: 'none',
+              }}
+            >
+              Get Started Free
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 text-base font-semibold"
+              style={{
+                backgroundColor: '#1e2d45',
+                color: '#ffffff',
+                borderRadius: '10px',
+                padding: '1rem 2.2rem',
+                textDecoration: 'none',
+              }}
+            >
+              See How It Works
+            </Link>
           </div>
 
           {/* Stats Row */}
