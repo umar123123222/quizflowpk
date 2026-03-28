@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { Eye } from "lucide-react";
 import {
   ArrowLeft,
   Plus,
@@ -56,6 +57,7 @@ const CreateExam = () => {
 
   const [title, setTitle] = useState("");
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
+  const [resultVisibility, setResultVisibility] = useState<"immediate" | "after_exam_ends">("immediate");
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
   const [saving, setSaving] = useState(false);
   const [savedExamCode, setSavedExamCode] = useState<string | null>(null);
@@ -78,6 +80,7 @@ const CreateExam = () => {
         if (exam) {
           setTitle(exam.title);
           setTimeLimit(exam.time_limit ?? 30);
+          setResultVisibility((exam as any).result_visibility || "immediate");
           if (exam.code) setSavedExamCode(exam.code);
         }
         const { data: qs } = await supabase
@@ -191,7 +194,7 @@ const CreateExam = () => {
         // Update existing exam
         const { error: examError } = await supabase
           .from("exams")
-          .update({ title: title.trim(), time_limit: timeLimit || null })
+          .update({ title: title.trim(), time_limit: timeLimit || null, result_visibility: resultVisibility })
           .eq("id", editId);
         if (examError) throw examError;
 
@@ -202,6 +205,7 @@ const CreateExam = () => {
         const insertData: any = {
             title: title.trim(),
             time_limit: timeLimit || null,
+            result_visibility: resultVisibility,
             created_by: user!.id,
             is_published: true,
           };
@@ -335,6 +339,52 @@ const CreateExam = () => {
                   min={1}
                   className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                 />
+              </div>
+            </div>
+
+            {/* Result Visibility */}
+            <div className="mb-8 space-y-3">
+              <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35 flex items-center gap-2">
+                <Eye className="h-3.5 w-3.5" />
+                Result Visibility
+              </label>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => setResultVisibility("immediate")}
+                  className={`rounded-lg border p-4 text-left transition-all ${
+                    resultVisibility === "immediate"
+                      ? "border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.08)]"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-white/20"
+                  }`}
+                >
+                  <p className={`font-mono text-[11px] tracking-wider font-bold ${
+                    resultVisibility === "immediate" ? "text-[hsl(var(--dashboard-gold))]" : "text-white/60"
+                  }`}>
+                    Immediately after submission
+                  </p>
+                  <p className="font-mono text-[9px] text-white/30 mt-1">
+                    Students see their score and answers right away
+                  </p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setResultVisibility("after_exam_ends")}
+                  className={`rounded-lg border p-4 text-left transition-all ${
+                    resultVisibility === "after_exam_ends"
+                      ? "border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.08)]"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-white/20"
+                  }`}
+                >
+                  <p className={`font-mono text-[11px] tracking-wider font-bold ${
+                    resultVisibility === "after_exam_ends" ? "text-[hsl(var(--dashboard-gold))]" : "text-white/60"
+                  }`}>
+                    After exam time window ends
+                  </p>
+                  <p className="font-mono text-[9px] text-white/30 mt-1">
+                    Results hidden until the exam period is over
+                  </p>
+                </button>
               </div>
             </div>
 

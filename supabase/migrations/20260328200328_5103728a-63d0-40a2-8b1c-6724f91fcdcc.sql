@@ -1,0 +1,1 @@
+ALTER TABLE public.exams ADD COLUMN result_visibility text NOT NULL DEFAULT 'immediate';

@@ -24,6 +24,7 @@ export type Database = {
           id: string
           is_published: boolean | null
           organization_id: string | null
+          result_visibility: string
           time_limit: number | null
           title: string
         }
@@ -36,6 +37,7 @@ export type Database = {
           id?: string
           is_published?: boolean | null
           organization_id?: string | null
+          result_visibility?: string
           time_limit?: number | null
           title: string
         }
@@ -48,6 +50,7 @@ export type Database = {
           id?: string
           is_published?: boolean | null
           organization_id?: string | null
+          result_visibility?: string
           time_limit?: number | null
           title?: string
         }
