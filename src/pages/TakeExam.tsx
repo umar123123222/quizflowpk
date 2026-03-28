@@ -72,6 +72,8 @@ const TakeExam = () => {
   const hasAutoSubmitted = useRef(false);
   const fullscreenExitCount = useRef(0);
   const [showFullscreenWarning, setShowFullscreenWarning] = useState(false);
+  const [fsCountdown, setFsCountdown] = useState(5);
+  const fsCountdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const tabSwitchCount = useRef(0);
   const [showTabSwitchWarning, setShowTabSwitchWarning] = useState(false);
   const isSubmittingRef = useRef(false);
@@ -328,19 +330,37 @@ const TakeExam = () => {
       if (!document.fullscreenElement && !isSubmittingRef.current && !hasAutoSubmitted.current) {
         fullscreenExitCount.current += 1;
         addViolation("Full-screen exited");
-        if (fullscreenExitCount.current >= 2) {
-          addViolation("Auto-submitted: repeated full-screen exit");
-          isSubmittingRef.current = true;
-          toast({ title: "Exam Auto-Submitted", description: "You exited full-screen a second time. Your exam has been submitted.", variant: "destructive" });
-          handleSubmitExam();
-        } else {
-          setShowFullscreenWarning(true);
-        }
+        setShowFullscreenWarning(true);
+        setFsCountdown(5);
+
+        // Clear any existing countdown
+        if (fsCountdownRef.current) clearInterval(fsCountdownRef.current);
+
+        let count = 5;
+        fsCountdownRef.current = setInterval(() => {
+          count -= 1;
+          setFsCountdown(count);
+          if (count <= 0) {
+            if (fsCountdownRef.current) clearInterval(fsCountdownRef.current);
+            fsCountdownRef.current = null;
+            // Auto-submit due to violation
+            if (!isSubmittingRef.current && !hasAutoSubmitted.current) {
+              addViolation("Auto-submitted: full-screen exit timeout");
+              isSubmittingRef.current = true;
+              setShowFullscreenWarning(false);
+              toast({ title: "Exam Auto-Submitted", description: "You did not return to full-screen in time. Your exam has been submitted.", variant: "destructive" });
+              handleSubmitExam();
+            }
+          }
+        }, 1000);
       }
     };
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
-    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      if (fsCountdownRef.current) clearInterval(fsCountdownRef.current);
+    };
   }, [studentInfo, submitted, handleSubmitExam, toast]);
 
   // Tab switch / visibility detection
@@ -367,6 +387,11 @@ const TakeExam = () => {
   }, [studentInfo, submitted, handleSubmitExam, toast]);
 
   const handleReEnterFullscreen = () => {
+    // Cancel countdown
+    if (fsCountdownRef.current) {
+      clearInterval(fsCountdownRef.current);
+      fsCountdownRef.current = null;
+    }
     setShowFullscreenWarning(false);
     try {
       document.documentElement.requestFullscreen?.();
@@ -680,10 +705,19 @@ const TakeExam = () => {
               Full-Screen Exited!
             </DialogTitle>
             <DialogDescription className="text-base pt-2">
-              You have exited full-screen. Please return to full-screen immediately or your exam will be submitted.
-              <span className="block mt-2 font-semibold text-destructive">There will be no second chance.</span>
+              You have exited full-screen. Return to full-screen immediately or your exam will be auto-submitted.
             </DialogDescription>
           </DialogHeader>
+          <div className="flex items-center justify-center py-4">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-16 h-16 rounded-full border-4 border-destructive flex items-center justify-center">
+                <span className="text-3xl font-bold text-destructive font-mono">{fsCountdown}</span>
+              </div>
+              <p className="text-sm text-muted-foreground font-medium">
+                Return to full-screen in <span className="text-destructive font-bold">{fsCountdown}</span>...
+              </p>
+            </div>
+          </div>
           <DialogFooter>
             <Button onClick={handleReEnterFullscreen} className="w-full gap-2">
               <Maximize className="h-4 w-4" />
