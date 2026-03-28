@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { FileText, LogOut, Loader2, Copy, Search, ChevronDown } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 

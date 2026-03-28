@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";

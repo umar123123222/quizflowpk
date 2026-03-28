@@ -4,6 +4,7 @@ import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert, Eye, Download, Search, RotateCcw, Plus, X } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";

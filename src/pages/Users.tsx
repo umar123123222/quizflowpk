@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { LogOut, Loader2, Users as UsersIcon, Plus, X } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { useToast } from "@/hooks/use-toast";
 import {
   Table,

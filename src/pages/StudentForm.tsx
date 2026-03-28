@@ -2,6 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { LogOut } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { useNavigate } from "react-router-dom";
 import StudentFormSettings from "@/components/StudentFormSettings";
 

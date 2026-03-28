@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { LogOut, User, Shield, Mail, Save, Loader2, Eye, EyeOff, BadgeCheck } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { useNavigate } from "react-router-dom";
 
 
