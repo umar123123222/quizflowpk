@@ -216,7 +216,7 @@ const Submissions = () => {
                   size="sm"
                   className="shrink-0 border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] text-white/60 hover:text-white/90 font-mono text-[10px] tracking-wider uppercase"
                   onClick={() => {
-                    const rows: string[][] = [["Exam", "Name", "Email", "Phone", "Score", "Violations", "Date"]];
+                    const rows: string[][] = [["Exam", "Name", "Email", "Phone", "Score", "Status", "Violations", "Date"]];
                     examsWithSubs.forEach((exam) => {
                       exam.submissions.forEach((sub) => {
                         const violations = sub.violations && sub.violations.length > 0
@@ -231,6 +231,7 @@ const Submissions = () => {
                           sub.student.email || "—",
                           sub.student.phone || "—",
                           sub.score !== null ? `${sub.score}%` : "—",
+                          (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
                           violations,
                           date,
                         ]);
@@ -311,6 +312,7 @@ const Submissions = () => {
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Email</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Phone</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Score</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-center">Status</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Violations</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Date</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-center">Details</TableHead>
@@ -342,6 +344,17 @@ const Submissions = () => {
                                         }`}
                                       >
                                         {sub.score !== null ? `${sub.score}%` : "—"}
+                                      </span>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                      <span
+                                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
+                                          (sub.score ?? 0) >= 50
+                                            ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
+                                            : "bg-destructive/15 text-destructive"
+                                        }`}
+                                      >
+                                        {(sub.score ?? 0) >= 50 ? "Pass" : "Fail"}
                                       </span>
                                     </TableCell>
                                     <TableCell>
