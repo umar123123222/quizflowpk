@@ -188,10 +188,10 @@ const CreateExam = () => {
     return d.toISOString();
   };
 
-  const handleSave = async () => {
+  const validateExam = () => {
     if (!title.trim()) {
       toast({ title: "Title required", description: "Please enter an exam title.", variant: "destructive" });
-      return;
+      return false;
     }
     const hasIncomplete = questions.some((q) => {
       if (!q.text.trim()) return true;
@@ -200,14 +200,12 @@ const CreateExam = () => {
     });
     if (hasIncomplete) {
       toast({ title: "Incomplete questions", description: "Fill in all question texts and options.", variant: "destructive" });
-      return;
+      return false;
     }
-
-    // Validate custom marking constraints
     if (customMarking) {
       if (typeof totalMarks !== "number" || totalMarks <= 0) {
         toast({ title: "Total Marks required", description: "Please set Total Marks when Custom Marking is enabled.", variant: "destructive" });
-        return;
+        return false;
       }
       const assignedMarks = questions.reduce((sum, q) => {
         if (q.marks !== "" && typeof q.marks === "number" && q.marks > 0) return sum + q.marks;
@@ -215,13 +213,41 @@ const CreateExam = () => {
       }, 0);
       if (assignedMarks > totalMarks) {
         toast({ title: "Marks exceed total", description: `Assigned marks (${assignedMarks}) exceed total exam marks (${totalMarks}). Please adjust.`, variant: "destructive" });
-        return;
+        return false;
       }
     }
+    return true;
+  };
 
-    setSaving(true);
+  const getQuestionPoints = (q: Question): number => {
+    if (customMarking) {
+      if (q.marks !== "" && typeof q.marks === "number" && q.marks > 0) return q.marks;
+      if (typeof totalMarks === "number" && totalMarks > 0) {
+        const assigned = questions.reduce((sum, qq) => {
+          if (qq.marks !== "" && typeof qq.marks === "number" && qq.marks > 0) return sum + qq.marks;
+          return sum;
+        }, 0);
+        const unassignedCount = questions.filter((qq) => qq.marks === "" || qq.marks === 0).length;
+        if (unassignedCount > 0) {
+          const remaining = totalMarks - assigned;
+          return Math.round((remaining / unassignedCount) * 100) / 100;
+        }
+      }
+      const defaultVal = q.type === "mcq" ? defaultMcqMarks : defaultTextMarks;
+      return typeof defaultVal === "number" && defaultVal > 0 ? defaultVal : 1;
+    }
+    if (totalMarks && typeof totalMarks === "number") {
+      return Math.round((totalMarks / questions.length) * 100) / 100;
+    }
+    return 1;
+  };
+
+  const saveExam = async (publish: boolean) => {
+    if (!validateExam()) return;
+
+    const setLoadingState = publish ? setSaving : setSavingDraft;
+    setLoadingState(true);
     try {
-      // Try to get org (optional for teachers)
       let orgId: string | null = null;
       const { data: orgOwner } = await supabase
         .from("organizations")
@@ -231,7 +257,6 @@ const CreateExam = () => {
       if (orgOwner) {
         orgId = orgOwner.id;
       } else {
-        // Check if teacher belongs to an org
         const { data: membership } = await supabase
           .from("organization_teachers")
           .select("organization_id")
@@ -245,7 +270,6 @@ const CreateExam = () => {
       let examId = editId;
 
       if (isEditMode && editId) {
-        // Update existing exam
         const { error: examError } = await supabase
           .from("exams")
           .update({
@@ -255,24 +279,22 @@ const CreateExam = () => {
             result_visibility: resultVisibility,
             start_time: buildDatetime(startTime, startHour, startMinute),
             end_time: buildDatetime(endTime, endHour, endMinute),
+            is_published: publish,
           } as any)
           .eq("id", editId);
         if (examError) throw examError;
-
-        // Delete old questions and re-insert
         await supabase.from("questions").delete().eq("exam_id", editId);
       } else {
-        // Insert new exam
         const insertData: any = {
-            title: title.trim(),
-            time_limit: timeLimit || null,
-            total_marks: totalMarks || null,
-            result_visibility: resultVisibility,
-            start_time: buildDatetime(startTime, startHour, startMinute),
-            end_time: buildDatetime(endTime, endHour, endMinute),
-            created_by: user!.id,
-            is_published: true,
-          };
+          title: title.trim(),
+          time_limit: timeLimit || null,
+          total_marks: totalMarks || null,
+          result_visibility: resultVisibility,
+          start_time: buildDatetime(startTime, startHour, startMinute),
+          end_time: buildDatetime(endTime, endHour, endMinute),
+          created_by: user!.id,
+          is_published: publish,
+        };
         if (orgId) insertData.organization_id = orgId;
 
         const { data: exam, error: examError } = await supabase
@@ -285,36 +307,6 @@ const CreateExam = () => {
         examId = exam.id;
         setSavedExamCode(exam.code);
       }
-
-      // Calculate points per question
-      const getQuestionPoints = (q: Question): number => {
-        if (customMarking) {
-          // If this question has explicit marks, use them
-          if (q.marks !== "" && typeof q.marks === "number" && q.marks > 0) return q.marks;
-
-          // If total marks is set, distribute remaining among unassigned
-          if (typeof totalMarks === "number" && totalMarks > 0) {
-            const assigned = questions.reduce((sum, qq) => {
-              if (qq.marks !== "" && typeof qq.marks === "number" && qq.marks > 0) return sum + qq.marks;
-              return sum;
-            }, 0);
-            const unassignedCount = questions.filter((qq) => qq.marks === "" || qq.marks === 0).length;
-            if (unassignedCount > 0) {
-              const remaining = totalMarks - assigned;
-              return Math.round((remaining / unassignedCount) * 100) / 100;
-            }
-          }
-
-          // Fall back to default per type
-          const defaultVal = q.type === "mcq" ? defaultMcqMarks : defaultTextMarks;
-          return typeof defaultVal === "number" && defaultVal > 0 ? defaultVal : 1;
-        }
-        // Equal distribution from total marks or 1 per question
-        if (totalMarks && typeof totalMarks === "number") {
-          return Math.round((totalMarks / questions.length) * 100) / 100;
-        }
-        return 1;
-      };
 
       const questionRows = questions.map((q, i) => ({
         exam_id: examId!,
@@ -338,15 +330,31 @@ const CreateExam = () => {
       const { error: qError } = await supabase.from("questions").insert(questionRows);
       if (qError) throw qError;
 
-      toast({ title: isEditMode ? "Exam updated!" : "Exam saved!", description: `"${title}" has been ${isEditMode ? "updated" : "created"} successfully.` });
-      setSavedExamCode(savedExamCode || "saved");
-      setShowLinkDialog(true);
+      if (publish) {
+        toast({ title: "Exam published!", description: `"${title}" is now live.` });
+        setSavedExamCode(savedExamCode || "saved");
+        setShowPublishDialog(false);
+        setShowLinkDialog(true);
+      } else {
+        toast({ title: "Draft saved", description: `"${title}" has been saved as a draft.` });
+        navigate("/dashboard/owner/exams");
+      }
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Something went wrong.", variant: "destructive" });
     } finally {
-      setSaving(false);
+      setLoadingState(false);
     }
   };
+
+  const handleSaveDraft = () => saveExam(false);
+
+  const handleOpenPublishDialog = () => {
+    if (!validateExam()) return;
+    setPublishStep(1);
+    setShowPublishDialog(true);
+  };
+
+  const handleConfirmPublish = () => saveExam(true);
 
   const optionLabels = ["A", "B", "C", "D"];
 
