@@ -16,6 +16,7 @@ import CreateExam from "./pages/CreateExam.tsx";
 import ExamsList from "./pages/ExamsList.tsx";
 import TakeExam from "./pages/TakeExam.tsx";
 import Submissions from "./pages/Submissions.tsx";
+import ViewSubmission from "./pages/ViewSubmission.tsx";
 import Settings from "./pages/Settings.tsx";
 import Users from "./pages/Users.tsx";
 import NotFound from "./pages/NotFound.tsx";
