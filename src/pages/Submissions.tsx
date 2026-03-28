@@ -268,6 +268,7 @@ const Submissions = () => {
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Score</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Violations</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Date</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-center">Details</TableHead>
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
