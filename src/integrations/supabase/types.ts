@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       exams: {
         Row: {
+          code: string
           created_at: string | null
           created_by: string
           description: string | null
@@ -27,6 +28,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          code?: string
           created_at?: string | null
           created_by: string
           description?: string | null
@@ -38,6 +40,7 @@ export type Database = {
           title: string
         }
         Update: {
+          code?: string
           created_at?: string | null
           created_by?: string
           description?: string | null
@@ -312,7 +315,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_exam_code: { Args: never; Returns: string }
     }
     Enums: {
       app_role: "organization_owner" | "teacher"
