@@ -306,6 +306,7 @@ const CreateExam = () => {
           title: title.trim(),
           time_limit: timeLimit || null,
           total_marks: totalMarks || null,
+          passing_percentage: passingPercentage || null,
           result_visibility: resultVisibility,
           start_time: buildDatetime(startTime, startHour, startMinute),
           end_time: buildDatetime(endTime, endHour, endMinute),
