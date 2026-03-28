@@ -176,7 +176,7 @@ const TakeExam = () => {
       setLoading(true);
       const { data: examData, error: examError } = await supabase
         .from("exams")
-        .select("id, title, description, time_limit, organization_id, result_visibility, start_time, end_time")
+        .select("id, title, description, time_limit, organization_id, result_visibility, start_time, end_time, shuffle_questions")
         .eq("code", code)
         .eq("is_published", true)
         .single();
