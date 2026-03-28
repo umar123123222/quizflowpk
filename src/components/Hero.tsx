@@ -60,9 +60,9 @@ const Hero = () => {
               to="/login"
               className="inline-flex items-center gap-2 text-base transition-colors duration-200"
               style={{
-                backgroundColor: 'transparent',
-                color: '#e8e3d5',
-                border: '1px solid rgba(232,227,213,0.2)',
+                backgroundColor: '#1E3A5F',
+                color: '#ffffff',
+                border: 'none',
                 borderRadius: '8px',
                 padding: '0.85rem 2rem',
                 textDecoration: 'none',
