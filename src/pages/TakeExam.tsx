@@ -185,12 +185,15 @@ const TakeExam = () => {
 
     const sorted = fullQuestions || [];
     let correct = 0;
-    const results = sorted.map((q) => {
+    const mcqCount = sorted.filter((q: any) => (q as any).question_type !== "text").length;
+    const results = sorted.map((q: any) => {
       const studentAnswer = answers[q.id] || null;
-      const isCorrect = studentAnswer === q.correct_answer;
+      const qType = q.question_type || "mcq";
+      const isCorrect = qType === "mcq" ? studentAnswer === q.correct_answer : false;
       if (isCorrect) correct++;
       return {
         question_text: q.question_text,
+        question_type: qType,
         student_answer: studentAnswer,
         correct_answer: q.correct_answer,
         is_correct: isCorrect,
@@ -201,7 +204,7 @@ const TakeExam = () => {
       };
     });
 
-    const total = sorted.length;
+    const total = mcqCount;
     const calculatedScore = total > 0 ? Math.round((correct / total) * 100) : 0;
 
     // Submit
