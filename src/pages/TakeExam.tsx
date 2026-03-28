@@ -668,81 +668,110 @@ const TakeExam = () => {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onStudentSubmit)} className="space-y-4">
-                <FormField control={form.control} name="fullName" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Enter your full name" className="pl-10" {...field} />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                {(!formSettings || formSettings.email_visible) && (
-                  <FormField control={form.control} name="email" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email{formSettings && !formSettings.email_required ? " (Optional)" : ""}</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input type="email" placeholder="Enter your email" className="pl-10" {...field} />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                )}
-                {(!formSettings || formSettings.phone_visible) && (
-                  <FormField control={form.control} name="phone" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number{formSettings && !formSettings.phone_required ? " (Optional)" : ""}</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input type="tel" placeholder="Enter your phone number" className="pl-10" {...field} />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                )}
+                {(() => {
+                  // Build ordered field list
+                  const order = formSettings?.field_order || ["name", "email", "phone"];
+                  // Add any custom fields not in order
+                  const allCustomIds = customFieldDefs.map((cf) => `custom:${cf.id}`);
+                  const fullOrder = [...order];
+                  for (const cid of allCustomIds) {
+                    if (!fullOrder.includes(cid)) fullOrder.push(cid);
+                  }
+                  // Add defaults not in order
+                  for (const d of ["name", "email", "phone"]) {
+                    if (!fullOrder.includes(d)) fullOrder.push(d);
+                  }
 
-                {/* Custom fields */}
-                {customFieldDefs.map((cf) => (
-                  <div key={cf.id} className="space-y-2">
-                    <Label>
-                      {cf.field_label}
-                      {!cf.is_required && <span className="text-muted-foreground text-xs ml-1">(Optional)</span>}
-                    </Label>
-                    {cf.field_type === "dropdown" ? (
-                      <select
-                        value={customFieldValues[cf.id] || ""}
-                        onChange={(e) =>
-                          setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
-                        }
-                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                        required={cf.is_required}
-                      >
-                        <option value="">Select {cf.field_label}</option>
-                        {cf.dropdown_options.map((opt) => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <Input
-                        type={cf.field_type === "number" ? "number" : "text"}
-                        placeholder={`Enter ${cf.field_label.toLowerCase()}`}
-                        value={customFieldValues[cf.id] || ""}
-                        onChange={(e) =>
-                          setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
-                        }
-                        required={cf.is_required}
-                      />
-                    )}
-                  </div>
-                ))}
+                  return fullOrder.map((key) => {
+                    if (key === "name") {
+                      return (
+                        <FormField key="name" control={form.control} name="fullName" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Full Name</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Input placeholder="Enter your full name" className="pl-10" {...field} />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+                      );
+                    }
+                    if (key === "email" && (!formSettings || formSettings.email_visible)) {
+                      return (
+                        <FormField key="email" control={form.control} name="email" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email{formSettings && !formSettings.email_required ? " (Optional)" : ""}</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Input type="email" placeholder="Enter your email" className="pl-10" {...field} />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+                      );
+                    }
+                    if (key === "phone" && (!formSettings || formSettings.phone_visible)) {
+                      return (
+                        <FormField key="phone" control={form.control} name="phone" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Phone Number{formSettings && !formSettings.phone_required ? " (Optional)" : ""}</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Input type="tel" placeholder="Enter your phone number" className="pl-10" {...field} />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+                      );
+                    }
+                    if (key.startsWith("custom:")) {
+                      const cfId = key.replace("custom:", "");
+                      const cf = customFieldDefs.find((c) => c.id === cfId);
+                      if (!cf) return null;
+                      return (
+                        <div key={cf.id} className="space-y-2">
+                          <Label>
+                            {cf.field_label}
+                            {!cf.is_required && <span className="text-muted-foreground text-xs ml-1">(Optional)</span>}
+                          </Label>
+                          {cf.field_type === "dropdown" ? (
+                            <select
+                              value={customFieldValues[cf.id] || ""}
+                              onChange={(e) =>
+                                setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
+                              }
+                              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                              required={cf.is_required}
+                            >
+                              <option value="">Select {cf.field_label}</option>
+                              {cf.dropdown_options.map((opt) => (
+                                <option key={opt} value={opt}>{opt}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <Input
+                              type={cf.field_type === "number" ? "number" : "text"}
+                              placeholder={`Enter ${cf.field_label.toLowerCase()}`}
+                              value={customFieldValues[cf.id] || ""}
+                              onChange={(e) =>
+                                setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
+                              }
+                              required={cf.is_required}
+                            />
+                          )}
+                        </div>
+                      );
+                    }
+                    return null;
+                  });
+                })()}
 
                 <Button type="submit" className="w-full mt-2">Start Exam</Button>
               </form>
