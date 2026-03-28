@@ -1,6 +1,6 @@
-import { Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Logo } from "@/components/Logo";
 
 const Navbar = () => {
   return (
@@ -9,12 +9,7 @@ const Navbar = () => {
       style={{ backgroundColor: 'transparent', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          <div className="rounded-lg p-1.5" style={{ backgroundColor: '#F59E0B' }}>
-            <Zap className="h-5 w-5" style={{ color: '#0a0d14' }} />
-          </div>
-          <span className="text-xl font-bold font-serif" style={{ color: '#F59E0B' }}>QuizFlow</span>
-        </div>
+        <Logo size="lg" linkTo="/" />
 
         <div className="hidden items-center gap-8 md:flex">
           {["Features", "Pricing", "Templates"].map((item) => (

@@ -1,4 +1,5 @@
-import { FileText, ClipboardList, Settings, GraduationCap, LogOut, Plus } from "lucide-react";
+import { FileText, ClipboardList, Settings, LogOut, Plus } from "lucide-react";
+import { Logo } from "@/components/Logo";
 import { NavLink as RouterNavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -46,14 +47,7 @@ export function TeacherSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r border-[hsl(var(--dashboard-border))]">
       <SidebarHeader className="px-5 py-6">
-        <div className="flex items-center gap-2.5">
-          <GraduationCap className="h-6 w-6 text-sidebar-primary" />
-          {!collapsed && (
-            <span className="font-serif text-base font-bold tracking-wide text-sidebar-primary">
-              QuizFlow
-            </span>
-          )}
-        </div>
+        <Logo showText={!collapsed} />
       </SidebarHeader>
 
       <SidebarContent className="px-3">

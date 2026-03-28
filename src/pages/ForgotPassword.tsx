@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { Zap, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Logo } from "@/components/Logo";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -101,11 +102,8 @@ const ForgotPassword = () => {
     <div className="flex min-h-screen items-center justify-center bg-secondary/30 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex items-center gap-2">
-            <div className="rounded-lg bg-primary p-1.5">
-              <Zap className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold font-display">QuizFlow</span>
+          <div className="mx-auto mb-4">
+            <Logo size="lg" />
           </div>
           <CardTitle className="text-2xl">
             {step === "email" && "Forgot Password"}
