@@ -251,7 +251,7 @@ const TakeExam = () => {
 
   const onStudentSubmit = async (data: StudentInfo) => {
     // Check if student already submitted this exam (by email or phone + exam_id)
-    if (id) {
+    if (examId) {
       const { data: existingStudents } = await supabase
         .from("students")
         .select("id")
@@ -262,7 +262,7 @@ const TakeExam = () => {
         const { data: existingSubs } = await supabase
           .from("submissions")
           .select("id")
-          .eq("exam_id", id)
+          .eq("exam_id", examId)
           .in("student_id", studentIds);
 
         if (existingSubs && existingSubs.length > 0) {

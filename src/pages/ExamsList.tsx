@@ -54,7 +54,7 @@ const ExamsList = () => {
         if (org) {
           const { data, error } = await supabase
             .from("exams")
-            .select("id, title, description, created_at, is_published, time_limit, created_by")
+            .select("id, title, description, created_at, is_published, time_limit, code, created_by")
             .eq("organization_id", org.id)
             .order("created_at", { ascending: false });
 
