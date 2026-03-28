@@ -549,6 +549,11 @@ const Submissions = () => {
                                   >
                                     <TableCell className="text-sm text-white/85 font-medium">
                                       {sub.student.full_name}
+                                      {sub.attemptLabel && (
+                                        <span className="ml-2 inline-block rounded bg-[hsl(var(--dashboard-gold)/0.15)] px-1.5 py-0.5 font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))]">
+                                          {sub.attemptLabel}
+                                        </span>
+                                      )}
                                     </TableCell>
                                     <TableCell className="font-mono text-xs text-white/70">
                                       {sub.student.email || "—"}
