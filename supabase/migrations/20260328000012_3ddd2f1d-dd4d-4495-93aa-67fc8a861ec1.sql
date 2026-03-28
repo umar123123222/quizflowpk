@@ -1,0 +1,11 @@
+
+ALTER TABLE public.questions 
+  ADD COLUMN IF NOT EXISTS question_type text NOT NULL DEFAULT 'mcq',
+  ALTER COLUMN option_a DROP NOT NULL,
+  ALTER COLUMN option_b DROP NOT NULL,
+  ALTER COLUMN correct_answer DROP NOT NULL;
+
+ALTER TABLE public.questions 
+  ALTER COLUMN option_a SET DEFAULT NULL,
+  ALTER COLUMN option_b SET DEFAULT NULL,
+  ALTER COLUMN correct_answer SET DEFAULT NULL;

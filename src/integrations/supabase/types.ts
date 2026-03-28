@@ -167,48 +167,51 @@ export type Database = {
       }
       questions: {
         Row: {
-          correct_answer: string
+          correct_answer: string | null
           created_at: string | null
           exam_id: string
           id: string
-          option_a: string
-          option_b: string
+          option_a: string | null
+          option_b: string | null
           option_c: string | null
           option_d: string | null
           options: Json
           order_index: number
           points: number | null
           question_text: string
+          question_type: string
           sort_order: number | null
         }
         Insert: {
-          correct_answer: string
+          correct_answer?: string | null
           created_at?: string | null
           exam_id: string
           id?: string
-          option_a: string
-          option_b: string
+          option_a?: string | null
+          option_b?: string | null
           option_c?: string | null
           option_d?: string | null
           options?: Json
           order_index?: number
           points?: number | null
           question_text: string
+          question_type?: string
           sort_order?: number | null
         }
         Update: {
-          correct_answer?: string
+          correct_answer?: string | null
           created_at?: string | null
           exam_id?: string
           id?: string
-          option_a?: string
-          option_b?: string
+          option_a?: string | null
+          option_b?: string | null
           option_c?: string | null
           option_d?: string | null
           options?: Json
           order_index?: number
           points?: number | null
           question_text?: string
+          question_type?: string
           sort_order?: number | null
         }
         Relationships: [
