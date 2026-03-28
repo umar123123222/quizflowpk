@@ -797,7 +797,8 @@ const TakeExam = () => {
     const ps = prevSubmission;
     const pendingReview = ps?.hasTextQuestions && !ps?.isReviewed;
     const percentage = ps?.score ?? 0;
-    const passed = percentage >= 50;
+    const passingThreshold = exam?.passing_percentage ?? 50;
+    const passed = percentage >= passingThreshold;
 
     const formatDateTime = (dateStr: string | null) => {
       if (!dateStr) return "—";
@@ -828,6 +829,21 @@ const TakeExam = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                {/* Pass/Fail Badge */}
+                {!pendingReview && (
+                  <div className="flex flex-col items-center gap-1.5 pb-2">
+                    <div className={`flex items-center gap-2 rounded-full px-6 py-2.5 text-lg font-bold tracking-wider uppercase ${
+                      passed
+                        ? "bg-green-500/15 text-green-600 dark:text-green-400"
+                        : "bg-destructive/15 text-red-600 dark:text-red-400"
+                    }`}>
+                      {passed ? <CheckCircle className="h-5 w-5" /> : <XCircle className="h-5 w-5" />}
+                      {passed ? "PASS" : "FAIL"}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Passing score: {passingThreshold}%</p>
+                  </div>
+                )}
+
                 {/* Score */}
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Score</span>
@@ -854,21 +870,6 @@ const TakeExam = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Submitted</span>
                   <span className="text-sm font-medium text-foreground">{formatDateTime(ps.submitted_at)}</span>
-                </div>
-
-                {/* Divider + Badge */}
-                <div className="pt-2 border-t border-border flex justify-center">
-                  <Badge
-                    className={`text-xs px-4 py-1.5 ${
-                      pendingReview
-                        ? "bg-yellow-500/15 text-yellow-500 border-yellow-500/30"
-                        : passed
-                        ? "bg-green-500/15 text-green-500 border-green-500/30"
-                        : "bg-destructive/15 text-destructive border-destructive/30"
-                    }`}
-                  >
-                    {pendingReview ? "Pending Review" : passed ? "Pass" : "Fail"}
-                  </Badge>
                 </div>
               </CardContent>
             </Card>
