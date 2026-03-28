@@ -345,8 +345,8 @@ const TakeExam = () => {
     }
 
     setScore(calculatedScore);
-    setCorrectCount(correct);
-    setTotalCount(total);
+    setCorrectCount(mcqEarnedPoints);
+    setTotalCount(mcqTotalPoints);
     setQuestionResults(results);
     setSubmitted(true);
     setSubmitting(false);
