@@ -172,7 +172,8 @@ const TakeExam = () => {
       .single();
 
     if (studentError || !studentData) {
-      toast({ title: "Error", description: `Failed to register student: ${studentError?.message || "Unknown error"}`, variant: "destructive" });
+      console.error("Student registration error:", studentError);
+      toast({ title: "Error", description: `Failed to register student: ${studentError?.message || "Unknown error"} (code: ${studentError?.code || "N/A"}, details: ${studentError?.details || "N/A"})`, variant: "destructive" });
       setSubmitting(false);
       return;
     }
