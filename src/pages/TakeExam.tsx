@@ -84,7 +84,11 @@ interface Exam {
   start_time: string | null;
   end_time: string | null;
   shuffle_questions?: boolean;
+  shuffle_options?: boolean;
 }
+
+// Maps shuffled display key -> original key, per question
+type OptionShuffleMap = Record<string, Record<string, string>>;
 
 // Seeded PRNG (mulberry32)
 function seededRandom(seed: number) {
@@ -125,6 +129,7 @@ const TakeExam = () => {
   const [customFieldDefs, setCustomFieldDefs] = useState<CustomFieldDef[]>([]);
   const [customFieldValues, setCustomFieldValues] = useState<Record<string, string>>({});
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [optionShuffleMap, setOptionShuffleMap] = useState<OptionShuffleMap>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -176,7 +181,7 @@ const TakeExam = () => {
       setLoading(true);
       const { data: examData, error: examError } = await supabase
         .from("exams")
-        .select("id, title, description, time_limit, organization_id, result_visibility, start_time, end_time, shuffle_questions")
+        .select("id, title, description, time_limit, organization_id, result_visibility, start_time, end_time, shuffle_questions, shuffle_options")
         .eq("code", code)
         .eq("is_published", true)
         .single();
@@ -255,13 +260,33 @@ const TakeExam = () => {
         question_type: q.question_type || "mcq",
       }));
 
-      // Apply seeded shuffle if enabled
-      if ((examData as any).shuffle_questions) {
-        const seed = getOrCreateSessionSeed(examData.id);
-        setQuestions(seededShuffle(questionsWithType, seed));
-      } else {
-        setQuestions(questionsWithType);
+      const seed = getOrCreateSessionSeed(examData.id);
+
+      // Apply seeded question shuffle if enabled
+      const orderedQuestions = (examData as any).shuffle_questions
+        ? seededShuffle(questionsWithType, seed)
+        : questionsWithType;
+
+      // Build option shuffle map if enabled
+      if ((examData as any).shuffle_options) {
+        const map: OptionShuffleMap = {};
+        const labels = ["A", "B", "C", "D"];
+        orderedQuestions.forEach((q: any, idx: number) => {
+          if (q.question_type === "mcq") {
+            const originalOptions = labels.filter((k) => q[`option_${k.toLowerCase()}`]);
+            // Use a unique seed per question (base seed + question index)
+            const shuffled = seededShuffle(originalOptions, seed + idx + 1);
+            const qMap: Record<string, string> = {};
+            shuffled.forEach((origKey, i) => {
+              qMap[labels[i]] = origKey; // displayKey -> originalKey
+            });
+            map[q.id] = qMap;
+          }
+        });
+        setOptionShuffleMap(map);
       }
+
+      setQuestions(orderedQuestions);
       setLoading(false);
     };
     fetchExam();
@@ -329,10 +354,19 @@ const TakeExam = () => {
       .order("order_index", { ascending: true });
 
     const sorted = fullQuestions || [];
+    // Translate shuffled answers back to original keys
+    const translatedAnswers: Record<string, string> = {};
+    for (const [qId, displayKey] of Object.entries(answers)) {
+      if (optionShuffleMap[qId] && displayKey) {
+        translatedAnswers[qId] = optionShuffleMap[qId][displayKey] || displayKey;
+      } else {
+        translatedAnswers[qId] = displayKey;
+      }
+    }
     let mcqEarnedPoints = 0;
     let mcqTotalPoints = 0;
     const results = sorted.map((q: any) => {
-      const studentAnswer = answers[q.id] || null;
+      const studentAnswer = translatedAnswers[q.id] || null;
       const qType = q.question_type || "mcq";
       const qPoints = q.points ?? 1;
       const isCorrect = qType === "mcq" ? studentAnswer === q.correct_answer : false;
@@ -361,8 +395,8 @@ const TakeExam = () => {
       ? (totalPoints > 0 ? Math.round((mcqEarnedPoints / totalPoints) * 100) : 0)
       : (totalPoints > 0 ? Math.round((mcqEarnedPoints / totalPoints) * 100) : 0);
 
-    // Submit — include custom fields in the answers payload
-    const submissionAnswers: Record<string, any> = { ...answers };
+    // Submit — include custom fields and use translated answers
+    const submissionAnswers: Record<string, any> = { ...translatedAnswers };
     if (studentInfo.customFields && Object.keys(studentInfo.customFields).length > 0) {
       submissionAnswers._customFields = studentInfo.customFields;
     }
@@ -387,7 +421,7 @@ const TakeExam = () => {
     setQuestionResults(results);
     setSubmitted(true);
     setSubmitting(false);
-  }, [studentInfo, exam, examId, answers, submitting, submitted, toast]);
+  }, [studentInfo, exam, examId, answers, optionShuffleMap, submitting, submitted, toast]);
 
   // Auto-submit when timer hits zero
   useEffect(() => {
@@ -957,14 +991,16 @@ const TakeExam = () => {
                   onValueChange={(val) => setAnswers((prev) => ({ ...prev, [q.id]: val }))}
                   className="space-y-2"
                 >
-                  {[
-                    { key: "A", value: q.option_a },
-                    { key: "B", value: q.option_b },
-                    { key: "C", value: q.option_c },
-                    { key: "D", value: q.option_d },
-                  ]
-                    .filter((opt) => opt.value)
-                    .map((opt) => (
+                  {(() => {
+                    const labels = ["A", "B", "C", "D"];
+                    const qMap = optionShuffleMap[q.id];
+                    // Build options: if shuffle map exists, display shuffled; otherwise original
+                    const opts = labels.map((displayKey) => {
+                      const origKey = qMap ? qMap[displayKey] : displayKey;
+                      const value = origKey ? (q as any)[`option_${origKey.toLowerCase()}`] : null;
+                      return { key: displayKey, value };
+                    }).filter((opt) => opt.value);
+                    return opts.map((opt) => (
                       <div key={opt.key} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors cursor-pointer">
                         <RadioGroupItem value={opt.key} id={`${q.id}-${opt.key}`} />
                         <Label htmlFor={`${q.id}-${opt.key}`} className="cursor-pointer flex-1 text-sm">
@@ -972,7 +1008,8 @@ const TakeExam = () => {
                           {opt.value}
                         </Label>
                       </div>
-                    ))}
+                    ));
+                  })()}
                 </RadioGroup>
               )}
             </CardContent>
