@@ -630,7 +630,7 @@ const TakeExam = () => {
                 <div className="flex items-center justify-center gap-6 mt-2">
                   <div className="text-center">
                     <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
-                    <p className="text-xs text-muted-foreground mt-1">Correct Answers</p>
+                    <p className="text-xs text-muted-foreground mt-1">Marks Earned</p>
                   </div>
                   <div className="w-px h-12 bg-border" />
                   <div className="text-center">
