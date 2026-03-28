@@ -415,19 +415,26 @@ const Submissions = () => {
                         const qCols: string[] = [];
                         sortedQs.forEach((q) => {
                           qCols.push(q.question_text);
+                          // Student answer
                           const rawAns = sub.answers ? sub.answers[q.id] : null;
                           if (!rawAns) {
                             qCols.push("Not Answered");
                           } else if (q.question_type === "text") {
                             qCols.push(String(rawAns));
                           } else {
-                            // MCQ: resolve option key to full text
                             const opt = q.options.find((o) => o.key === rawAns);
                             qCols.push(opt ? opt.text : String(rawAns));
                           }
+                          // Correct answer
+                          if (q.question_type === "text") {
+                            qCols.push("Manual Review");
+                          } else {
+                            const correctOpt = q.options.find((o) => o.key === q.correct_answer);
+                            qCols.push(correctOpt ? correctOpt.text : (q.correct_answer || "—"));
+                          }
                         });
-                        // Pad if fewer questions
-                        const padCount = (maxQs - sortedQs.length) * 2;
+                        // Pad if fewer questions (3 cols per question)
+                        const padCount = (maxQs - sortedQs.length) * 3;
                         for (let p = 0; p < padCount; p++) qCols.push("");
                         const row = [
                           exam.title,
