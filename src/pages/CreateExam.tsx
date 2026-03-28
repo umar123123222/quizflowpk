@@ -740,8 +740,8 @@ const CreateExam = () => {
               ))}
             </div>
 
-            {/* Add Question + Save */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            {/* Add Question Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
               <button
                 onClick={() => setQuestions((prev) => [...prev, createEmptyQuestion("mcq")])}
                 className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-[hsl(var(--dashboard-border))] px-5 py-3 font-mono text-[11px] tracking-wider uppercase text-white/50 transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
@@ -756,18 +756,139 @@ const CreateExam = () => {
                 <FileText className="h-3.5 w-3.5" />
                 Add Text Question
               </button>
+            </div>
+
+            {/* Save Draft + Publish */}
+            <div className="flex gap-3">
               <Button
-                onClick={handleSave}
-                disabled={saving}
-                className="flex items-center justify-center gap-2 rounded-lg bg-[hsl(var(--dashboard-gold))] px-6 py-3 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-bg))] font-bold transition-all hover:bg-[hsl(var(--dashboard-gold)/0.85)] disabled:opacity-50"
+                onClick={handleSaveDraft}
+                disabled={savingDraft || saving}
+                className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-6 py-3 font-mono text-[11px] tracking-wider uppercase text-white/70 font-bold transition-all hover:border-white/30 hover:text-white/90 disabled:opacity-50"
               >
                 <Save className="h-3.5 w-3.5" />
-                {saving ? "Saving..." : isEditMode ? "Update Exam" : "Save Exam"}
+                {savingDraft ? "Saving..." : "Save Draft"}
+              </Button>
+              <Button
+                onClick={handleOpenPublishDialog}
+                disabled={saving || savingDraft}
+                className="flex-1 flex items-center justify-center gap-2 rounded-lg px-6 py-3 font-mono text-[11px] tracking-wider uppercase font-bold transition-all hover:opacity-90 disabled:opacity-50 border-0"
+                style={{ backgroundColor: '#e09615', color: '#0a0d14' }}
+              >
+                <Send className="h-3.5 w-3.5" />
+                {saving ? "Publishing..." : "Publish Exam"}
               </Button>
             </div>
           </main>
         </div>
       </div>
+
+      {/* Publish Confirmation Dialog */}
+      <Dialog open={showPublishDialog} onOpenChange={setShowPublishDialog}>
+        <DialogContent className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/95 sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl text-white/95 flex items-center gap-2">
+              <Send className="h-5 w-5" style={{ color: '#e09615' }} />
+              Publish Exam
+            </DialogTitle>
+            <DialogDescription className="text-white/60">
+              Review before publishing
+            </DialogDescription>
+          </DialogHeader>
+
+          {publishStep === 1 && (
+            <div className="space-y-4 mt-2">
+              <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] p-4 space-y-3">
+                <h3 className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/50">Exam Summary</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Title</span>
+                    <span className="text-white/90 font-medium">{title || "—"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Questions</span>
+                    <span className="text-white/90 font-medium">{questions.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Total Marks</span>
+                    <span className="text-white/90 font-medium">
+                      {typeof totalMarks === "number" ? totalMarks : `${questions.length} (1 per question)`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Time Limit</span>
+                    <span className="text-white/90 font-medium">{timeLimit ? `${timeLimit} min` : "None"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/50">MCQs</span>
+                    <span className="text-white/90 font-medium">{questions.filter(q => q.type === "mcq").length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Text Questions</span>
+                    <span className="text-white/90 font-medium">{questions.filter(q => q.type === "text").length}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowPublishDialog(false)}
+                  className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-white/50 hover:text-white/70 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => setPublishStep(2)}
+                  className="flex-1 rounded-md py-2.5 font-mono text-[10px] tracking-wider uppercase font-bold transition-all hover:opacity-90"
+                  style={{ backgroundColor: '#e09615', color: '#0a0d14' }}
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
+          )}
+
+          {publishStep === 2 && (
+            <div className="space-y-4 mt-2">
+              <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-4 space-y-3">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-white/90">Are you sure?</p>
+                    <p className="text-xs text-white/50 mt-1">
+                      Once published, students will be able to access and take this exam immediately. Make sure all questions and settings are correct.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-white/50">
+                <CheckCircle className="h-3.5 w-3.5 text-green-400" />
+                <span>{questions.length} question{questions.length > 1 ? "s" : ""} ready</span>
+              </div>
+              {questions.some(q => q.type === "text") && (
+                <div className="flex items-center gap-2 text-xs text-white/50">
+                  <AlertTriangle className="h-3.5 w-3.5 text-yellow-500" />
+                  <span>Text questions will require manual review</span>
+                </div>
+              )}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setPublishStep(1)}
+                  className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-white/50 hover:text-white/70 transition-colors"
+                >
+                  ← Back
+                </button>
+                <button
+                  onClick={handleConfirmPublish}
+                  disabled={saving}
+                  className="flex-1 flex items-center justify-center gap-2 rounded-md py-2.5 font-mono text-[10px] tracking-wider uppercase font-bold transition-all hover:opacity-90 disabled:opacity-50"
+                  style={{ backgroundColor: '#e09615', color: '#0a0d14' }}
+                >
+                  {saving ? "Publishing..." : "Publish Now"}
+                </button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Shareable Link Dialog */}
       <Dialog open={showLinkDialog} onOpenChange={setShowLinkDialog}>
