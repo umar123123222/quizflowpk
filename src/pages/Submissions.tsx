@@ -213,6 +213,7 @@ const Submissions = () => {
               isReviewed: answersObj?._reviewed === true,
               passFail: (s as any).pass_fail as string | null,
               attemptLabel: undefined as string | undefined,
+              answers: answersObj || {},
               student: studentMap.get(s.student_id) || {
                 full_name: "Unknown",
                 email: null,
