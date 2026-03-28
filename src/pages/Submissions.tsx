@@ -429,13 +429,20 @@ const Submissions = () => {
                           // Correct answer
                           if (q.question_type === "text") {
                             qCols.push("Manual Review");
+                            qCols.push("Manual Review");
                           } else {
                             const correctOpt = q.options.find((o) => o.key === q.correct_answer);
                             qCols.push(correctOpt ? correctOpt.text : (q.correct_answer || "—"));
+                            // Status
+                            if (!rawAns) {
+                              qCols.push("Wrong");
+                            } else {
+                              qCols.push(rawAns === q.correct_answer ? "Correct" : "Wrong");
+                            }
                           }
                         });
-                        // Pad if fewer questions (3 cols per question)
-                        const padCount = (maxQs - sortedQs.length) * 3;
+                        // Pad if fewer questions (4 cols per question)
+                        const padCount = (maxQs - sortedQs.length) * 4;
                         for (let p = 0; p < padCount; p++) qCols.push("");
                         const row = [
                           exam.title,
