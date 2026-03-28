@@ -15,7 +15,7 @@ const Hero = () => {
         <div className="mx-auto max-w-3xl text-center">
           <div
             className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium opacity-0 animate-fade-up"
-            style={{ backgroundColor: 'rgba(255,255,255,0.92)', color: '#1a1d2e', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.3)' }}
+            style={{ backgroundColor: '#ffffff', color: '#1a1a2e', borderRadius: '999px', border: '1px solid #e0e0e0' }}
           >
             <Sparkles className="h-4 w-4" />
             The smartest way to create quizzes
@@ -23,17 +23,18 @@ const Hero = () => {
 
           <h1
             className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl opacity-0 animate-fade-up [animation-delay:100ms]"
-            style={{ color: '#e8e3d5', fontFamily: "'Playfair Display', serif" }}
+            style={{ color: '#ffffff', fontFamily: "'Playfair Display', serif" }}
           >
             Build engaging quizzes{" "}
-            <span style={{ color: '#6b8cba' }}>in</span>{" "}
-            <span style={{ color: '#888888' }}>minu</span>
+            <span style={{ color: '#6b8cba' }}>in</span>
+            <br />
+            <span style={{ color: '#7a7a7a' }}>minu</span>
             <span style={{ color: '#e8a020' }}>tes</span>
           </h1>
 
           <p
             className="mb-10 text-lg md:text-xl opacity-0 animate-fade-up [animation-delay:200ms]"
-            style={{ color: 'rgba(232,227,213,0.5)' }}
+            style={{ color: '#8892a4' }}
           >
             QuizFlow helps educators, trainers, and creators build beautiful,
             interactive quizzes with AI-powered question generation, real-time
@@ -41,13 +42,13 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center opacity-0 animate-fade-up [animation-delay:300ms]">
-            <Button asChild size="lg" className="text-base border-0 font-medium" style={{ background: 'linear-gradient(to right, #1e2a3a 70%, #e8a020 100%)', color: '#ffffff', borderRadius: '8px', padding: '0.85rem 2rem' }}>
+            <Button asChild size="lg" className="text-base border-0 font-semibold" style={{ background: 'linear-gradient(to right, #1e2d45 60%, #e8a020 100%)', color: '#ffffff', borderRadius: '10px', padding: '1rem 2rem' }}>
               <Link to="/signup">
                 Get Started Free
                 <ArrowRight className="ml-1 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild size="lg" className="text-base border-0 font-medium" style={{ backgroundColor: '#1e2d40', color: '#ffffff', borderRadius: '8px', padding: '0.85rem 2rem' }}>
+            <Button asChild size="lg" className="text-base border-0 font-semibold" style={{ backgroundColor: '#1e2d45', color: '#ffffff', borderRadius: '10px', padding: '1rem 2rem' }}>
               <Link to="/login">
                 See How It Works
               </Link>

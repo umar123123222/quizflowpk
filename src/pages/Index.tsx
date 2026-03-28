@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#0a0d14', color: '#e8e3d5' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#0d1117', color: '#e8e3d5' }}>
       <Navbar />
       <Hero />
       <Features />
