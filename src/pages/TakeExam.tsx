@@ -42,8 +42,9 @@ interface Exam {
 }
 
 const TakeExam = () => {
-  const { id } = useParams<{ id: string }>();
+  const { code } = useParams<{ code: string }>();
   const { toast } = useToast();
+  const [examId, setExamId] = useState<string | null>(null);
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [exam, setExam] = useState<Exam | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
