@@ -135,7 +135,7 @@ const OwnerDashboard = () => {
                 {today}
               </p>
               <h1 className="font-serif text-4xl md:text-5xl font-bold text-white/90">
-                Welcome <span className="text-[hsl(var(--dashboard-gold))]">back.</span>
+                Welcome <span className="text-[hsl(var(--dashboard-gold))]">back,</span>
               </h1>
               {user?.user_metadata?.full_name && (
                 <p className="font-serif text-lg md:text-xl text-white/50 mt-2">
