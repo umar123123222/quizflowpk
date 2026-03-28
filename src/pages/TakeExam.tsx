@@ -708,15 +708,86 @@ const TakeExam = () => {
 
   // Already submitted state
   if (alreadySubmitted) {
+    const ps = prevSubmission;
+    const pendingReview = ps?.hasTextQuestions && !ps?.isReviewed;
+    const percentage = ps?.score ?? 0;
+    const passed = percentage >= 50;
+
+    const formatDateTime = (dateStr: string | null) => {
+      if (!dateStr) return "—";
+      const d = new Date(dateStr);
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) +
+        " at " + d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+    };
+
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-        <Card className="w-full max-w-md text-center">
-          <CardContent className="pt-8 pb-8 space-y-4">
-            <AlertTriangle className="h-12 w-12 text-destructive mx-auto" />
-            <h2 className="text-xl font-bold">Already Attempted</h2>
-            <p className="text-muted-foreground">You have already submitted this exam. Only one attempt is allowed per student.</p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
+        <div className="w-full max-w-md space-y-5">
+          {/* Top section */}
+          <div className="text-center space-y-3">
+            <div className="mx-auto h-16 w-16 rounded-full bg-destructive/10 flex items-center justify-center">
+              <AlertTriangle className="h-8 w-8 text-destructive" />
+            </div>
+            <h2 className="text-xl font-bold">You have already submitted this exam.</h2>
+            <p className="text-muted-foreground text-sm">This exam does not allow multiple attempts.</p>
+          </div>
+
+          {/* Result summary card */}
+          {ps && (
+            <Card className="border border-border">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <ClipboardList className="h-4 w-4" />
+                  Your Result Summary
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Score */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Score</span>
+                  <span className="text-lg font-bold text-foreground">
+                    {pendingReview ? (
+                      <span className="text-yellow-500">Pending Review</span>
+                    ) : (
+                      `${ps.earnedPoints} / ${ps.totalPoints}`
+                    )}
+                  </span>
+                </div>
+
+                {/* Percentage */}
+                {!pendingReview && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Percentage</span>
+                    <span className={`text-lg font-bold ${passed ? "text-green-500" : "text-destructive"}`}>
+                      {percentage}%
+                    </span>
+                  </div>
+                )}
+
+                {/* Submitted at */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Submitted</span>
+                  <span className="text-sm font-medium text-foreground">{formatDateTime(ps.submitted_at)}</span>
+                </div>
+
+                {/* Divider + Badge */}
+                <div className="pt-2 border-t border-border flex justify-center">
+                  <Badge
+                    className={`text-xs px-4 py-1.5 ${
+                      pendingReview
+                        ? "bg-yellow-500/15 text-yellow-500 border-yellow-500/30"
+                        : passed
+                        ? "bg-green-500/15 text-green-500 border-green-500/30"
+                        : "bg-destructive/15 text-destructive border-destructive/30"
+                    }`}
+                  >
+                    {pendingReview ? "Pending Review" : passed ? "Pass" : "Fail"}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
     );
   }
