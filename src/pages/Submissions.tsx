@@ -168,7 +168,7 @@ const Submissions = () => {
       for (const exam of exams) {
         const { data: subs } = await supabase
           .from("submissions")
-          .select("id, score, submitted_at, student_id, violations, answers")
+          .select("id, score, submitted_at, student_id, violations, answers, pass_fail")
           .eq("exam_id", exam.id)
           .order("submitted_at", { ascending: false });
 
