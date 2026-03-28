@@ -342,6 +342,52 @@ const CreateExam = () => {
               </div>
             </div>
 
+            {/* Result Visibility */}
+            <div className="mb-8 space-y-3">
+              <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35 flex items-center gap-2">
+                <Eye className="h-3.5 w-3.5" />
+                Result Visibility
+              </label>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => setResultVisibility("immediate")}
+                  className={`rounded-lg border p-4 text-left transition-all ${
+                    resultVisibility === "immediate"
+                      ? "border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.08)]"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-white/20"
+                  }`}
+                >
+                  <p className={`font-mono text-[11px] tracking-wider font-bold ${
+                    resultVisibility === "immediate" ? "text-[hsl(var(--dashboard-gold))]" : "text-white/60"
+                  }`}>
+                    Immediately after submission
+                  </p>
+                  <p className="font-mono text-[9px] text-white/30 mt-1">
+                    Students see their score and answers right away
+                  </p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setResultVisibility("after_exam_ends")}
+                  className={`rounded-lg border p-4 text-left transition-all ${
+                    resultVisibility === "after_exam_ends"
+                      ? "border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.08)]"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-white/20"
+                  }`}
+                >
+                  <p className={`font-mono text-[11px] tracking-wider font-bold ${
+                    resultVisibility === "after_exam_ends" ? "text-[hsl(var(--dashboard-gold))]" : "text-white/60"
+                  }`}>
+                    After exam time window ends
+                  </p>
+                  <p className="font-mono text-[9px] text-white/30 mt-1">
+                    Results hidden until the exam period is over
+                  </p>
+                </button>
+              </div>
+            </div>
+
             {/* Questions */}
             <div className="mb-4">
               <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/30 mb-4">
