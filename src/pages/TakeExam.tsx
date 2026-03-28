@@ -14,11 +14,42 @@ import { User, Mail, Phone, Clock, CheckCircle, AlertTriangle, Maximize } from "
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-const studentInfoSchema = z.object({
-  fullName: z.string().trim().min(1, "Full name is required").max(100, "Name too long"),
-  email: z.string().trim().email("Invalid email address").max(255),
-  phone: z.string().trim().min(7, "Phone number is too short").max(20, "Phone number is too long"),
-});
+interface FormFieldSettings {
+  name_visible: boolean;
+  name_required: boolean;
+  email_visible: boolean;
+  email_required: boolean;
+  phone_visible: boolean;
+  phone_required: boolean;
+}
+
+const buildStudentInfoSchema = (fs: FormFieldSettings | null) => {
+  const shape: Record<string, z.ZodTypeAny> = {
+    fullName: z.string().trim().min(1, "Full name is required").max(100, "Name too long"),
+  };
+
+  if (!fs || fs.email_visible) {
+    if (!fs || fs.email_required) {
+      shape.email = z.string().trim().email("Invalid email address").max(255);
+    } else {
+      shape.email = z.string().trim().email("Invalid email address").max(255).or(z.literal("")).optional();
+    }
+  } else {
+    shape.email = z.string().optional();
+  }
+
+  if (!fs || fs.phone_visible) {
+    if (!fs || fs.phone_required) {
+      shape.phone = z.string().trim().min(7, "Phone number is too short").max(20, "Phone number is too long");
+    } else {
+      shape.phone = z.string().trim().max(20, "Phone number is too long").or(z.literal("")).optional();
+    }
+  } else {
+    shape.phone = z.string().optional();
+  }
+
+  return z.object(shape);
+};
 
 type StudentInfo = z.infer<typeof studentInfoSchema>;
 

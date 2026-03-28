@@ -337,6 +337,9 @@ const Settings = () => {
                 </div>
               </div>
 
+              {/* Student Identification Form - Owner only */}
+              {userRole === "organization_owner" && <StudentFormSettings />}
+
               {/* Backup Email Section */}
               <div className={sectionClass}>
                 <div className="h-[2px] bg-[hsl(var(--dashboard-gold))]" />
