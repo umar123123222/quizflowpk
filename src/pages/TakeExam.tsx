@@ -376,6 +376,7 @@ const TakeExam = () => {
         if (isCorrect) mcqEarnedPoints += qPoints;
       }
       return {
+        id: q.id,
         question_text: q.question_text,
         question_type: qType,
         student_answer: studentAnswer,
