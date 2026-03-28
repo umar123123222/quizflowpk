@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      exam_reattempts: {
+        Row: {
+          created_at: string | null
+          exam_id: string
+          granted_by: string
+          id: string
+          student_email: string
+          used: boolean
+        }
+        Insert: {
+          created_at?: string | null
+          exam_id: string
+          granted_by: string
+          id?: string
+          student_email: string
+          used?: boolean
+        }
+        Update: {
+          created_at?: string | null
+          exam_id?: string
+          granted_by?: string
+          id?: string
+          student_email?: string
+          used?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_reattempts_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exams: {
         Row: {
           code: string
