@@ -26,9 +26,9 @@ const Hero = () => {
             style={{ color: '#e8e3d5', fontFamily: "'Playfair Display', serif" }}
           >
             Build engaging quizzes{" "}
-            <span style={{ color: '#e8c87a' }}>
-              in minutes
-            </span>
+            <span style={{ color: '#6b8cba' }}>in</span>{" "}
+            <span style={{ color: '#888888' }}>minu</span>
+            <span style={{ color: '#e8a020' }}>tes</span>
           </h1>
 
           <p
