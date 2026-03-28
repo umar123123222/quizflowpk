@@ -67,6 +67,9 @@ const ViewSubmission = () => {
 
       setSubmittedAt(sub.submitted_at);
       setSubmissionData({ id: sub.id, exam_id: sub.exam_id, answers: answersObj });
+      if (answersObj._publishedAt) {
+        setPublishedAt(answersObj._publishedAt as string);
+      }
 
       const [studentRes, examRes, questionsRes] = await Promise.all([
         supabase.from("students").select("full_name, email, phone").eq("id", sub.student_id).single(),
