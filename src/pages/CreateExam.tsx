@@ -292,6 +292,8 @@ const CreateExam = () => {
             start_time: buildDatetime(startTime, startHour, startMinute),
             end_time: buildDatetime(endTime, endHour, endMinute),
             is_published: publish,
+            shuffle_questions: shuffleQuestions,
+            shuffle_options: shuffleOptions,
           } as any)
           .eq("id", editId);
         if (examError) throw examError;
