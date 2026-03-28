@@ -172,6 +172,7 @@ const Submissions = () => {
         results.push({
           ...exam,
           teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
+          hasTextQuestions: examsWithText.has(exam.id),
           submissions: subs.map((s) => ({
             id: s.id,
             score: s.score,
