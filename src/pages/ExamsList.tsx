@@ -23,8 +23,8 @@ const ExamsList = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const copyExamLink = async (examId: string) => {
-    const link = `${window.location.origin}/exam/${examId}`;
+  const copyExamLink = async (code: string) => {
+    const link = `${window.location.origin}/exam/${code}`;
     await navigator.clipboard.writeText(link);
     toast({ title: "Link copied!", description: "Shareable exam link copied to clipboard." });
   };
