@@ -171,10 +171,12 @@ const ViewSubmission = () => {
       const finalScore = totalPoints > 0 ? Math.round(((mcqEarned + textEarned) / totalPoints) * 100) : 0;
 
       // Save text scores inside answers JSON and update overall score
+      const now = new Date().toISOString();
       const updatedAnswers = {
         ...submissionData.answers,
         _textScores: textScoresNumeric,
         _reviewed: true,
+        _publishedAt: now,
       };
 
       const { error } = await supabase
