@@ -255,7 +255,13 @@ const TakeExam = () => {
         question_type: q.question_type || "mcq",
       }));
 
-      setQuestions(questionsWithType);
+      // Apply seeded shuffle if enabled
+      if ((examData as any).shuffle_questions) {
+        const seed = getOrCreateSessionSeed(examData.id);
+        setQuestions(seededShuffle(questionsWithType, seed));
+      } else {
+        setQuestions(questionsWithType);
+      }
       setLoading(false);
     };
     fetchExam();
