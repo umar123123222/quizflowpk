@@ -516,7 +516,7 @@ const ViewSubmission = () => {
         {/* Publish Result / Published Badge */}
         {hasTextQuestions && isTeacherOrOwner && (
           isReviewed ? (
-            <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t border-border py-4 -mx-4 px-4 flex items-center justify-center">
+            <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t border-border py-4 -mx-4 px-4 flex flex-col items-center justify-center gap-2">
               <div className="flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/10 px-5 py-3">
                 <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
                 <div>
@@ -528,6 +528,26 @@ const ViewSubmission = () => {
                   )}
                 </div>
               </div>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+                    <Pencil className="h-3 w-3" />
+                    Edit scores &amp; republish
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Edit published result?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to edit this result? The student will see the updated score after you republish.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => setIsEditing(true)}>Yes, edit scores</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           ) : (
             <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t border-border py-4 -mx-4 px-4 flex items-center justify-between">
@@ -546,12 +566,12 @@ const ViewSubmission = () => {
                 )}
               </div>
               <Button
-                onClick={handleSaveGrades}
+                onClick={() => { handleSaveGrades(); setIsEditing(false); }}
                 disabled={saving || !canPublish}
                 className="gap-2"
               >
                 <Save className="h-4 w-4" />
-                {saving ? "Publishing..." : "Publish Result"}
+                {saving ? "Publishing..." : isEditing ? "Republish Result" : "Publish Result"}
               </Button>
             </div>
           )
