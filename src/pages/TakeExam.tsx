@@ -38,7 +38,7 @@ interface Exam {
   title: string;
   description: string | null;
   time_limit: number | null;
-  organization_id: string;
+  organization_id: string | null;
 }
 
 const TakeExam = () => {
