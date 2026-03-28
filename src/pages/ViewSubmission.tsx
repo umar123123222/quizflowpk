@@ -190,9 +190,9 @@ const ViewSubmission = () => {
       // Update submissionData to reflect published state
       setSubmissionData((prev) => prev ? {
         ...prev,
-        answers: { ...prev.answers, _textScores: textScoresNumeric, _reviewed: true },
+        answers: { ...prev.answers, _textScores: textScoresNumeric, _reviewed: true, _publishedAt: now },
       } : prev);
-      setPublishedAt(new Date().toISOString());
+      setPublishedAt(now);
       toast({ title: "Grades saved", description: `Final score: ${finalScore}%` });
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Failed to save grades.", variant: "destructive" });
