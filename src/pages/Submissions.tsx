@@ -189,7 +189,7 @@ const Submissions = () => {
           if (q.option_c) opts.push({ key: "C", text: q.option_c });
           if (q.option_d) opts.push({ key: "D", text: q.option_d });
         }
-        questionsByExam.get(q.exam_id)!.push({ id: q.id, question_text: q.question_text, order_index: q.order_index, question_type: q.question_type || "mcq", correct_answer: q.correct_answer || null, options: opts });
+        questionsByExam.get(q.exam_id)!.push({ id: q.id, question_text: q.question_text, order_index: q.order_index, question_type: q.question_type || "mcq", correct_answer: q.correct_answer || null, points: q.points ?? 1, options: opts });
       });
 
       // Get submissions with student info for all exams
