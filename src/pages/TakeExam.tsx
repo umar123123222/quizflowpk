@@ -1364,7 +1364,8 @@ const TakeExam = () => {
             onClick={handleSubmitExam}
             disabled={submitting}
             size="lg"
-            className="w-full text-lg py-6"
+            className="w-full text-lg py-6 border-0 font-semibold"
+            style={{ backgroundColor: "#e09615", color: "#fff" }}
           >
             {submitting ? "Submitting..." : "Submit Exam"}
           </Button>
