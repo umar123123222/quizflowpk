@@ -387,6 +387,11 @@ const TakeExam = () => {
   }, [studentInfo, submitted, handleSubmitExam, toast]);
 
   const handleReEnterFullscreen = () => {
+    // Cancel countdown
+    if (fsCountdownRef.current) {
+      clearInterval(fsCountdownRef.current);
+      fsCountdownRef.current = null;
+    }
     setShowFullscreenWarning(false);
     try {
       document.documentElement.requestFullscreen?.();
