@@ -170,6 +170,12 @@ const ViewSubmission = () => {
                     <Mail className="h-4 w-4 shrink-0" />
                     <span>Email: <span className="font-medium text-foreground">{studentEmail}</span></span>
                   </div>
+                  {studentPhone && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Phone className="h-4 w-4 shrink-0" />
+                      <span>Phone: <span className="font-medium text-foreground">{studentPhone}</span></span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <FileText className="h-4 w-4 shrink-0" />
                     <span>Exam: <span className="font-semibold text-foreground">{examTitle}</span></span>
@@ -178,6 +184,20 @@ const ViewSubmission = () => {
                     <Calendar className="h-4 w-4 shrink-0" />
                     <span>Submitted: <span className="font-medium text-foreground">{formatDate(submittedAt)}</span></span>
                   </div>
+                  {/* Custom fields */}
+                  {Object.keys(customFieldData).length > 0 && (
+                    <>
+                      {Object.entries(customFieldData).map(([fieldId, value]) => (
+                        <div key={fieldId} className="flex items-center gap-2 text-muted-foreground">
+                          <ClipboardList className="h-4 w-4 shrink-0" />
+                          <span>
+                            {customFieldLabels[fieldId] || fieldId}:{" "}
+                            <span className="font-medium text-foreground">{value || "—"}</span>
+                          </span>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
 
