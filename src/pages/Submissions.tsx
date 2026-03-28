@@ -36,6 +36,7 @@ interface ExamWithSubmissions {
     submitted_at: string | null;
     violations: Array<{ type: string; timestamp: string }> | null;
     isReviewed?: boolean;
+    passFail?: string | null;
     attemptLabel?: string;
     student: {
       full_name: string;
