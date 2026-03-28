@@ -25,8 +25,9 @@ type StudentInfo = z.infer<typeof studentInfoSchema>;
 interface Question {
   id: string;
   question_text: string;
-  option_a: string;
-  option_b: string;
+  question_type: string;
+  option_a: string | null;
+  option_b: string | null;
   option_c: string | null;
   option_d: string | null;
   order_index: number;
