@@ -202,37 +202,46 @@ const ViewSubmission = () => {
               </div>
 
               {/* Right: score */}
-              <div className="flex items-center gap-6 md:gap-8 shrink-0">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
-                  <p className="text-xs text-muted-foreground mt-1">Correct</p>
-                </div>
-                <div className="w-px h-14 bg-border" />
-                <div className="text-center">
-                  <div className={`text-4xl font-bold ${
-                    (score ?? 0) >= 70
-                      ? "text-green-500"
-                      : (score ?? 0) >= 40
-                      ? "text-yellow-500"
-                      : "text-destructive"
-                  }`}>
-                    {score ?? 0}%
+              {(() => {
+                const hasText = questionResults.some((q) => q.question_type === "text");
+                return (
+                  <div className="flex items-center gap-6 md:gap-8 shrink-0">
+                    <div className="text-center">
+                      <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
+                      <p className="text-xs text-muted-foreground mt-1">MCQ Correct</p>
+                    </div>
+                    <div className="w-px h-14 bg-border" />
+                    <div className="text-center">
+                      <div className={`text-4xl font-bold ${
+                        hasText
+                          ? "text-yellow-500"
+                          : (score ?? 0) >= 70
+                          ? "text-green-500"
+                          : (score ?? 0) >= 40
+                          ? "text-yellow-500"
+                          : "text-destructive"
+                      }`}>
+                        {hasText ? "—" : `${score ?? 0}%`}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">{hasText ? "Awaiting Review" : "Score"}</p>
+                    </div>
+                    <div className="w-px h-14 bg-border" />
+                    <div className="text-center flex items-center">
+                      <Badge
+                        className={`text-sm px-4 py-1.5 ${
+                          hasText
+                            ? "bg-yellow-500/15 text-yellow-500 border-yellow-500/30 hover:bg-yellow-500/20"
+                            : (score ?? 0) >= 50
+                            ? "bg-green-500/15 text-green-500 border-green-500/30 hover:bg-green-500/20"
+                            : "bg-destructive/15 text-destructive border-destructive/30 hover:bg-destructive/20"
+                        }`}
+                      >
+                        {hasText ? "Pending Review" : (score ?? 0) >= 50 ? "Pass" : "Fail"}
+                      </Badge>
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">Score</p>
-                </div>
-                <div className="w-px h-14 bg-border" />
-                <div className="text-center flex items-center">
-                  <Badge
-                    className={`text-sm px-4 py-1.5 ${
-                      (score ?? 0) >= 50
-                        ? "bg-green-500/15 text-green-500 border-green-500/30 hover:bg-green-500/20"
-                        : "bg-destructive/15 text-destructive border-destructive/30 hover:bg-destructive/20"
-                    }`}
-                  >
-                    {(score ?? 0) >= 50 ? "Pass" : "Fail"}
-                  </Badge>
-                </div>
-              </div>
+                );
+              })()}
             </div>
           </CardContent>
         </Card>

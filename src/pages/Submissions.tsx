@@ -29,6 +29,7 @@ interface ExamWithSubmissions {
   id: string;
   title: string;
   teacher_name?: string;
+  hasTextQuestions?: boolean;
   submissions: {
     id: string;
     score: number | null;
@@ -134,6 +135,15 @@ const Submissions = () => {
 
       if (!exams || exams.length === 0) { setLoading(false); return; }
 
+      // Check which exams have text questions
+      const examIds = exams.map((e) => e.id);
+      const { data: textQs } = await supabase
+        .from("questions")
+        .select("exam_id")
+        .in("exam_id", examIds)
+        .eq("question_type", "text");
+      const examsWithText = new Set((textQs || []).map((q) => q.exam_id));
+
       // Get submissions with student info for all exams
       const results: ExamWithSubmissions[] = [];
       for (const exam of exams) {
@@ -162,6 +172,7 @@ const Submissions = () => {
         results.push({
           ...exam,
           teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
+          hasTextQuestions: examsWithText.has(exam.id),
           submissions: subs.map((s) => ({
             id: s.id,
             score: s.score,
@@ -315,7 +326,7 @@ const Submissions = () => {
                           sub.student.email || "—",
                           sub.student.phone || "—",
                           sub.score !== null ? `${sub.score}%` : "—",
-                          (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
+                          exam.hasTextQuestions ? "Pending Review" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
                           violations,
                           date,
                         ]);
@@ -482,12 +493,14 @@ const Submissions = () => {
                                     <TableCell className="text-center">
                                       <span
                                         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
-                                          (sub.score ?? 0) >= 50
+                                          exam.hasTextQuestions
+                                            ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
+                                            : (sub.score ?? 0) >= 50
                                             ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
                                             : "bg-destructive/15 text-destructive"
                                         }`}
                                       >
-                                        {(sub.score ?? 0) >= 50 ? "Pass" : "Fail"}
+                                        {exam.hasTextQuestions ? "Pending Review" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail"}
                                       </span>
                                     </TableCell>
                                     <TableCell>
