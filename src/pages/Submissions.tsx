@@ -31,6 +31,7 @@ interface ExamQuestion {
   order_index: number;
   question_type: string;
   correct_answer: string | null;
+  points: number;
   options: { key: string; text: string }[];
 }
 
