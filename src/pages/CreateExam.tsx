@@ -339,10 +339,27 @@ const CreateExam = () => {
       if (qError) throw qError;
 
       if (publish) {
-        toast({ title: "Exam published!", description: `"${title}" is now live.` });
-        setSavedExamCode(savedExamCode || "saved");
+        const code = savedExamCode || examId;
+        const link = `${window.location.origin}/exam/${code}`;
         setShowPublishDialog(false);
-        setShowLinkDialog(true);
+        toast({
+          title: "🎉 Exam published successfully!",
+          description: `"${title}" is now live.`,
+          action: (
+            <button
+              onClick={async () => {
+                await navigator.clipboard.writeText(link);
+                toast({ title: "Link copied!", description: "Exam link copied to clipboard." });
+              }}
+              className="ml-2 shrink-0 rounded-md border border-[hsl(var(--dashboard-gold)/0.4)] bg-[hsl(var(--dashboard-gold)/0.1)] px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] hover:bg-[hsl(var(--dashboard-gold)/0.2)] transition-colors"
+            >
+              <Copy className="inline h-3 w-3 mr-1" />
+              Copy Link
+            </button>
+          ),
+          duration: 5000,
+        });
+        setTimeout(() => navigate("/dashboard/owner/exams"), 2000);
       } else {
         toast({ title: "Draft saved", description: `"${title}" has been saved as a draft.` });
         navigate("/dashboard/owner/exams");
