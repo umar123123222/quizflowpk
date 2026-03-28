@@ -20,6 +20,9 @@ import {
   Copy,
   FileText,
   ListChecks,
+  CheckCircle,
+  AlertTriangle,
+  Send,
 } from "lucide-react";
 import {
   Dialog,
