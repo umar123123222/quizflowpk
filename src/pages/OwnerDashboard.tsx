@@ -14,6 +14,7 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const OwnerDashboard = () => {
   const { user, role, signOut } = useAuth();
