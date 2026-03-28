@@ -353,9 +353,36 @@ const CreateExam = () => {
                   <div className="p-5">
                     {/* Question header */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-gold))]">
-                        Question {qIndex + 1}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-gold))]">
+                          Question {qIndex + 1}
+                        </span>
+                        {/* Type toggle */}
+                        <div className="flex rounded-md border border-[hsl(var(--dashboard-border))] overflow-hidden">
+                          <button
+                            onClick={() => updateQuestion(qIndex, "type", "mcq")}
+                            className={`flex items-center gap-1 px-2.5 py-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
+                              q.type === "mcq"
+                                ? "bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-bold"
+                                : "text-white/30 hover:text-white/50"
+                            }`}
+                          >
+                            <ListChecks className="h-3 w-3" />
+                            MCQ
+                          </button>
+                          <button
+                            onClick={() => updateQuestion(qIndex, "type", "text")}
+                            className={`flex items-center gap-1 px-2.5 py-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
+                              q.type === "text"
+                                ? "bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-bold"
+                                : "text-white/30 hover:text-white/50"
+                            }`}
+                          >
+                            <FileText className="h-3 w-3" />
+                            Text
+                          </button>
+                        </div>
+                      </div>
                       {questions.length > 1 && (
                         <button
                           onClick={() => removeQuestion(qIndex)}
@@ -375,37 +402,57 @@ const CreateExam = () => {
                       className="mb-4 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                     />
 
-                    {/* Options with radio */}
-                    <RadioGroup
-                      value={q.correctAnswer}
-                      onValueChange={(val) => updateQuestion(qIndex, "correctAnswer", val)}
-                      className="space-y-3"
-                    >
-                      {q.options.map((opt, oIndex) => (
-                        <div key={oIndex} className="flex items-center gap-3">
-                          <RadioGroupItem
-                            value={optionLabels[oIndex]}
-                            id={`q${qIndex}-opt${oIndex}`}
-                            className="border-white/20 text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[hsl(var(--dashboard-gold))]"
-                          />
-                          <Label
-                            htmlFor={`q${qIndex}-opt${oIndex}`}
-                            className="font-mono text-[11px] font-bold text-white/40 w-4 shrink-0"
-                          >
-                            {optionLabels[oIndex]}
-                          </Label>
-                          <Input
-                            value={opt}
-                            onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
-                            placeholder={`Option ${optionLabels[oIndex]}`}
-                            className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
-                          />
-                        </div>
-                      ))}
-                    </RadioGroup>
-                    <p className="font-mono text-[9px] text-white/20 mt-3">
-                      Select the radio button next to the correct answer
-                    </p>
+                    {q.type === "mcq" ? (
+                      <>
+                        {/* Options with radio */}
+                        <RadioGroup
+                          value={q.correctAnswer}
+                          onValueChange={(val) => updateQuestion(qIndex, "correctAnswer", val)}
+                          className="space-y-3"
+                        >
+                          {q.options.map((opt, oIndex) => (
+                            <div key={oIndex} className="flex items-center gap-3">
+                              <RadioGroupItem
+                                value={optionLabels[oIndex]}
+                                id={`q${qIndex}-opt${oIndex}`}
+                                className="border-white/20 text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[hsl(var(--dashboard-gold))]"
+                              />
+                              <Label
+                                htmlFor={`q${qIndex}-opt${oIndex}`}
+                                className="font-mono text-[11px] font-bold text-white/40 w-4 shrink-0"
+                              >
+                                {optionLabels[oIndex]}
+                              </Label>
+                              <Input
+                                value={opt}
+                                onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
+                                placeholder={`Option ${optionLabels[oIndex]}`}
+                                className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                              />
+                            </div>
+                          ))}
+                        </RadioGroup>
+                        <p className="font-mono text-[9px] text-white/20 mt-3">
+                          Select the radio button next to the correct answer
+                        </p>
+                      </>
+                    ) : (
+                      <div className="space-y-2">
+                        <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35">
+                          Model Answer (optional)
+                        </label>
+                        <textarea
+                          value={q.correctAnswer}
+                          onChange={(e) => updateQuestion(qIndex, "correctAnswer", e.target.value)}
+                          placeholder="Enter the expected answer for reference..."
+                          rows={3}
+                          className="w-full rounded-md bg-[hsl(var(--dashboard-bg))] border border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                        />
+                        <p className="font-mono text-[9px] text-white/20">
+                          Students will type their answer in a text field
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
