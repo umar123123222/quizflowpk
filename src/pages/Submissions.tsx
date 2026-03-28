@@ -29,6 +29,7 @@ interface ExamWithSubmissions {
   id: string;
   title: string;
   teacher_name?: string;
+  hasTextQuestions?: boolean;
   submissions: {
     id: string;
     score: number | null;
