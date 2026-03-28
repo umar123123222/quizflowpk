@@ -14,13 +14,44 @@ import { User, Mail, Phone, Clock, CheckCircle, AlertTriangle, Maximize } from "
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-const studentInfoSchema = z.object({
-  fullName: z.string().trim().min(1, "Full name is required").max(100, "Name too long"),
-  email: z.string().trim().email("Invalid email address").max(255),
-  phone: z.string().trim().min(7, "Phone number is too short").max(20, "Phone number is too long"),
-});
+interface FormFieldSettings {
+  name_visible: boolean;
+  name_required: boolean;
+  email_visible: boolean;
+  email_required: boolean;
+  phone_visible: boolean;
+  phone_required: boolean;
+}
 
-type StudentInfo = z.infer<typeof studentInfoSchema>;
+const buildStudentInfoSchema = (fs: FormFieldSettings | null) => {
+  const shape: Record<string, z.ZodTypeAny> = {
+    fullName: z.string().trim().min(1, "Full name is required").max(100, "Name too long"),
+  };
+
+  if (!fs || fs.email_visible) {
+    if (!fs || fs.email_required) {
+      shape.email = z.string().trim().email("Invalid email address").max(255);
+    } else {
+      shape.email = z.string().trim().email("Invalid email address").max(255).or(z.literal("")).optional();
+    }
+  } else {
+    shape.email = z.string().optional();
+  }
+
+  if (!fs || fs.phone_visible) {
+    if (!fs || fs.phone_required) {
+      shape.phone = z.string().trim().min(7, "Phone number is too short").max(20, "Phone number is too long");
+    } else {
+      shape.phone = z.string().trim().max(20, "Phone number is too long").or(z.literal("")).optional();
+    }
+  } else {
+    shape.phone = z.string().optional();
+  }
+
+  return z.object(shape);
+};
+
+type StudentInfo = { fullName: string; email?: string; phone?: string };
 
 interface Question {
   id: string;
@@ -47,6 +78,7 @@ const TakeExam = () => {
   const [examId, setExamId] = useState<string | null>(null);
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [exam, setExam] = useState<Exam | null>(null);
+  const [formSettings, setFormSettings] = useState<FormFieldSettings | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -85,6 +117,7 @@ const TakeExam = () => {
       timestamp: new Date().toISOString(),
     });
   };
+  const studentInfoSchema = buildStudentInfoSchema(formSettings);
   const form = useForm<StudentInfo>({
     resolver: zodResolver(studentInfoSchema),
     defaultValues: { fullName: "", email: "", phone: "" },
@@ -109,6 +142,25 @@ const TakeExam = () => {
       }
       setExam(examData);
       setExamId(examData.id);
+
+      // Fetch form settings for the org
+      if (examData.organization_id) {
+        const { data: fs } = await supabase
+          .from("organization_form_settings")
+          .select("*")
+          .eq("organization_id", examData.organization_id)
+          .single();
+        if (fs) {
+          setFormSettings({
+            name_visible: fs.name_visible,
+            name_required: fs.name_required,
+            email_visible: fs.email_visible,
+            email_required: fs.email_required,
+            phone_visible: fs.phone_visible,
+            phone_required: fs.phone_required,
+          });
+        }
+      }
 
       const { data: questionsData } = await supabase
         .from("questions")
@@ -163,9 +215,9 @@ const TakeExam = () => {
     const studentInsert: any = {
       id: studentId,
       full_name: studentInfo.fullName,
-      email: studentInfo.email,
-      phone: studentInfo.phone,
     };
+    if (studentInfo.email) studentInsert.email = studentInfo.email;
+    if (studentInfo.phone) studentInsert.phone = studentInfo.phone;
     if (exam.organization_id) {
       studentInsert.organization_id = exam.organization_id;
     }
@@ -253,8 +305,8 @@ const TakeExam = () => {
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
   const onStudentSubmit = async (data: StudentInfo) => {
-    // Check if student already submitted this exam
-    if (examId) {
+    // Check if student already submitted this exam (only if email provided)
+    if (examId && data.email) {
       const { data: existingStudents } = await supabase
         .from("students")
         .select("id")
@@ -584,30 +636,34 @@ const TakeExam = () => {
                     <FormMessage />
                   </FormItem>
                 )} />
-                <FormField control={form.control} name="email" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input type="email" placeholder="Enter your email" className="pl-10" {...field} />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="phone" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input type="tel" placeholder="Enter your phone number" className="pl-10" {...field} />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
+                {(!formSettings || formSettings.email_visible) && (
+                  <FormField control={form.control} name="email" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email{formSettings && !formSettings.email_required ? " (Optional)" : ""}</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input type="email" placeholder="Enter your email" className="pl-10" {...field} />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                )}
+                {(!formSettings || formSettings.phone_visible) && (
+                  <FormField control={form.control} name="phone" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number{formSettings && !formSettings.phone_required ? " (Optional)" : ""}</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input type="tel" placeholder="Enter your phone number" className="pl-10" {...field} />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                )}
                 <Button type="submit" className="w-full mt-2">Start Exam</Button>
               </form>
             </Form>
