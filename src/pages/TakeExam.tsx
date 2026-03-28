@@ -1011,6 +1011,24 @@ const TakeExam = () => {
               </div>
             ) : showScoreAndReview ? (
               <>
+                {/* Pass/Fail Badge */}
+                {(() => {
+                  const passingThreshold = exam?.passing_percentage ?? 50;
+                  const isPassed = (score ?? 0) >= passingThreshold;
+                  return (
+                    <div className="flex flex-col items-center gap-1.5 mt-2">
+                      <div className={`flex items-center gap-2 rounded-full px-6 py-2.5 text-lg font-bold tracking-wider uppercase ${
+                        isPassed
+                          ? "bg-green-500/15 text-green-600 dark:text-green-400"
+                          : "bg-destructive/15 text-red-600 dark:text-red-400"
+                      }`}>
+                        {isPassed ? <CheckCircle className="h-5 w-5" /> : <XCircle className="h-5 w-5" />}
+                        {isPassed ? "PASS" : "FAIL"}
+                      </div>
+                      <p className="text-xs text-muted-foreground">Passing score: {passingThreshold}%</p>
+                    </div>
+                  );
+                })()}
                 {(() => {
                   const mcqQs = questionResults.filter(q => q.question_type !== "text");
                   const mcqEarned = mcqQs.reduce((s, q) => s + (q.is_correct ? (q.points ?? 1) : 0), 0);
