@@ -87,6 +87,8 @@ const TakeExam = () => {
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [exam, setExam] = useState<Exam | null>(null);
   const [formSettings, setFormSettings] = useState<FormFieldSettings | null>(null);
+  const [customFieldDefs, setCustomFieldDefs] = useState<CustomFieldDef[]>([]);
+  const [customFieldValues, setCustomFieldValues] = useState<Record<string, string>>({});
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
