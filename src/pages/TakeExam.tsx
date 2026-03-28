@@ -456,7 +456,22 @@ const TakeExam = () => {
     earnedPoints: number;
     isReviewed: boolean;
     hasTextQuestions: boolean;
+    canReview: boolean;
+    questions: Array<{
+      id: string;
+      question_text: string;
+      question_type: string;
+      student_answer: string | null;
+      correct_answer: string | null;
+      is_correct: boolean;
+      option_a: string | null;
+      option_b: string | null;
+      option_c: string | null;
+      option_d: string | null;
+      points: number;
+    }>;
   } | null>(null);
+  const [showPrevReview, setShowPrevReview] = useState(false);
 
   const onStudentSubmit = async (data: StudentInfo) => {
     // Validate custom required fields
@@ -505,51 +520,66 @@ const TakeExam = () => {
           } else {
             // Fetch the previous submission details
             const subId = existingSubs[0].id;
-            const { data: subDetail } = await supabase
-              .from("submissions")
-              .select("score, submitted_at, answers, exam_id")
-              .eq("id", subId)
-              .single();
+            const [subRes, examRes2] = await Promise.all([
+              supabase.from("submissions").select("score, submitted_at, answers, exam_id").eq("id", subId).single(),
+              supabase.from("exams").select("result_visibility, end_time").eq("id", examId).single(),
+            ]);
+            const subDetail = subRes.data;
+            const examInfo = examRes2.data;
 
             if (subDetail) {
               const answersObj = (subDetail.answers as Record<string, any>) || {};
               const isReviewed = answersObj._reviewed === true;
 
-              // Fetch questions to compute points
-              const { data: qs } = await supabase
-                .from("questions")
-                .select("id, question_type, points")
-                .eq("exam_id", subDetail.exam_id);
+              // Determine if answer review is available
+              const visibility = (examInfo as any)?.result_visibility || "immediate";
+              const examEnded = (examInfo as any)?.end_time ? new Date((examInfo as any).end_time) < new Date() : true;
+              const hasTextQs2 = false; // will be set below
+              let canReview = visibility === "immediate" || (visibility === "after_exam_ends" && examEnded);
 
-              const allQs = qs || [];
+              // Fetch full questions for answer review
+              const { data: fullQs } = await supabase
+                .from("questions")
+                .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index, points")
+                .eq("exam_id", subDetail.exam_id)
+                .order("order_index", { ascending: true });
+
+              const allQs = fullQs || [];
               const hasTextQuestions = allQs.some((q: any) => q.question_type === "text");
               const totalPoints = allQs.reduce((s: number, q: any) => s + (q.points ?? 1), 0);
 
-              // Compute earned points
-              let earnedPoints = 0;
-              if (isReviewed || !hasTextQuestions) {
-                // MCQ points from score percentage
-                const mcqQs = allQs.filter((q: any) => q.question_type !== "text");
-                const mcqTotal = mcqQs.reduce((s: number, q: any) => s + (q.points ?? 1), 0);
+              // If has text questions and not reviewed, can't show review
+              if (hasTextQuestions && !isReviewed) canReview = false;
 
-                // Fetch full questions for correct answer comparison
-                const { data: fullQs } = await supabase
-                  .from("questions")
-                  .select("id, question_type, correct_answer, points")
-                  .eq("exam_id", subDetail.exam_id);
-
-                let mcqEarned = 0;
-                const textScores = answersObj._textScores as Record<string, number> | undefined;
-                let textEarned = 0;
-                (fullQs || []).forEach((q: any) => {
-                  if (q.question_type !== "text") {
-                    if (answersObj[q.id] === q.correct_answer) mcqEarned += (q.points ?? 1);
-                  } else if (textScores && textScores[q.id] !== undefined) {
-                    textEarned += textScores[q.id];
-                  }
-                });
-                earnedPoints = mcqEarned + (isReviewed ? textEarned : 0);
-              }
+              // Compute earned points & build question results
+              let mcqEarned = 0;
+              const textScores = answersObj._textScores as Record<string, number> | undefined;
+              let textEarned = 0;
+              const questionResults = allQs.map((q: any) => {
+                const studentAnswer = answersObj[q.id] || null;
+                const qType = q.question_type || "mcq";
+                const qPoints = q.points ?? 1;
+                const isCorrect = qType === "mcq" ? studentAnswer === q.correct_answer : false;
+                if (qType !== "text") {
+                  if (isCorrect) mcqEarned += qPoints;
+                } else if (textScores && textScores[q.id] !== undefined) {
+                  textEarned += textScores[q.id];
+                }
+                return {
+                  id: q.id,
+                  question_text: q.question_text,
+                  question_type: qType,
+                  student_answer: studentAnswer,
+                  correct_answer: q.correct_answer,
+                  is_correct: isCorrect,
+                  option_a: q.option_a,
+                  option_b: q.option_b,
+                  option_c: q.option_c,
+                  option_d: q.option_d,
+                  points: qPoints,
+                };
+              });
+              const earnedPoints = mcqEarned + (isReviewed ? textEarned : 0);
 
               setPrevSubmission({
                 score: subDetail.score,
@@ -558,6 +588,8 @@ const TakeExam = () => {
                 earnedPoints,
                 isReviewed,
                 hasTextQuestions,
+                canReview,
+                questions: questionResults,
               });
             }
 
@@ -787,6 +819,86 @@ const TakeExam = () => {
                 </div>
               </CardContent>
             </Card>
+          )}
+
+          {/* Answer review section */}
+          {ps && (
+            ps.canReview ? (
+              <div className="space-y-4">
+                <Button
+                  variant={showPrevReview ? "outline" : "default"}
+                  className="w-full"
+                  onClick={() => setShowPrevReview(!showPrevReview)}
+                >
+                  {showPrevReview ? "Hide Answers" : "Review Your Answers"}
+                </Button>
+                {showPrevReview && (
+                  <div className="space-y-3">
+                    {ps.questions.map((q, index) => {
+                      const isText = q.question_type === "text";
+                      return (
+                        <Card key={q.id} className={`overflow-hidden border-l-4 ${isText ? "border-l-muted" : q.is_correct ? "border-l-primary" : "border-l-destructive"}`}>
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-sm font-medium flex items-center gap-2">
+                              {isText ? (
+                                <span className="h-4 w-4 text-muted-foreground text-xs font-mono">✍</span>
+                              ) : q.is_correct ? (
+                                <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                              ) : (
+                                <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                              )}
+                              <span className="text-primary font-bold">Q{index + 1}.</span>
+                              {q.question_text}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-2 pt-0">
+                            {isText ? (
+                              <div className="p-2.5 rounded-md border border-border text-sm">
+                                <span className="text-muted-foreground text-xs font-medium block mb-1">Your Answer:</span>
+                                <p className="text-foreground">{q.student_answer || <span className="italic text-muted-foreground">Not answered</span>}</p>
+                              </div>
+                            ) : (
+                              <>
+                                {[
+                                  { key: "A", value: q.option_a },
+                                  { key: "B", value: q.option_b },
+                                  { key: "C", value: q.option_c },
+                                  { key: "D", value: q.option_d },
+                                ].filter((opt) => opt.value).map((opt) => {
+                                  const isStudentAnswer = q.student_answer === opt.key;
+                                  const isCorrectAnswer = q.correct_answer === opt.key;
+                                  let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2";
+                                  if (isCorrectAnswer) {
+                                    classes += " border-primary bg-primary/10 text-foreground";
+                                  } else if (isStudentAnswer && !q.is_correct) {
+                                    classes += " border-destructive bg-destructive/10 text-foreground";
+                                  } else {
+                                    classes += " border-border text-muted-foreground";
+                                  }
+                                  return (
+                                    <div key={opt.key} className={classes}>
+                                      <span className="font-semibold">{opt.key}.</span>
+                                      <span className="flex-1">{opt.value}</span>
+                                      {isCorrectAnswer && <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0" />}
+                                      {isStudentAnswer && !q.is_correct && <span className="text-xs text-destructive font-medium">Your answer</span>}
+                                    </div>
+                                  );
+                                })}
+                                {!q.student_answer && (
+                                  <p className="text-xs text-muted-foreground italic">Not answered</p>
+                                )}
+                              </>
+                            )}
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-center text-sm text-muted-foreground">Answer review is not available for this exam.</p>
+            )
           )}
         </div>
       </div>
