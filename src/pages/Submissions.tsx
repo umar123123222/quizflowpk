@@ -58,7 +58,15 @@ const Submissions = () => {
   const [reattemptEmails, setReattemptEmails] = useState<string[]>([""]);
   const [savingReattempts, setSavingReattempts] = useState(false);
   const filteredExams = useMemo(() => {
-    return examsWithSubs.map((exam) => {
+    // First filter exams by status filter
+    let exams = examsWithSubs;
+    if (statusFilter === "pending_review") {
+      exams = exams.filter((e) => e.hasTextQuestions);
+    } else if (statusFilter === "auto_evaluated") {
+      exams = exams.filter((e) => !e.hasTextQuestions);
+    }
+
+    return exams.map((exam) => {
       let subs = exam.submissions;
 
       if (searchQuery.trim()) {
@@ -87,7 +95,11 @@ const Submissions = () => {
 
       return { ...exam, submissions: subs };
     });
-  }, [examsWithSubs, searchQuery, scoreFilter, sortOrder]);
+  }, [examsWithSubs, searchQuery, scoreFilter, sortOrder, statusFilter]);
+
+  const pendingCount = useMemo(() => examsWithSubs.filter((e) => e.hasTextQuestions).reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
+  const autoCount = useMemo(() => examsWithSubs.filter((e) => !e.hasTextQuestions).reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
+  const totalCount = useMemo(() => examsWithSubs.reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
 
   useEffect(() => {
     const fetchData = async () => {
