@@ -139,6 +139,7 @@ const TakeExam = () => {
   const [correctCount, setCorrectCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [questionResults, setQuestionResults] = useState<Array<{
+    id: string;
     question_text: string;
     question_type: string;
     student_answer: string | null;
