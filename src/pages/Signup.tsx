@@ -10,6 +10,7 @@ import { Building2, GraduationCap, Eye, EyeOff } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
