@@ -16,8 +16,22 @@ interface Exam {
   is_published: boolean | null;
   time_limit: number | null;
   code: string;
+  start_time?: string | null;
+  end_time?: string | null;
   teacher_name?: string;
 }
+
+const getScheduleStatus = (exam: Exam): { label: string; color: string } | null => {
+  if (!exam.start_time && !exam.end_time) return null;
+  const now = new Date();
+  if (exam.start_time && new Date(exam.start_time) > now) {
+    return { label: "Scheduled", color: "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]" };
+  }
+  if (exam.end_time && new Date(exam.end_time) < now) {
+    return { label: "Ended", color: "bg-red-500/15 text-red-400" };
+  }
+  return { label: "Live", color: "bg-emerald-500/15 text-emerald-400" };
+};
 
 const ExamsList = () => {
   const { user, role, signOut } = useAuth();
@@ -59,7 +73,7 @@ const ExamsList = () => {
         // Teachers only see their own exams
         const { data, error } = await supabase
           .from("exams")
-          .select("id, title, description, created_at, is_published, time_limit, code")
+          .select("id, title, description, created_at, is_published, time_limit, code, start_time, end_time")
           .eq("created_by", user.id)
           .order("created_at", { ascending: false });
         if (!error && data) setExams(data);
@@ -74,7 +88,7 @@ const ExamsList = () => {
         if (org) {
           const { data, error } = await supabase
             .from("exams")
-            .select("id, title, description, created_at, is_published, time_limit, code, created_by")
+            .select("id, title, description, created_at, is_published, time_limit, code, created_by, start_time, end_time")
             .eq("organization_id", org.id)
             .order("created_at", { ascending: false });
 
@@ -212,6 +226,16 @@ const ExamsList = () => {
                           {exam.is_published ? "Published" : "Draft"}
                         </span>
                       </div>
+                      {(() => {
+                        const schedule = getScheduleStatus(exam);
+                        if (!schedule) return null;
+                        return (
+                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 font-mono text-[9px] tracking-wider uppercase mb-3 ${schedule.color}`}>
+                            {schedule.label === "Live" && <span className="mr-1 h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />}
+                            {schedule.label}
+                          </span>
+                        );
+                      })()}
                       {exam.teacher_name && (
                         <p className="font-mono text-[10px] text-white/30 mb-2">
                           By: <span className="text-white/50">{exam.teacher_name}</span>
