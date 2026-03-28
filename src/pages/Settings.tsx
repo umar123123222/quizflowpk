@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { LogOut, User, Shield, Mail, Save, Loader2, Eye, EyeOff, BadgeCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import StudentFormSettings from "@/components/StudentFormSettings";
+
 
 const Settings = () => {
   const { user, signOut } = useAuth();
@@ -337,8 +337,6 @@ const Settings = () => {
                 </div>
               </div>
 
-              {/* Student Identification Form - Owner only */}
-              {userRole === "organization_owner" && <StudentFormSettings />}
 
               {/* Backup Email Section */}
               <div className={sectionClass}>

@@ -19,6 +19,7 @@ import Submissions from "./pages/Submissions.tsx";
 import ViewSubmission from "./pages/ViewSubmission.tsx";
 import Settings from "./pages/Settings.tsx";
 import Users from "./pages/Users.tsx";
+import StudentForm from "./pages/StudentForm.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/dashboard/owner/submissions" element={<ProtectedRoute><Submissions /></ProtectedRoute>} />
             <Route path="/dashboard/owner/settings" element={<ProtectedRoute allowedRole="organization_owner"><Settings /></ProtectedRoute>} />
             <Route path="/dashboard/owner/users" element={<ProtectedRoute allowedRole="organization_owner"><Users /></ProtectedRoute>} />
+            <Route path="/dashboard/owner/student-form" element={<ProtectedRoute allowedRole="organization_owner"><StudentForm /></ProtectedRoute>} />
             <Route path="/dashboard/teacher" element={<ProtectedRoute allowedRole="teacher"><TeacherDashboard /></ProtectedRoute>} />
             <Route path="/dashboard/teacher/settings" element={<ProtectedRoute allowedRole="teacher"><Settings /></ProtectedRoute>} />
             <Route path="/exam/:code" element={<TakeExam />} />
