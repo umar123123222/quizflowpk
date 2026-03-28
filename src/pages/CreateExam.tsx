@@ -58,11 +58,11 @@ const CreateExam = () => {
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
   const [saving, setSaving] = useState(false);
-  const [savedExamId, setSavedExamId] = useState<string | null>(null);
+  const [savedExamCode, setSavedExamCode] = useState<string | null>(null);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [loadingExam, setLoadingExam] = useState(false);
 
-  const examLink = (savedExamId || editId) ? `${window.location.origin}/exam/${savedExamId || editId}` : "";
+  const examLink = savedExamCode ? `${window.location.origin}/exam/${savedExamCode}` : "";
 
   // Load existing exam data in edit mode
   useEffect(() => {
