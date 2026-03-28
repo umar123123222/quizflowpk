@@ -36,6 +36,7 @@ interface ExamWithSubmissions {
 const Submissions = () => {
   const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [examsWithSubs, setExamsWithSubs] = useState<ExamWithSubmissions[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedExams, setExpandedExams] = useState<Set<string>>(new Set());
