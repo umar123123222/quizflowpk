@@ -218,7 +218,7 @@ const TakeExam = () => {
     });
 
     if (subError) {
-      toast({ title: "Error", description: "Failed to submit exam.", variant: "destructive" });
+      toast({ title: "Error", description: `Failed to submit exam: ${subError?.message || "Unknown error"}`, variant: "destructive" });
       setSubmitting(false);
       return;
     }
