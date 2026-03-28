@@ -358,7 +358,11 @@ const Submissions = () => {
                   size="sm"
                   className="shrink-0 border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] text-white/75 hover:text-white/95 font-mono text-[10px] tracking-wider uppercase"
                   onClick={() => {
-                    const rows: string[][] = [["Exam", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]];
+                    const isOwner = role === "organization_owner";
+                    const header = isOwner
+                      ? ["Exam", "Teacher", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]
+                      : ["Exam", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"];
+                    const rows: string[][] = [header];
                     examsWithSubs.forEach((exam) => {
                       exam.submissions.forEach((sub) => {
                         const violations = sub.violations && sub.violations.length > 0
@@ -368,8 +372,9 @@ const Submissions = () => {
                           ? new Date(sub.submitted_at).toLocaleString("en-US")
                           : "—";
                         const isPending = exam.hasTextQuestions && !sub.isReviewed;
-                        rows.push([
+                        const row = [
                           exam.title,
+                          ...(isOwner ? [exam.teacher_name || "—"] : []),
                           sub.student.full_name + (sub.attemptLabel ? ` (${sub.attemptLabel})` : ""),
                           sub.student.email || "—",
                           sub.student.phone || "—",
@@ -378,7 +383,8 @@ const Submissions = () => {
                           sub.passFail || "—",
                           violations,
                           date,
-                        ]);
+                        ];
+                        rows.push(row);
                       });
                     });
                     const csv = rows.map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -538,6 +544,9 @@ const Submissions = () => {
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Name</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Email</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Phone</TableHead>
+                                  {role === "organization_owner" && (
+                                    <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Teacher</TableHead>
+                                  )}
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-right">Score</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-center">Status</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-center">Result</TableHead>
@@ -566,6 +575,11 @@ const Submissions = () => {
                                     <TableCell className="font-mono text-xs text-white/70">
                                       {sub.student.phone || "—"}
                                     </TableCell>
+                                    {role === "organization_owner" && (
+                                      <TableCell className="font-mono text-xs text-white/70">
+                                        {exam.teacher_name || "—"}
+                                      </TableCell>
+                                    )}
                                     <TableCell className="text-right">
                                       <span
                                         className={`font-mono text-sm font-bold ${
