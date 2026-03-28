@@ -10,7 +10,7 @@ const CTA = () => {
           className="relative mx-auto max-w-4xl overflow-hidden rounded-3xl p-12 text-center md:p-16"
           style={{
             background: 'linear-gradient(135deg, #1a1d2e 0%, #0d1018 100%)',
-            border: '1px solid rgba(232,200,122,0.15)',
+            border: '1px solid rgba(245,158,11,0.15)',
           }}
         >
           {/* Decorative circles */}
