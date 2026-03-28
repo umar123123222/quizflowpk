@@ -23,12 +23,15 @@ const ViewSubmission = () => {
   const [error, setError] = useState<string | null>(null);
   const [studentName, setStudentName] = useState("");
   const [studentEmail, setStudentEmail] = useState("");
+  const [studentPhone, setStudentPhone] = useState("");
   const [examTitle, setExamTitle] = useState("");
   const [submittedAt, setSubmittedAt] = useState<string | null>(null);
   const [score, setScore] = useState<number | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [questionResults, setQuestionResults] = useState<QuestionResult[]>([]);
+  const [customFieldData, setCustomFieldData] = useState<Record<string, string>>({});
+  const [customFieldLabels, setCustomFieldLabels] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchSubmission = async () => {
