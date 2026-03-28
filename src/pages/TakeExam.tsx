@@ -109,11 +109,10 @@ const TakeExam = () => {
 
       const { data: questionsData } = await supabase
         .from("questions")
-        .select("id, question_text, option_a, option_b, option_c, option_d, order_index")
+        .select("id, question_text, question_type, option_a, option_b, option_c, option_d, order_index")
         .eq("exam_id", id)
         .order("order_index", { ascending: true });
 
-      // Add question_type from raw data
       const questionsWithType = (questionsData || []).map((q: any) => ({
         ...q,
         question_type: q.question_type || "mcq",
