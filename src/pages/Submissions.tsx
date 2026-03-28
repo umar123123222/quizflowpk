@@ -52,7 +52,9 @@ const Submissions = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [scoreFilter, setScoreFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState("newest");
-
+  const [reattemptDialogExamId, setReattemptDialogExamId] = useState<string | null>(null);
+  const [reattemptEmails, setReattemptEmails] = useState<string[]>([""]);
+  const [savingReattempts, setSavingReattempts] = useState(false);
   const filteredExams = useMemo(() => {
     return examsWithSubs.map((exam) => {
       let subs = exam.submissions;
