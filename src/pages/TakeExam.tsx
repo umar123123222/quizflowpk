@@ -248,7 +248,36 @@ const TakeExam = () => {
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
+  const [alreadySubmitted, setAlreadySubmitted] = useState(false);
+
   const onStudentSubmit = async (data: StudentInfo) => {
+    // Check if student already submitted this exam
+    if (examId) {
+      const { data: existingStudents } = await supabase
+        .from("students")
+        .select("id")
+        .eq("email", data.email);
+
+      if (existingStudents && existingStudents.length > 0) {
+        const studentIds = existingStudents.map((s) => s.id);
+        const { data: existingSubs } = await supabase
+          .from("submissions")
+          .select("id")
+          .eq("exam_id", examId)
+          .in("student_id", studentIds);
+
+        if (existingSubs && existingSubs.length > 0) {
+          setAlreadySubmitted(true);
+          toast({
+            title: "Already Submitted",
+            description: "You have already attempted this exam. Only one attempt is allowed.",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+    }
+
     setStudentInfo(data);
     // Request fullscreen when exam starts
     try {
@@ -354,6 +383,21 @@ const TakeExam = () => {
           <CardContent className="pt-8 pb-8 space-y-4">
             <AlertTriangle className="h-12 w-12 text-destructive mx-auto" />
             <h2 className="text-xl font-bold">{error}</h2>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Already submitted state
+  if (alreadySubmitted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
+        <Card className="w-full max-w-md text-center">
+          <CardContent className="pt-8 pb-8 space-y-4">
+            <AlertTriangle className="h-12 w-12 text-destructive mx-auto" />
+            <h2 className="text-xl font-bold">Already Attempted</h2>
+            <p className="text-muted-foreground">You have already submitted this exam. Only one attempt is allowed per student.</p>
           </CardContent>
         </Card>
       </div>
