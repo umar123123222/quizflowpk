@@ -85,6 +85,8 @@ const CreateExam = () => {
   const [showPublishDialog, setShowPublishDialog] = useState(false);
   const [publishStep, setPublishStep] = useState(1);
   const [noSchedule, setNoSchedule] = useState(true);
+  const [shuffleQuestions, setShuffleQuestions] = useState(false);
+  const [shuffleOptions, setShuffleOptions] = useState(false);
   const [loadingExam, setLoadingExam] = useState(false);
 
   const examLink = savedExamCode ? `${window.location.origin}/exam/${savedExamCode}` : "";
