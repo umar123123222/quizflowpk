@@ -51,7 +51,15 @@ const buildStudentInfoSchema = (fs: FormFieldSettings | null) => {
   return z.object(shape);
 };
 
-type StudentInfo = { fullName: string; email?: string; phone?: string };
+type StudentInfo = { fullName: string; email?: string; phone?: string; customFields?: Record<string, string> };
+
+interface CustomFieldDef {
+  id: string;
+  field_label: string;
+  field_type: string;
+  is_required: boolean;
+  dropdown_options: string[];
+}
 
 interface Question {
   id: string;
@@ -79,6 +87,8 @@ const TakeExam = () => {
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [exam, setExam] = useState<Exam | null>(null);
   const [formSettings, setFormSettings] = useState<FormFieldSettings | null>(null);
+  const [customFieldDefs, setCustomFieldDefs] = useState<CustomFieldDef[]>([]);
+  const [customFieldValues, setCustomFieldValues] = useState<Record<string, string>>({});
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -159,6 +169,23 @@ const TakeExam = () => {
             phone_visible: fs.phone_visible,
             phone_required: fs.phone_required,
           });
+        }
+        // Fetch custom fields
+        const { data: cfData } = await supabase
+          .from("organization_custom_fields")
+          .select("*")
+          .eq("organization_id", examData.organization_id)
+          .order("sort_order", { ascending: true });
+        if (cfData) {
+          setCustomFieldDefs(
+            cfData.map((cf: any) => ({
+              id: cf.id,
+              field_label: cf.field_label,
+              field_type: cf.field_type,
+              is_required: cf.is_required,
+              dropdown_options: Array.isArray(cf.dropdown_options) ? cf.dropdown_options : [],
+            }))
+          );
         }
       }
 
@@ -305,6 +332,18 @@ const TakeExam = () => {
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
   const onStudentSubmit = async (data: StudentInfo) => {
+    // Validate custom required fields
+    for (const cf of customFieldDefs) {
+      if (cf.is_required && !customFieldValues[cf.id]?.trim()) {
+        toast({
+          title: "Required Field",
+          description: `Please fill in "${cf.field_label}"`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     // Check if student already submitted this exam (only if email provided)
     if (examId && data.email) {
       const { data: existingStudents } = await supabase
@@ -332,7 +371,7 @@ const TakeExam = () => {
       }
     }
 
-    setStudentInfo(data);
+    setStudentInfo({ ...data, customFields: customFieldValues });
     // Request fullscreen when exam starts
     try {
       document.documentElement.requestFullscreen?.();
@@ -664,6 +703,42 @@ const TakeExam = () => {
                     </FormItem>
                   )} />
                 )}
+
+                {/* Custom fields */}
+                {customFieldDefs.map((cf) => (
+                  <div key={cf.id} className="space-y-2">
+                    <Label>
+                      {cf.field_label}
+                      {!cf.is_required && <span className="text-muted-foreground text-xs ml-1">(Optional)</span>}
+                    </Label>
+                    {cf.field_type === "dropdown" ? (
+                      <select
+                        value={customFieldValues[cf.id] || ""}
+                        onChange={(e) =>
+                          setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
+                        }
+                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        required={cf.is_required}
+                      >
+                        <option value="">Select {cf.field_label}</option>
+                        {cf.dropdown_options.map((opt) => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <Input
+                        type={cf.field_type === "number" ? "number" : "text"}
+                        placeholder={`Enter ${cf.field_label.toLowerCase()}`}
+                        value={customFieldValues[cf.id] || ""}
+                        onChange={(e) =>
+                          setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
+                        }
+                        required={cf.is_required}
+                      />
+                    )}
+                  </div>
+                ))}
+
                 <Button type="submit" className="w-full mt-2">Start Exam</Button>
               </form>
             </Form>
