@@ -285,34 +285,60 @@ const ViewSubmission = () => {
                 </div>
               </div>
 
-              {/* Right: score */}
+              {/* Right: score breakdown */}
               {(() => {
                 const pendingReview = hasTextQuestions && !isReviewed;
+                const mcqQuestions = questionResults.filter(q => q.question_type !== "text");
+                const textQuestions = questionResults.filter(q => q.question_type === "text");
+                const mcqEarned = mcqQuestions.reduce((s, q) => s + (q.is_correct ? q.points : 0), 0);
+                const mcqTotal = mcqQuestions.reduce((s, q) => s + q.points, 0);
+                const textTotal = textQuestions.reduce((s, q) => s + q.points, 0);
+                const savedTextScores = submissionData?.answers?._textScores as Record<string, number> | undefined;
+                const textEarned = isReviewed && savedTextScores
+                  ? textQuestions.reduce((s, q) => s + (savedTextScores[q.id] ?? 0), 0)
+                  : 0;
+                const grandTotal = mcqTotal + textTotal;
+                const grandEarned = mcqEarned + (isReviewed ? textEarned : 0);
+
                 return (
-                  <div className="flex items-center gap-6 md:gap-8 shrink-0">
-                    <div className="text-center">
-                      <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
-                      <p className="text-xs text-muted-foreground mt-1">MCQ Correct</p>
-                    </div>
-                    <div className="w-px h-14 bg-border" />
-                    <div className="text-center">
-                      <div className={`text-4xl font-bold ${
-                        pendingReview
-                          ? "text-yellow-500"
-                          : (score ?? 0) >= 70
-                          ? "text-green-500"
-                          : (score ?? 0) >= 40
-                          ? "text-yellow-500"
-                          : "text-destructive"
-                      }`}>
-                        {pendingReview ? "—" : `${score ?? 0}%`}
+                  <div className="shrink-0 space-y-3">
+                    <div className="flex items-center gap-5">
+                      {/* MCQ Score */}
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-primary">{mcqEarned}/{mcqTotal}</div>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">MCQ Score</p>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">{pendingReview ? "Awaiting Review" : "Score"}</p>
+                      {hasTextQuestions && (
+                        <>
+                          <div className="w-px h-10 bg-border" />
+                          {/* Text Score */}
+                          <div className="text-center">
+                            <div className={`text-2xl font-bold ${pendingReview ? "text-yellow-500" : "text-primary"}`}>
+                              {pendingReview ? "—" : `${textEarned}/${textTotal}`}
+                            </div>
+                            <p className="text-[10px] text-muted-foreground mt-0.5">{pendingReview ? "Awaiting Review" : "Text Score"}</p>
+                          </div>
+                        </>
+                      )}
+                      <div className="w-px h-10 bg-border" />
+                      {/* Total */}
+                      <div className="text-center">
+                        <div className={`text-2xl font-bold ${
+                          pendingReview ? "text-yellow-500"
+                            : (score ?? 0) >= 70 ? "text-green-500"
+                            : (score ?? 0) >= 40 ? "text-yellow-500"
+                            : "text-destructive"
+                        }`}>
+                          {pendingReview ? `${mcqEarned}/${grandTotal}` : `${grandEarned}/${grandTotal}`}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">
+                          Total {!pendingReview && `· ${score ?? 0}%`}
+                        </p>
+                      </div>
                     </div>
-                    <div className="w-px h-14 bg-border" />
-                    <div className="text-center flex items-center">
+                    <div className="flex justify-end">
                       <Badge
-                        className={`text-sm px-4 py-1.5 ${
+                        className={`text-xs px-3 py-1 ${
                           pendingReview
                             ? "bg-yellow-500/15 text-yellow-500 border-yellow-500/30 hover:bg-yellow-500/20"
                             : (score ?? 0) >= 50
@@ -330,31 +356,6 @@ const ViewSubmission = () => {
           </CardContent>
         </Card>
 
-        {/* MCQ Summary for mixed exams */}
-        {hasTextQuestions && (
-          <Card className="mb-6 border-l-4 border-l-primary">
-            <CardContent className="pt-5 pb-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-1">MCQ Score (Auto Evaluated)</h3>
-                  <p className="text-xs text-muted-foreground">
-                    {correctCount} out of {totalCount} multiple-choice questions answered correctly
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-primary">{correctCount} / {totalCount}</div>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {(() => {
-                      const mcqPoints = questionResults.filter(q => q.question_type !== "text").reduce((s, q) => s + (q.is_correct ? q.points : 0), 0);
-                      const mcqTotal = questionResults.filter(q => q.question_type !== "text").reduce((s, q) => s + q.points, 0);
-                      return `${mcqPoints} / ${mcqTotal} marks`;
-                    })()}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Questions */}
         <h2 className="font-serif text-xl font-semibold mb-4">
