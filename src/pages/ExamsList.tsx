@@ -184,9 +184,14 @@ const ExamsList = () => {
                 <p className="font-mono text-[10px] text-white/25 mb-6">Create your first exam to get started</p>
                 <p className="font-mono text-[10px] text-white/25">Only teachers can create exams</p>
               </div>
+            ) : filteredExams.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <p className="text-sm text-white/50 mb-1">No exams match your filters</p>
+                <p className="font-mono text-[10px] text-white/25">Try adjusting your search or filters</p>
+              </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {exams.map((exam) => (
+                {filteredExams.map((exam) => (
                   <div
                     key={exam.id}
                     className="group rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] overflow-hidden transition-all duration-200 hover:border-[hsl(var(--dashboard-gold))]"
