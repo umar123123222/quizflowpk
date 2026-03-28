@@ -110,6 +110,12 @@ const TakeExam = () => {
         .eq("exam_id", id)
         .order("order_index", { ascending: true });
 
+      // Add question_type from raw data
+      const questionsWithType = (questionsData || []).map((q: any) => ({
+        ...q,
+        question_type: q.question_type || "mcq",
+      }));
+
       setQuestions(questionsData || []);
       setLoading(false);
     };
