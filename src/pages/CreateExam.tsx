@@ -41,6 +41,7 @@ interface Question {
   text: string;
   options: [string, string, string, string];
   correctAnswer: string;
+  marks: number | "";
 }
 
 const createEmptyQuestion = (type: QuestionType = "mcq"): Question => ({
@@ -49,6 +50,7 @@ const createEmptyQuestion = (type: QuestionType = "mcq"): Question => ({
   text: "",
   options: ["", "", "", ""],
   correctAnswer: type === "mcq" ? "A" : "",
+  marks: "",
 });
 
 const CreateExam = () => {
