@@ -358,7 +358,7 @@ const Submissions = () => {
                   size="sm"
                   className="shrink-0 border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] text-white/75 hover:text-white/95 font-mono text-[10px] tracking-wider uppercase"
                   onClick={() => {
-                    const rows: string[][] = [["Exam", "Name", "Email", "Phone", "Score", "Status", "Violations", "Date"]];
+                    const rows: string[][] = [["Exam", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]];
                     examsWithSubs.forEach((exam) => {
                       exam.submissions.forEach((sub) => {
                         const violations = sub.violations && sub.violations.length > 0
@@ -367,13 +367,15 @@ const Submissions = () => {
                         const date = sub.submitted_at
                           ? new Date(sub.submitted_at).toLocaleString("en-US")
                           : "—";
+                        const isPending = exam.hasTextQuestions && !sub.isReviewed;
                         rows.push([
                           exam.title,
                           sub.student.full_name + (sub.attemptLabel ? ` (${sub.attemptLabel})` : ""),
                           sub.student.email || "—",
                           sub.student.phone || "—",
                           sub.score !== null ? `${sub.score}%` : "—",
-                          exam.hasTextQuestions ? (sub.isReviewed ? "Published" : "Pending Review") : (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
+                          isPending ? "Pending Review" : "Published",
+                          sub.passFail || "—",
                           violations,
                           date,
                         ]);
