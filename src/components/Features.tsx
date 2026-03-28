@@ -46,7 +46,7 @@ const Features = () => {
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <div
             className="mb-4 text-[11px] font-semibold tracking-[0.2em] uppercase"
-            style={{ color: "#e8c87a", fontFamily: "'DM Mono', monospace" }}
+            style={{ color: "#F59E0B", fontFamily: "'DM Mono', monospace" }}
           >
             Why QuizFlow
           </div>

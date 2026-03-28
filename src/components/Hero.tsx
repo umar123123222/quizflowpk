@@ -84,9 +84,9 @@ const Hero = () => {
             }}
           >
             {[
-              { number: '50K+', label: 'Quizzes Created', color: '#e8c87a' },
-              { number: '2M+', label: 'Students Reached', color: '#4a9eff' },
-              { number: '98%', label: 'Satisfaction Rate', color: '#4acf8e' },
+              { number: '50K+', label: 'Quizzes Created', color: '#F59E0B' },
+              { number: '2M+', label: 'Students Reached', color: '#1E3A5F' },
+              { number: '98%', label: 'Satisfaction Rate', color: '#F59E0B' },
             ].map((stat, i) => (
               <div
                 key={i}

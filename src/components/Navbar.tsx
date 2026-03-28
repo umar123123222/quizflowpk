@@ -39,7 +39,7 @@ const Navbar = () => {
             size="sm"
             asChild
             className="font-medium border-0"
-            style={{ backgroundColor: '#e8c87a', color: '#0a0d14', borderRadius: '6px' }}
+            style={{ backgroundColor: '#F59E0B', color: '#0a0d14', borderRadius: '6px' }}
           >
             <Link to="/signup">Sign up</Link>
           </Button>

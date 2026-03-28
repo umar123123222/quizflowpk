@@ -31,7 +31,7 @@ const CTA = () => {
             asChild
             size="lg"
             className="relative text-base px-8 py-6 border-0 font-medium"
-            style={{ backgroundColor: '#e8c87a', color: '#0a0d14', borderRadius: '8px' }}
+            style={{ backgroundColor: '#F59E0B', color: '#0a0d14', borderRadius: '8px' }}
           >
             <Link to="/signup">
               Get Started Free
