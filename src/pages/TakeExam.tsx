@@ -420,7 +420,14 @@ const TakeExam = () => {
     setScore(calculatedScore);
     setCorrectCount(mcqEarnedPoints);
     setTotalCount(mcqTotalPoints);
-    setQuestionResults(results);
+    // Reorder results to match the shuffled question order the student saw
+    const questionOrder = questions.map((q) => q.id);
+    const orderedResults = [...results].sort((a, b) => {
+      const ai = questionOrder.indexOf(a.id);
+      const bi = questionOrder.indexOf(b.id);
+      return (ai === -1 ? 9999 : ai) - (bi === -1 ? 9999 : bi);
+    });
+    setQuestionResults(orderedResults);
     setSubmitted(true);
     setSubmitting(false);
   }, [studentInfo, exam, examId, answers, optionShuffleMap, submitting, submitted, toast]);
