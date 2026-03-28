@@ -55,10 +55,10 @@ const ViewSubmission = () => {
 
       setSubmittedAt(sub.submitted_at);
 
-      // Fetch student & exam in parallel
+      // Fetch student, exam, questions, and org custom field labels in parallel
       const [studentRes, examRes, questionsRes] = await Promise.all([
-        supabase.from("students").select("full_name, email").eq("id", sub.student_id).single(),
-        supabase.from("exams").select("title").eq("id", sub.exam_id).single(),
+        supabase.from("students").select("full_name, email, phone").eq("id", sub.student_id).single(),
+        supabase.from("exams").select("title, organization_id").eq("id", sub.exam_id).single(),
         supabase
           .from("questions")
           .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index")
@@ -68,9 +68,25 @@ const ViewSubmission = () => {
 
       setStudentName(studentRes.data?.full_name || "Unknown");
       setStudentEmail(studentRes.data?.email || "—");
+      setStudentPhone(studentRes.data?.phone || "");
       setExamTitle(examRes.data?.title || "Unknown Exam");
 
-      const answers = (sub.answers as Record<string, string>) || {};
+      // Fetch custom field labels if org exists
+      if (customFields && Object.keys(customFields).length > 0) {
+        setCustomFieldData(customFields);
+        const cfIds = Object.keys(customFields);
+        const { data: cfDefs } = await supabase
+          .from("organization_custom_fields")
+          .select("id, field_label")
+          .in("id", cfIds);
+        if (cfDefs) {
+          const labels: Record<string, string> = {};
+          cfDefs.forEach((cf: any) => { labels[cf.id] = cf.field_label; });
+          setCustomFieldLabels(labels);
+        }
+      }
+
+      const answers = answersObj as Record<string, string>;
       const sorted = questionsRes.data || [];
       let correct = 0;
       const mcqCount = sorted.filter((q) => q.question_type !== "text").length;
