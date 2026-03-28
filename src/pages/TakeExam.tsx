@@ -89,15 +89,15 @@ const TakeExam = () => {
     defaultValues: { fullName: "", email: "", phone: "" },
   });
 
-  // Fetch exam & questions
+  // Fetch exam & questions by code
   useEffect(() => {
-    if (!id) return;
+    if (!code) return;
     const fetchExam = async () => {
       setLoading(true);
       const { data: examData, error: examError } = await supabase
         .from("exams")
         .select("id, title, description, time_limit, organization_id")
-        .eq("id", id)
+        .eq("code", code)
         .eq("is_published", true)
         .single();
 
@@ -107,11 +107,12 @@ const TakeExam = () => {
         return;
       }
       setExam(examData);
+      setExamId(examData.id);
 
       const { data: questionsData } = await supabase
         .from("questions")
         .select("id, question_text, question_type, option_a, option_b, option_c, option_d, order_index")
-        .eq("exam_id", id)
+        .eq("exam_id", examData.id)
         .order("order_index", { ascending: true });
 
       const questionsWithType = (questionsData || []).map((q: any) => ({
@@ -123,7 +124,7 @@ const TakeExam = () => {
       setLoading(false);
     };
     fetchExam();
-  }, [id]);
+  }, [code]);
 
   // Start timer when student submits info
   useEffect(() => {
