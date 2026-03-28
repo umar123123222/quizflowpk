@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, XCircle, AlertTriangle, Mail, User, Calendar, FileText } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface QuestionResult {
   question_text: string;
