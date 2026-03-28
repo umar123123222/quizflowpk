@@ -344,7 +344,7 @@ const Submissions = () => {
                           sub.student.email || "—",
                           sub.student.phone || "—",
                           sub.score !== null ? `${sub.score}%` : "—",
-                          exam.hasTextQuestions ? "Pending Review" : (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
+                          exam.hasTextQuestions ? (sub.isReviewed ? "Evaluated" : "Pending Review") : (sub.score ?? 0) >= 50 ? "Pass" : "Fail",
                           violations,
                           date,
                         ]);
