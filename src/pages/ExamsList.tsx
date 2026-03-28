@@ -226,6 +226,16 @@ const ExamsList = () => {
                           {exam.is_published ? "Published" : "Draft"}
                         </span>
                       </div>
+                      {(() => {
+                        const schedule = getScheduleStatus(exam);
+                        if (!schedule) return null;
+                        return (
+                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 font-mono text-[9px] tracking-wider uppercase mb-3 ${schedule.color}`}>
+                            {schedule.label === "Live" && <span className="mr-1 h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />}
+                            {schedule.label}
+                          </span>
+                        );
+                      })()}
                       {exam.teacher_name && (
                         <p className="font-mono text-[10px] text-white/30 mb-2">
                           By: <span className="text-white/50">{exam.teacher_name}</span>
