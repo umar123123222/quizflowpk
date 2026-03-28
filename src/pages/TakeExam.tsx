@@ -389,6 +389,21 @@ const TakeExam = () => {
     );
   }
 
+  // Already submitted state
+  if (alreadySubmitted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
+        <Card className="w-full max-w-md text-center">
+          <CardContent className="pt-8 pb-8 space-y-4">
+            <AlertTriangle className="h-12 w-12 text-destructive mx-auto" />
+            <h2 className="text-xl font-bold">Already Attempted</h2>
+            <p className="text-muted-foreground">You have already submitted this exam. Only one attempt is allowed per student.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   // Loading
   if (loading) {
     return (
