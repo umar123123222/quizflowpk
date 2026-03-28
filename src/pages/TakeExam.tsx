@@ -395,8 +395,8 @@ const TakeExam = () => {
       ? (totalPoints > 0 ? Math.round((mcqEarnedPoints / totalPoints) * 100) : 0)
       : (totalPoints > 0 ? Math.round((mcqEarnedPoints / totalPoints) * 100) : 0);
 
-    // Submit — include custom fields in the answers payload
-    const submissionAnswers: Record<string, any> = { ...answers };
+    // Submit — include custom fields and use translated answers
+    const submissionAnswers: Record<string, any> = { ...translatedAnswers };
     if (studentInfo.customFields && Object.keys(studentInfo.customFields).length > 0) {
       submissionAnswers._customFields = studentInfo.customFields;
     }
