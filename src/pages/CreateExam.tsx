@@ -451,7 +451,7 @@ const CreateExam = () => {
             {/* Exam Details */}
             <div className="grid gap-4 sm:grid-cols-3 mb-8">
               <div className="space-y-2">
-                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text))] font-semibold">
                   Exam Title
                 </label>
                 <Input
@@ -462,7 +462,7 @@ const CreateExam = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text))] font-semibold">
                   Total Marks (Optional)
                 </label>
                 <Input
@@ -478,7 +478,7 @@ const CreateExam = () => {
                 </p>
               </div>
               <div className="space-y-2">
-                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text))] font-semibold">
                   Passing Percentage (Optional)
                 </label>
                 <Input
@@ -500,7 +500,7 @@ const CreateExam = () => {
                 </p>
               </div>
               <div className="space-y-2">
-                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text))] font-semibold">
                   Time Limit (minutes)
                 </label>
                 <Input
@@ -807,7 +807,7 @@ const CreateExam = () => {
                       </>
                     ) : (
                       <div className="space-y-2">
-                        <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]">
+                        <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text))] font-semibold">
                           Model Answer (optional)
                         </label>
                         <textarea
@@ -897,7 +897,7 @@ const CreateExam = () => {
               <div className={`grid gap-4 sm:grid-cols-2 transition-opacity ${noSchedule ? "opacity-40 pointer-events-none" : ""}`}>
                 {/* Start Date & Time */}
                 <div className="space-y-2">
-                  <label className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.55)]">Start Date & Time</label>
+                  <label className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text))] font-semibold">Start Date & Time</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <button className={cn(
@@ -946,7 +946,7 @@ const CreateExam = () => {
 
                 {/* End Date & Time */}
                 <div className="space-y-2">
-                  <label className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.55)]">End Date & Time</label>
+                  <label className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text))] font-semibold">End Date & Time</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <button className={cn(
