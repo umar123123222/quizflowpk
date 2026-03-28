@@ -1276,7 +1276,7 @@ const TakeExam = () => {
                   });
                 })()}
 
-                <Button type="submit" className="w-full mt-2">Start Exam</Button>
+                <Button type="submit" className="w-full mt-2 border-0 font-semibold" style={{ backgroundColor: "#e09615", color: "#fff" }}>Start Exam</Button>
               </form>
             </Form>
           </CardContent>
