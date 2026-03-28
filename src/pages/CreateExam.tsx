@@ -209,7 +209,7 @@ const CreateExam = () => {
         const { data: exam, error: examError } = await supabase
           .from("exams")
           .insert(insertData)
-          .select("id")
+          .select("id, code")
           .single();
 
         if (examError || !exam) throw examError || new Error("Failed to create exam");
