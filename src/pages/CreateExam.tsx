@@ -359,6 +359,7 @@ const CreateExam = () => {
   const handleOpenPublishDialog = () => {
     if (!validateExam()) return;
     setPublishStep(1);
+    setNoSchedule(!startTime && !endTime);
     setShowPublishDialog(true);
   };
 
