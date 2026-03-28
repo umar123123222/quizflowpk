@@ -145,7 +145,7 @@ const Users = () => {
         <OwnerSidebar />
         <div className="flex-1 flex flex-col">
           {/* Topbar */}
-          <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] px-5">
+          <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-white/60 hover:text-white/80" />
               <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-white/60">
