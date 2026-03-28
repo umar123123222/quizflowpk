@@ -36,6 +36,7 @@ interface ExamWithSubmissions {
     submitted_at: string | null;
     violations: Array<{ type: string; timestamp: string }> | null;
     isReviewed?: boolean;
+    attemptLabel?: string;
     student: {
       full_name: string;
       email: string | null;
@@ -186,11 +187,7 @@ const Submissions = () => {
           (students || []).map((s) => [s.id, s])
         );
 
-        results.push({
-          ...exam,
-          teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
-          hasTextQuestions: examsWithText.has(exam.id),
-          submissions: subs.map((s) => {
+        const submissions = subs.map((s) => {
             const answersObj = (s as any).answers as Record<string, any> | null;
             return {
               id: s.id,
@@ -198,13 +195,40 @@ const Submissions = () => {
               submitted_at: s.submitted_at,
               violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
               isReviewed: answersObj?._reviewed === true,
+              attemptLabel: undefined as string | undefined,
               student: studentMap.get(s.student_id) || {
                 full_name: "Unknown",
                 email: null,
                 phone: null,
               },
+              _studentId: s.student_id,
             };
-          }),
+          });
+
+        // Label attempts for students with multiple submissions
+        const byStudent = new Map<string, typeof submissions>();
+        submissions.forEach((s) => {
+          const key = (s as any)._studentId;
+          if (!byStudent.has(key)) byStudent.set(key, []);
+          byStudent.get(key)!.push(s);
+        });
+        byStudent.forEach((studentSubs) => {
+          if (studentSubs.length > 1) {
+            // Sort oldest first for labeling
+            const sorted = [...studentSubs].sort(
+              (a, b) => new Date(a.submitted_at || 0).getTime() - new Date(b.submitted_at || 0).getTime()
+            );
+            sorted.forEach((s, i) => {
+              s.attemptLabel = `Attempt ${i + 1}`;
+            });
+          }
+        });
+
+        results.push({
+          ...exam,
+          teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
+          hasTextQuestions: examsWithText.has(exam.id),
+          submissions,
         });
       }
 
@@ -343,7 +367,7 @@ const Submissions = () => {
                           : "—";
                         rows.push([
                           exam.title,
-                          sub.student.full_name,
+                          sub.student.full_name + (sub.attemptLabel ? ` (${sub.attemptLabel})` : ""),
                           sub.student.email || "—",
                           sub.student.phone || "—",
                           sub.score !== null ? `${sub.score}%` : "—",
@@ -525,6 +549,11 @@ const Submissions = () => {
                                   >
                                     <TableCell className="text-sm text-white/85 font-medium">
                                       {sub.student.full_name}
+                                      {sub.attemptLabel && (
+                                        <span className="ml-2 inline-block rounded bg-[hsl(var(--dashboard-gold)/0.15)] px-1.5 py-0.5 font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))]">
+                                          {sub.attemptLabel}
+                                        </span>
+                                      )}
                                     </TableCell>
                                     <TableCell className="font-mono text-xs text-white/70">
                                       {sub.student.email || "—"}
