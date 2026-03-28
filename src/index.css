@@ -56,6 +56,8 @@
     --dashboard-blue: 211 49% 45%;
     --dashboard-green: 142 71% 45%;
     --dashboard-dark-card: 228 30% 16%;
+    --dashboard-text: 228 27% 7%;
+    --dashboard-text-muted: 228 16% 50%;
   }
 
   .dark {
