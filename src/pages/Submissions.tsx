@@ -196,6 +196,7 @@ const Submissions = () => {
               submitted_at: s.submitted_at,
               violations: (s as any).violations as Array<{ type: string; timestamp: string }> | null,
               isReviewed: answersObj?._reviewed === true,
+              passFail: (s as any).pass_fail as string | null,
               attemptLabel: undefined as string | undefined,
               student: studentMap.get(s.student_id) || {
                 full_name: "Unknown",
