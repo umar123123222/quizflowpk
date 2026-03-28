@@ -184,6 +184,11 @@ const ViewSubmission = () => {
       if (error) throw error;
 
       setScore(finalScore);
+      // Update submissionData to reflect published state
+      setSubmissionData((prev) => prev ? {
+        ...prev,
+        answers: { ...prev.answers, _textScores: textScoresNumeric, _reviewed: true },
+      } : prev);
       toast({ title: "Grades saved", description: `Final score: ${finalScore}%` });
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Failed to save grades.", variant: "destructive" });
@@ -406,25 +411,29 @@ const ViewSubmission = () => {
                             <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">
                               Score:
                             </label>
-                            <Input
-                              type="number"
-                              min={0}
-                              max={q.points}
-                              step="0.5"
-                              placeholder="0"
-                              value={textScores[q.id] ?? ""}
-                              onChange={(e) => {
-                                setTextScores((prev) => ({ ...prev, [q.id]: e.target.value }));
-                              }}
-                              className={`w-20 h-8 text-sm text-center ${
-                                textScores[q.id] !== undefined && textScores[q.id] !== "" && parseFloat(textScores[q.id]) > q.points
-                                  ? "border-destructive focus-visible:ring-destructive"
-                                  : ""
-                              }`}
-                            />
+                            {isReviewed ? (
+                              <span className="text-sm font-semibold text-foreground">{textScores[q.id] ?? "0"}</span>
+                            ) : (
+                              <Input
+                                type="number"
+                                min={0}
+                                max={q.points}
+                                step="0.5"
+                                placeholder="0"
+                                value={textScores[q.id] ?? ""}
+                                onChange={(e) => {
+                                  setTextScores((prev) => ({ ...prev, [q.id]: e.target.value }));
+                                }}
+                                className={`w-20 h-8 text-sm text-center ${
+                                  textScores[q.id] !== undefined && textScores[q.id] !== "" && parseFloat(textScores[q.id]) > q.points
+                                    ? "border-destructive focus-visible:ring-destructive"
+                                    : ""
+                                }`}
+                              />
+                            )}
                             <span className="text-xs text-muted-foreground font-medium">/ {q.points}</span>
                           </div>
-                          {textScores[q.id] !== undefined && textScores[q.id] !== "" && parseFloat(textScores[q.id]) > q.points && (
+                          {!isReviewed && textScores[q.id] !== undefined && textScores[q.id] !== "" && parseFloat(textScores[q.id]) > q.points && (
                             <p className="text-xs text-destructive font-medium pl-3">
                               Score cannot exceed {q.points} marks for this question.
                             </p>
