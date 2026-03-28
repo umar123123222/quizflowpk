@@ -62,7 +62,10 @@ const Submissions = () => {
     // First filter exams by status filter
     let exams = examsWithSubs;
     if (statusFilter === "pending_review") {
-      exams = exams.filter((e) => e.hasTextQuestions);
+      exams = exams.filter((e) => e.hasTextQuestions).map((e) => ({
+        ...e,
+        submissions: e.submissions.filter((s) => !s.isReviewed),
+      }));
     } else if (statusFilter === "auto_evaluated") {
       exams = exams.filter((e) => !e.hasTextQuestions);
     }
