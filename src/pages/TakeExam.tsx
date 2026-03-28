@@ -404,13 +404,18 @@ const TakeExam = () => {
       submissionAnswers._customFields = studentInfo.customFields;
     }
 
+    // Determine pass/fail for MCQ-only exams; mixed exams wait for manual review
+    const passingThreshold = (examData as any).passing_percentage ?? 50;
+    const passFail = hasTextQs ? null : (calculatedScore >= passingThreshold ? "PASS" : "FAIL");
+
     const { error: subError } = await supabase.from("submissions").insert({
       exam_id: examId,
       student_id: studentId,
       answers: submissionAnswers,
       score: calculatedScore,
       violations: violationsRef.current,
-    });
+      pass_fail: passFail,
+    } as any);
 
     if (subError) {
       toast({ title: "Error", description: `Failed to submit exam: ${subError?.message || "Unknown error"}`, variant: "destructive" });
