@@ -63,6 +63,12 @@ const CreateExam = () => {
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
   const [resultVisibility, setResultVisibility] = useState<"immediate" | "after_exam_ends">("immediate");
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
+  const [startTime, setStartTime] = useState<Date | undefined>(undefined);
+  const [startHour, setStartHour] = useState("09");
+  const [startMinute, setStartMinute] = useState("00");
+  const [endTime, setEndTime] = useState<Date | undefined>(undefined);
+  const [endHour, setEndHour] = useState("17");
+  const [endMinute, setEndMinute] = useState("00");
   const [saving, setSaving] = useState(false);
   const [savedExamCode, setSavedExamCode] = useState<string | null>(null);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
