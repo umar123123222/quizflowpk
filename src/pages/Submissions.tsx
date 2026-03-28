@@ -29,6 +29,8 @@ interface ExamQuestion {
   id: string;
   question_text: string;
   order_index: number;
+  question_type: string;
+  options: { key: string; text: string }[];
 }
 
 interface ExamWithSubmissions {
