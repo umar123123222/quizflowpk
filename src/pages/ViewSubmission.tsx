@@ -67,6 +67,9 @@ const ViewSubmission = () => {
 
       setSubmittedAt(sub.submitted_at);
       setSubmissionData({ id: sub.id, exam_id: sub.exam_id, answers: answersObj });
+      if (answersObj._publishedAt) {
+        setPublishedAt(answersObj._publishedAt as string);
+      }
 
       const [studentRes, examRes, questionsRes] = await Promise.all([
         supabase.from("students").select("full_name, email, phone").eq("id", sub.student_id).single(),
@@ -171,10 +174,12 @@ const ViewSubmission = () => {
       const finalScore = totalPoints > 0 ? Math.round(((mcqEarned + textEarned) / totalPoints) * 100) : 0;
 
       // Save text scores inside answers JSON and update overall score
+      const now = new Date().toISOString();
       const updatedAnswers = {
         ...submissionData.answers,
         _textScores: textScoresNumeric,
         _reviewed: true,
+        _publishedAt: now,
       };
 
       const { error } = await supabase
@@ -188,9 +193,9 @@ const ViewSubmission = () => {
       // Update submissionData to reflect published state
       setSubmissionData((prev) => prev ? {
         ...prev,
-        answers: { ...prev.answers, _textScores: textScoresNumeric, _reviewed: true },
+        answers: { ...prev.answers, _textScores: textScoresNumeric, _reviewed: true, _publishedAt: now },
       } : prev);
-      setPublishedAt(new Date().toISOString());
+      setPublishedAt(now);
       toast({ title: "Grades saved", description: `Final score: ${finalScore}%` });
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Failed to save grades.", variant: "destructive" });
@@ -246,6 +251,17 @@ const ViewSubmission = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-4xl mx-auto px-4 py-10">
+        {/* Published banner */}
+        {isReviewed && publishedAt && (
+          <div className="mb-6 flex items-center gap-3 rounded-lg border border-green-500/30 bg-green-500/10 px-5 py-3.5">
+            <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
+            <p className="text-sm text-green-500 font-medium">
+              This result has been published to the student on{" "}
+              {new Date(publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}{" "}
+              at {new Date(publishedAt).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}.
+            </p>
+          </div>
+        )}
         {/* Header card with student & exam info */}
         <Card className="mb-8">
           <CardContent className="pt-6 pb-6">
