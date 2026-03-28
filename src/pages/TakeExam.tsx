@@ -25,8 +25,9 @@ type StudentInfo = z.infer<typeof studentInfoSchema>;
 interface Question {
   id: string;
   question_text: string;
-  option_a: string;
-  option_b: string;
+  question_type: string;
+  option_a: string | null;
+  option_b: string | null;
   option_c: string | null;
   option_d: string | null;
   order_index: number;
@@ -37,7 +38,7 @@ interface Exam {
   title: string;
   description: string | null;
   time_limit: number | null;
-  organization_id: string;
+  organization_id: string | null;
 }
 
 const TakeExam = () => {
@@ -55,11 +56,12 @@ const TakeExam = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [questionResults, setQuestionResults] = useState<Array<{
     question_text: string;
+    question_type: string;
     student_answer: string | null;
-    correct_answer: string;
+    correct_answer: string | null;
     is_correct: boolean;
-    option_a: string;
-    option_b: string;
+    option_a: string | null;
+    option_b: string | null;
     option_c: string | null;
     option_d: string | null;
   }>>([]);
@@ -109,7 +111,13 @@ const TakeExam = () => {
         .eq("exam_id", id)
         .order("order_index", { ascending: true });
 
-      setQuestions(questionsData || []);
+      // Add question_type from raw data
+      const questionsWithType = (questionsData || []).map((q: any) => ({
+        ...q,
+        question_type: q.question_type || "mcq",
+      }));
+
+      setQuestions(questionsWithType);
       setLoading(false);
     };
     fetchExam();
@@ -147,15 +155,19 @@ const TakeExam = () => {
     }
 
     // Register student
+    const studentInsert: any = {
+      full_name: studentInfo.fullName,
+      email: studentInfo.email,
+      phone: studentInfo.phone,
+      created_by: "00000000-0000-0000-0000-000000000000",
+    };
+    if (exam.organization_id) {
+      studentInsert.organization_id = exam.organization_id;
+    }
+
     const { data: studentData, error: studentError } = await supabase
       .from("students")
-      .insert({
-        full_name: studentInfo.fullName,
-        email: studentInfo.email,
-        phone: studentInfo.phone,
-        organization_id: exam.organization_id,
-        created_by: "00000000-0000-0000-0000-000000000000",
-      })
+      .insert(studentInsert)
       .select("id")
       .single();
 
@@ -174,12 +186,15 @@ const TakeExam = () => {
 
     const sorted = fullQuestions || [];
     let correct = 0;
-    const results = sorted.map((q) => {
+    const mcqCount = sorted.filter((q: any) => (q as any).question_type !== "text").length;
+    const results = sorted.map((q: any) => {
       const studentAnswer = answers[q.id] || null;
-      const isCorrect = studentAnswer === q.correct_answer;
+      const qType = q.question_type || "mcq";
+      const isCorrect = qType === "mcq" ? studentAnswer === q.correct_answer : false;
       if (isCorrect) correct++;
       return {
         question_text: q.question_text,
+        question_type: qType,
         student_answer: studentAnswer,
         correct_answer: q.correct_answer,
         is_correct: isCorrect,
@@ -190,7 +205,7 @@ const TakeExam = () => {
       };
     });
 
-    const total = sorted.length;
+    const total = mcqCount;
     const calculatedScore = total > 0 ? Math.round((correct / total) * 100) : 0;
 
     // Submit
@@ -389,53 +404,70 @@ const TakeExam = () => {
         {/* Question-by-question results */}
         <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
           <h3 className="font-serif text-lg font-semibold">Review Your Answers</h3>
-          {questionResults.map((q, index) => (
-            <Card key={index} className={`overflow-hidden border-l-4 ${q.is_correct ? "border-l-primary" : "border-l-destructive"}`}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  {q.is_correct ? (
-                    <CheckCircle className="h-4 w-4 text-primary shrink-0" />
-                  ) : (
-                    <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
-                  )}
-                  <span className="text-primary font-bold">Q{index + 1}.</span>
-                  {q.question_text}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 pt-0">
-                {[
-                  { key: "A", value: q.option_a },
-                  { key: "B", value: q.option_b },
-                  { key: "C", value: q.option_c },
-                  { key: "D", value: q.option_d },
-                ]
-                  .filter((opt) => opt.value)
-                  .map((opt) => {
-                    const isStudentAnswer = q.student_answer === opt.key;
-                    const isCorrectAnswer = q.correct_answer === opt.key;
-                    let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2";
-                    if (isCorrectAnswer) {
-                      classes += " border-primary bg-primary/10 text-foreground";
-                    } else if (isStudentAnswer && !q.is_correct) {
-                      classes += " border-destructive bg-destructive/10 text-foreground";
-                    } else {
-                      classes += " border-border text-muted-foreground";
-                    }
-                    return (
-                      <div key={opt.key} className={classes}>
-                        <span className="font-semibold">{opt.key}.</span>
-                        <span className="flex-1">{opt.value}</span>
-                        {isCorrectAnswer && <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0" />}
-                        {isStudentAnswer && !q.is_correct && <span className="text-xs text-destructive font-medium">Your answer</span>}
+          {questionResults.map((q, index) => {
+            const isText = q.question_type === "text";
+            return (
+              <Card key={index} className={`overflow-hidden border-l-4 ${isText ? "border-l-muted" : q.is_correct ? "border-l-primary" : "border-l-destructive"}`}>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    {isText ? (
+                      <span className="h-4 w-4 text-muted-foreground text-xs font-mono">✍</span>
+                    ) : q.is_correct ? (
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                    ) : (
+                      <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                    )}
+                    <span className="text-primary font-bold">Q{index + 1}.</span>
+                    {q.question_text}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 pt-0">
+                  {isText ? (
+                    <div className="space-y-2">
+                      <div className="p-2.5 rounded-md border border-border text-sm">
+                        <span className="text-muted-foreground text-xs font-medium block mb-1">Your Answer:</span>
+                        <p className="text-foreground">{q.student_answer || <span className="italic text-muted-foreground">Not answered</span>}</p>
                       </div>
-                    );
-                  })}
-                {!q.student_answer && (
-                  <p className="text-xs text-muted-foreground italic">Not answered</p>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+                      <p className="text-xs text-muted-foreground">Text answers will be reviewed by the teacher.</p>
+                    </div>
+                  ) : (
+                    <>
+                      {[
+                        { key: "A", value: q.option_a },
+                        { key: "B", value: q.option_b },
+                        { key: "C", value: q.option_c },
+                        { key: "D", value: q.option_d },
+                      ]
+                        .filter((opt) => opt.value)
+                        .map((opt) => {
+                          const isStudentAnswer = q.student_answer === opt.key;
+                          const isCorrectAnswer = q.correct_answer === opt.key;
+                          let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2";
+                          if (isCorrectAnswer) {
+                            classes += " border-primary bg-primary/10 text-foreground";
+                          } else if (isStudentAnswer && !q.is_correct) {
+                            classes += " border-destructive bg-destructive/10 text-foreground";
+                          } else {
+                            classes += " border-border text-muted-foreground";
+                          }
+                          return (
+                            <div key={opt.key} className={classes}>
+                              <span className="font-semibold">{opt.key}.</span>
+                              <span className="flex-1">{opt.value}</span>
+                              {isCorrectAnswer && <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0" />}
+                              {isStudentAnswer && !q.is_correct && <span className="text-xs text-destructive font-medium">Your answer</span>}
+                            </div>
+                          );
+                        })}
+                      {!q.student_answer && (
+                        <p className="text-xs text-muted-foreground italic">Not answered</p>
+                      )}
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
     );
@@ -532,28 +564,38 @@ const TakeExam = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <RadioGroup
-                value={answers[q.id] || ""}
-                onValueChange={(val) => setAnswers((prev) => ({ ...prev, [q.id]: val }))}
-                className="space-y-2"
-              >
-                {[
-                  { key: "A", value: q.option_a },
-                  { key: "B", value: q.option_b },
-                  { key: "C", value: q.option_c },
-                  { key: "D", value: q.option_d },
-                ]
-                  .filter((opt) => opt.value)
-                  .map((opt) => (
-                    <div key={opt.key} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors cursor-pointer">
-                      <RadioGroupItem value={opt.key} id={`${q.id}-${opt.key}`} />
-                      <Label htmlFor={`${q.id}-${opt.key}`} className="cursor-pointer flex-1 text-sm">
-                        <span className="font-semibold text-primary mr-2">{opt.key}.</span>
-                        {opt.value}
-                      </Label>
-                    </div>
-                  ))}
-              </RadioGroup>
+              {q.question_type === "text" ? (
+                <textarea
+                  value={answers[q.id] || ""}
+                  onChange={(e) => setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
+                  placeholder="Type your answer here..."
+                  rows={4}
+                  className="w-full rounded-md border border-border bg-background text-foreground text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+              ) : (
+                <RadioGroup
+                  value={answers[q.id] || ""}
+                  onValueChange={(val) => setAnswers((prev) => ({ ...prev, [q.id]: val }))}
+                  className="space-y-2"
+                >
+                  {[
+                    { key: "A", value: q.option_a },
+                    { key: "B", value: q.option_b },
+                    { key: "C", value: q.option_c },
+                    { key: "D", value: q.option_d },
+                  ]
+                    .filter((opt) => opt.value)
+                    .map((opt) => (
+                      <div key={opt.key} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors cursor-pointer">
+                        <RadioGroupItem value={opt.key} id={`${q.id}-${opt.key}`} />
+                        <Label htmlFor={`${q.id}-${opt.key}`} className="cursor-pointer flex-1 text-sm">
+                          <span className="font-semibold text-primary mr-2">{opt.key}.</span>
+                          {opt.value}
+                        </Label>
+                      </div>
+                    ))}
+                </RadioGroup>
+              )}
             </CardContent>
           </Card>
         ))}

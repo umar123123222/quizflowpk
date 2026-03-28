@@ -17,6 +17,8 @@ import {
   LogOut,
   Link,
   Copy,
+  FileText,
+  ListChecks,
 } from "lucide-react";
 import {
   Dialog,
@@ -26,18 +28,22 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
+type QuestionType = "mcq" | "text";
+
 interface Question {
   id: string;
+  type: QuestionType;
   text: string;
   options: [string, string, string, string];
-  correctAnswer: string; // "A" | "B" | "C" | "D"
+  correctAnswer: string;
 }
 
-const createEmptyQuestion = (): Question => ({
+const createEmptyQuestion = (type: QuestionType = "mcq"): Question => ({
   id: crypto.randomUUID(),
+  type,
   text: "",
   options: ["", "", "", ""],
-  correctAnswer: "A",
+  correctAnswer: type === "mcq" ? "A" : "",
 });
 
 const CreateExam = () => {
@@ -82,9 +88,10 @@ const CreateExam = () => {
           setQuestions(
             qs.map((q) => ({
               id: q.id,
+              type: ((q as any).question_type || "mcq") as QuestionType,
               text: q.question_text,
-              options: [q.option_a, q.option_b, q.option_c || "", q.option_d || ""] as [string, string, string, string],
-              correctAnswer: q.correct_answer,
+              options: [q.option_a || "", q.option_b || "", q.option_c || "", q.option_d || ""] as [string, string, string, string],
+              correctAnswer: q.correct_answer || "",
             }))
           );
         }
@@ -144,7 +151,12 @@ const CreateExam = () => {
       toast({ title: "Title required", description: "Please enter an exam title.", variant: "destructive" });
       return;
     }
-    if (questions.some((q) => !q.text.trim() || q.options.some((o) => !o.trim()))) {
+    const hasIncomplete = questions.some((q) => {
+      if (!q.text.trim()) return true;
+      if (q.type === "mcq" && q.options.some((o) => !o.trim())) return true;
+      return false;
+    });
+    if (hasIncomplete) {
       toast({ title: "Incomplete questions", description: "Fill in all question texts and options.", variant: "destructive" });
       return;
     }
@@ -207,17 +219,20 @@ const CreateExam = () => {
       // Insert questions
       const questionRows = questions.map((q, i) => ({
         exam_id: examId!,
+        question_type: q.type,
         question_text: q.text.trim(),
-        option_a: q.options[0].trim(),
-        option_b: q.options[1].trim(),
-        option_c: q.options[2].trim(),
-        option_d: q.options[3].trim(),
-        correct_answer: q.correctAnswer,
+        option_a: q.type === "mcq" ? q.options[0].trim() : null,
+        option_b: q.type === "mcq" ? q.options[1].trim() : null,
+        option_c: q.type === "mcq" ? q.options[2].trim() : null,
+        option_d: q.type === "mcq" ? q.options[3].trim() : null,
+        correct_answer: q.type === "mcq" ? q.correctAnswer : (q.correctAnswer.trim() || null),
         order_index: i,
-        options: q.options.map((o, idx) => ({
-          label: String.fromCharCode(65 + idx),
-          text: o.trim(),
-        })),
+        options: q.type === "mcq"
+          ? q.options.map((o, idx) => ({
+              label: String.fromCharCode(65 + idx),
+              text: o.trim(),
+            }))
+          : [],
       }));
 
       const { error: qError } = await supabase.from("questions").insert(questionRows);
@@ -338,9 +353,36 @@ const CreateExam = () => {
                   <div className="p-5">
                     {/* Question header */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-gold))]">
-                        Question {qIndex + 1}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-gold))]">
+                          Question {qIndex + 1}
+                        </span>
+                        {/* Type toggle */}
+                        <div className="flex rounded-md border border-[hsl(var(--dashboard-border))] overflow-hidden">
+                          <button
+                            onClick={() => updateQuestion(qIndex, "type", "mcq")}
+                            className={`flex items-center gap-1 px-2.5 py-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
+                              q.type === "mcq"
+                                ? "bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-bold"
+                                : "text-white/30 hover:text-white/50"
+                            }`}
+                          >
+                            <ListChecks className="h-3 w-3" />
+                            MCQ
+                          </button>
+                          <button
+                            onClick={() => updateQuestion(qIndex, "type", "text")}
+                            className={`flex items-center gap-1 px-2.5 py-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
+                              q.type === "text"
+                                ? "bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-bold"
+                                : "text-white/30 hover:text-white/50"
+                            }`}
+                          >
+                            <FileText className="h-3 w-3" />
+                            Text
+                          </button>
+                        </div>
+                      </div>
                       {questions.length > 1 && (
                         <button
                           onClick={() => removeQuestion(qIndex)}
@@ -360,37 +402,57 @@ const CreateExam = () => {
                       className="mb-4 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                     />
 
-                    {/* Options with radio */}
-                    <RadioGroup
-                      value={q.correctAnswer}
-                      onValueChange={(val) => updateQuestion(qIndex, "correctAnswer", val)}
-                      className="space-y-3"
-                    >
-                      {q.options.map((opt, oIndex) => (
-                        <div key={oIndex} className="flex items-center gap-3">
-                          <RadioGroupItem
-                            value={optionLabels[oIndex]}
-                            id={`q${qIndex}-opt${oIndex}`}
-                            className="border-white/20 text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[hsl(var(--dashboard-gold))]"
-                          />
-                          <Label
-                            htmlFor={`q${qIndex}-opt${oIndex}`}
-                            className="font-mono text-[11px] font-bold text-white/40 w-4 shrink-0"
-                          >
-                            {optionLabels[oIndex]}
-                          </Label>
-                          <Input
-                            value={opt}
-                            onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
-                            placeholder={`Option ${optionLabels[oIndex]}`}
-                            className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
-                          />
-                        </div>
-                      ))}
-                    </RadioGroup>
-                    <p className="font-mono text-[9px] text-white/20 mt-3">
-                      Select the radio button next to the correct answer
-                    </p>
+                    {q.type === "mcq" ? (
+                      <>
+                        {/* Options with radio */}
+                        <RadioGroup
+                          value={q.correctAnswer}
+                          onValueChange={(val) => updateQuestion(qIndex, "correctAnswer", val)}
+                          className="space-y-3"
+                        >
+                          {q.options.map((opt, oIndex) => (
+                            <div key={oIndex} className="flex items-center gap-3">
+                              <RadioGroupItem
+                                value={optionLabels[oIndex]}
+                                id={`q${qIndex}-opt${oIndex}`}
+                                className="border-white/20 text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[hsl(var(--dashboard-gold))]"
+                              />
+                              <Label
+                                htmlFor={`q${qIndex}-opt${oIndex}`}
+                                className="font-mono text-[11px] font-bold text-white/40 w-4 shrink-0"
+                              >
+                                {optionLabels[oIndex]}
+                              </Label>
+                              <Input
+                                value={opt}
+                                onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
+                                placeholder={`Option ${optionLabels[oIndex]}`}
+                                className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                              />
+                            </div>
+                          ))}
+                        </RadioGroup>
+                        <p className="font-mono text-[9px] text-white/20 mt-3">
+                          Select the radio button next to the correct answer
+                        </p>
+                      </>
+                    ) : (
+                      <div className="space-y-2">
+                        <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35">
+                          Model Answer (optional)
+                        </label>
+                        <textarea
+                          value={q.correctAnswer}
+                          onChange={(e) => updateQuestion(qIndex, "correctAnswer", e.target.value)}
+                          placeholder="Enter the expected answer for reference..."
+                          rows={3}
+                          className="w-full rounded-md bg-[hsl(var(--dashboard-bg))] border border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                        />
+                        <p className="font-mono text-[9px] text-white/20">
+                          Students will type their answer in a text field
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -399,11 +461,18 @@ const CreateExam = () => {
             {/* Add Question + Save */}
             <div className="flex flex-col sm:flex-row gap-3">
               <button
-                onClick={addQuestion}
+                onClick={() => setQuestions((prev) => [...prev, createEmptyQuestion("mcq")])}
                 className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-[hsl(var(--dashboard-border))] px-5 py-3 font-mono text-[11px] tracking-wider uppercase text-white/30 transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
               >
-                <Plus className="h-3.5 w-3.5" />
-                Add Question
+                <ListChecks className="h-3.5 w-3.5" />
+                Add MCQ
+              </button>
+              <button
+                onClick={() => setQuestions((prev) => [...prev, createEmptyQuestion("text")])}
+                className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-[hsl(var(--dashboard-border))] px-5 py-3 font-mono text-[11px] tracking-wider uppercase text-white/30 transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
+              >
+                <FileText className="h-3.5 w-3.5" />
+                Add Text Question
               </button>
               <Button
                 onClick={handleSave}
