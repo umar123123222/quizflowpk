@@ -2,10 +2,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, XCircle, AlertTriangle, Mail, User, Calendar, FileText, ClipboardList, Phone } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, XCircle, AlertTriangle, Mail, User, Calendar, FileText, ClipboardList, Phone, Save } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface QuestionResult {
+  id: string;
   question_text: string;
   question_type: string;
   student_answer: string | null;
@@ -15,11 +20,15 @@ interface QuestionResult {
   option_b: string | null;
   option_c: string | null;
   option_d: string | null;
+  points: number;
 }
 
 const ViewSubmission = () => {
   const { submissionId } = useParams<{ submissionId: string }>();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [studentName, setStudentName] = useState("");
   const [studentEmail, setStudentEmail] = useState("");
@@ -32,6 +41,8 @@ const ViewSubmission = () => {
   const [questionResults, setQuestionResults] = useState<QuestionResult[]>([]);
   const [customFieldData, setCustomFieldData] = useState<Record<string, string>>({});
   const [customFieldLabels, setCustomFieldLabels] = useState<Record<string, string>>({});
+  const [textScores, setTextScores] = useState<Record<string, string>>({});
+  const [submissionData, setSubmissionData] = useState<{ id: string; exam_id: string; answers: Record<string, any> } | null>(null);
 
   useEffect(() => {
     const fetchSubmission = async () => {
@@ -49,19 +60,19 @@ const ViewSubmission = () => {
         return;
       }
 
-      // Extract custom fields from answers
       const answersObj = (sub.answers as Record<string, any>) || {};
       const customFields = answersObj._customFields as Record<string, string> | undefined;
+      const savedTextScores = answersObj._textScores as Record<string, number> | undefined;
 
       setSubmittedAt(sub.submitted_at);
+      setSubmissionData({ id: sub.id, exam_id: sub.exam_id, answers: answersObj });
 
-      // Fetch student, exam, questions, and org custom field labels in parallel
       const [studentRes, examRes, questionsRes] = await Promise.all([
         supabase.from("students").select("full_name, email, phone").eq("id", sub.student_id).single(),
         supabase.from("exams").select("title, organization_id").eq("id", sub.exam_id).single(),
         supabase
           .from("questions")
-          .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index")
+          .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index, points")
           .eq("exam_id", sub.exam_id)
           .order("order_index", { ascending: true }),
       ]);
@@ -71,7 +82,6 @@ const ViewSubmission = () => {
       setStudentPhone(studentRes.data?.phone || "");
       setExamTitle(examRes.data?.title || "Unknown Exam");
 
-      // Fetch custom field labels if org exists
       if (customFields && Object.keys(customFields).length > 0) {
         setCustomFieldData(customFields);
         const cfIds = Object.keys(customFields);
@@ -91,12 +101,21 @@ const ViewSubmission = () => {
       let correct = 0;
       const mcqCount = sorted.filter((q) => q.question_type !== "text").length;
 
+      // Initialize text scores from saved data
+      const initialTextScores: Record<string, string> = {};
+
       const results: QuestionResult[] = sorted.map((q) => {
         const studentAnswer = answers[q.id] || null;
         const qType = q.question_type || "mcq";
         const isCorrect = qType === "mcq" ? studentAnswer === q.correct_answer : false;
         if (isCorrect) correct++;
+
+        if (qType === "text" && savedTextScores && savedTextScores[q.id] !== undefined) {
+          initialTextScores[q.id] = String(savedTextScores[q.id]);
+        }
+
         return {
+          id: q.id,
           question_text: q.question_text,
           question_type: qType,
           student_answer: studentAnswer,
@@ -106,9 +125,11 @@ const ViewSubmission = () => {
           option_b: q.option_b,
           option_c: q.option_c,
           option_d: q.option_d,
+          points: q.points ?? 1,
         };
       });
 
+      setTextScores(initialTextScores);
       setScore(sub.score);
       setCorrectCount(correct);
       setTotalCount(mcqCount);
@@ -118,6 +139,62 @@ const ViewSubmission = () => {
 
     fetchSubmission();
   }, [submissionId]);
+
+  const hasTextQuestions = questionResults.some((q) => q.question_type === "text");
+  const isTeacherOrOwner = !!user;
+
+  const handleSaveGrades = async () => {
+    if (!submissionData) return;
+    setSaving(true);
+
+    try {
+      // Calculate total score: MCQ auto-score + text manual scores
+      const mcqQuestions = questionResults.filter((q) => q.question_type !== "text");
+      const textQuestions = questionResults.filter((q) => q.question_type === "text");
+
+      const totalPoints = questionResults.reduce((sum, q) => sum + q.points, 0);
+
+      // MCQ earned points
+      const mcqEarned = mcqQuestions.reduce((sum, q) => sum + (q.is_correct ? q.points : 0), 0);
+
+      // Text earned points
+      const textScoresNumeric: Record<string, number> = {};
+      let textEarned = 0;
+      for (const q of textQuestions) {
+        const val = parseFloat(textScores[q.id] || "0");
+        const clamped = Math.min(Math.max(val, 0), q.points);
+        textScoresNumeric[q.id] = clamped;
+        textEarned += clamped;
+      }
+
+      const finalScore = totalPoints > 0 ? Math.round(((mcqEarned + textEarned) / totalPoints) * 100) : 0;
+
+      // Save text scores inside answers JSON and update overall score
+      const updatedAnswers = {
+        ...submissionData.answers,
+        _textScores: textScoresNumeric,
+        _reviewed: true,
+      };
+
+      const { error } = await supabase
+        .from("submissions")
+        .update({ score: finalScore, answers: updatedAnswers })
+        .eq("id", submissionData.id);
+
+      if (error) throw error;
+
+      setScore(finalScore);
+      toast({ title: "Grades saved", description: `Final score: ${finalScore}%` });
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to save grades.", variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const allTextGraded = questionResults
+    .filter((q) => q.question_type === "text")
+    .every((q) => textScores[q.id] !== undefined && textScores[q.id] !== "");
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return "—";
@@ -150,6 +227,8 @@ const ViewSubmission = () => {
       </div>
     );
   }
+
+  const isReviewed = submissionData?.answers?._reviewed === true;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -184,7 +263,6 @@ const ViewSubmission = () => {
                     <Calendar className="h-4 w-4 shrink-0" />
                     <span>Submitted: <span className="font-medium text-foreground">{formatDate(submittedAt)}</span></span>
                   </div>
-                  {/* Custom fields */}
                   {Object.keys(customFieldData).length > 0 && (
                     <>
                       {Object.entries(customFieldData).map(([fieldId, value]) => (
@@ -203,7 +281,7 @@ const ViewSubmission = () => {
 
               {/* Right: score */}
               {(() => {
-                const hasText = questionResults.some((q) => q.question_type === "text");
+                const pendingReview = hasTextQuestions && !isReviewed;
                 return (
                   <div className="flex items-center gap-6 md:gap-8 shrink-0">
                     <div className="text-center">
@@ -213,7 +291,7 @@ const ViewSubmission = () => {
                     <div className="w-px h-14 bg-border" />
                     <div className="text-center">
                       <div className={`text-4xl font-bold ${
-                        hasText
+                        pendingReview
                           ? "text-yellow-500"
                           : (score ?? 0) >= 70
                           ? "text-green-500"
@@ -221,22 +299,22 @@ const ViewSubmission = () => {
                           ? "text-yellow-500"
                           : "text-destructive"
                       }`}>
-                        {hasText ? "—" : `${score ?? 0}%`}
+                        {pendingReview ? "—" : `${score ?? 0}%`}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">{hasText ? "Awaiting Review" : "Score"}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{pendingReview ? "Awaiting Review" : "Score"}</p>
                     </div>
                     <div className="w-px h-14 bg-border" />
                     <div className="text-center flex items-center">
                       <Badge
                         className={`text-sm px-4 py-1.5 ${
-                          hasText
+                          pendingReview
                             ? "bg-yellow-500/15 text-yellow-500 border-yellow-500/30 hover:bg-yellow-500/20"
                             : (score ?? 0) >= 50
                             ? "bg-green-500/15 text-green-500 border-green-500/30 hover:bg-green-500/20"
                             : "bg-destructive/15 text-destructive border-destructive/30 hover:bg-destructive/20"
                         }`}
                       >
-                        {hasText ? "Pending Review" : (score ?? 0) >= 50 ? "Pass" : "Fail"}
+                        {pendingReview ? "Pending Review" : isReviewed ? "Reviewed" : (score ?? 0) >= 50 ? "Pass" : "Fail"}
                       </Badge>
                     </div>
                   </div>
@@ -248,7 +326,7 @@ const ViewSubmission = () => {
 
         {/* Questions */}
         <h2 className="font-serif text-xl font-semibold mb-4">Answer Review</h2>
-        <div className="space-y-4 pb-10">
+        <div className="space-y-4 pb-4">
           {questionResults.map((q, index) => {
             const isText = q.question_type === "text";
             return (
@@ -263,26 +341,50 @@ const ViewSubmission = () => {
                 }`}
               >
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium flex items-center gap-2">
-                    {isText ? (
-                      <span className="h-4 w-4 text-muted-foreground text-xs font-mono">✍</span>
-                    ) : q.is_correct ? (
-                      <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
-                    ) : (
-                      <XCircle className="h-5 w-5 text-destructive shrink-0" />
-                    )}
-                    <span className="text-primary font-bold">Q{index + 1}.</span>
-                    {q.question_text}
+                  <CardTitle className="text-sm font-medium flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      {isText ? (
+                        <span className="h-4 w-4 text-muted-foreground text-xs font-mono">✍</span>
+                      ) : q.is_correct ? (
+                        <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
+                      ) : (
+                        <XCircle className="h-5 w-5 text-destructive shrink-0" />
+                      )}
+                      <span className="text-primary font-bold">Q{index + 1}.</span>
+                      {q.question_text}
+                    </div>
+                    <span className="text-xs text-muted-foreground whitespace-nowrap shrink-0">
+                      {q.points} {q.points === 1 ? "mark" : "marks"}
+                    </span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2 pt-0">
                   {isText ? (
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <div className="p-2.5 rounded-md border border-border text-sm">
                         <span className="text-muted-foreground text-xs font-medium block mb-1">Student's Answer:</span>
                         <p className="text-foreground">{q.student_answer || <span className="italic text-muted-foreground">Not answered</span>}</p>
                       </div>
-                      <p className="text-xs text-muted-foreground">Text answers require manual review.</p>
+                      {isTeacherOrOwner && (
+                        <div className="flex items-center gap-3 p-3 rounded-md bg-muted/50 border border-border">
+                          <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+                            Award marks:
+                          </label>
+                          <Input
+                            type="number"
+                            min={0}
+                            max={q.points}
+                            step="0.5"
+                            placeholder="0"
+                            value={textScores[q.id] ?? ""}
+                            onChange={(e) => {
+                              setTextScores((prev) => ({ ...prev, [q.id]: e.target.value }));
+                            }}
+                            className="w-20 h-8 text-sm text-center"
+                          />
+                          <span className="text-xs text-muted-foreground">/ {q.points}</span>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <>
@@ -335,6 +437,32 @@ const ViewSubmission = () => {
             );
           })}
         </div>
+
+        {/* Save Grades Button */}
+        {hasTextQuestions && isTeacherOrOwner && (
+          <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t border-border py-4 -mx-4 px-4 flex items-center justify-between">
+            <div className="text-sm text-muted-foreground">
+              {allTextGraded ? (
+                <span className="text-green-500 font-medium">All text answers graded</span>
+              ) : (
+                <span>
+                  {questionResults.filter((q) => q.question_type === "text" && textScores[q.id] !== undefined && textScores[q.id] !== "").length}
+                  {" / "}
+                  {questionResults.filter((q) => q.question_type === "text").length}
+                  {" text answers graded"}
+                </span>
+              )}
+            </div>
+            <Button
+              onClick={handleSaveGrades}
+              disabled={saving || !allTextGraded}
+              className="gap-2"
+            >
+              <Save className="h-4 w-4" />
+              {saving ? "Saving..." : "Save & Finalize Grades"}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
