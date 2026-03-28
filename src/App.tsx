@@ -16,6 +16,7 @@ import CreateExam from "./pages/CreateExam.tsx";
 import ExamsList from "./pages/ExamsList.tsx";
 import TakeExam from "./pages/TakeExam.tsx";
 import Submissions from "./pages/Submissions.tsx";
+import ViewSubmission from "./pages/ViewSubmission.tsx";
 import Settings from "./pages/Settings.tsx";
 import Users from "./pages/Users.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/dashboard/teacher" element={<ProtectedRoute allowedRole="teacher"><TeacherDashboard /></ProtectedRoute>} />
             <Route path="/dashboard/teacher/settings" element={<ProtectedRoute allowedRole="teacher"><Settings /></ProtectedRoute>} />
             <Route path="/exam/:code" element={<TakeExam />} />
+            <Route path="/submission/:submissionId" element={<ProtectedRoute><ViewSubmission /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

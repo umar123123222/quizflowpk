@@ -3,7 +3,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert } from "lucide-react";
+import { LogOut, ClipboardList, ChevronDown, ChevronRight, ShieldAlert, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -267,6 +268,7 @@ const Submissions = () => {
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Score</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40">Violations</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-right">Date</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/40 text-center">Details</TableHead>
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
@@ -320,6 +322,17 @@ const Submissions = () => {
                                     </TableCell>
                                     <TableCell className="font-mono text-[11px] text-white/40 text-right">
                                       {formatDate(sub.submitted_at)}
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-7 px-2 text-[10px] font-mono tracking-wider uppercase text-white/40 hover:text-white/70"
+                                        onClick={() => window.open(`/submission/${sub.id}`, "_blank")}
+                                      >
+                                        <Eye className="h-3 w-3 mr-1" />
+                                        View
+                                      </Button>
                                     </TableCell>
                                   </TableRow>
                                 ))}
