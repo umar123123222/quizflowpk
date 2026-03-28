@@ -177,6 +177,18 @@ const ViewSubmission = () => {
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">Score</p>
                 </div>
+                <div className="w-px h-14 bg-border" />
+                <div className="text-center flex items-center">
+                  <Badge
+                    className={`text-sm px-4 py-1.5 ${
+                      (score ?? 0) >= 50
+                        ? "bg-green-500/15 text-green-500 border-green-500/30 hover:bg-green-500/20"
+                        : "bg-destructive/15 text-destructive border-destructive/30 hover:bg-destructive/20"
+                    }`}
+                  >
+                    {(score ?? 0) >= 50 ? "Pass" : "Fail"}
+                  </Badge>
+                </div>
               </div>
             </div>
           </CardContent>
