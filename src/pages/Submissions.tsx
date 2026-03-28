@@ -289,6 +289,40 @@ const Submissions = () => {
               )}
             </div>
 
+            {/* Search & Filter Bar */}
+            {examsWithSubs.length > 0 && (
+              <div className="mb-6 flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+                  <Input
+                    placeholder="Search by name or email..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9 h-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/25 font-mono text-xs"
+                  />
+                </div>
+                <select
+                  value={scoreFilter}
+                  onChange={(e) => setScoreFilter(e.target.value)}
+                  className="h-9 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 font-mono text-[10px] tracking-wider uppercase text-white/60 outline-none"
+                >
+                  <option value="all">All Scores</option>
+                  <option value="0-25">0–25%</option>
+                  <option value="26-50">26–50%</option>
+                  <option value="51-75">51–75%</option>
+                  <option value="76-100">76–100%</option>
+                </select>
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}
+                  className="h-9 rounded-md border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 font-mono text-[10px] tracking-wider uppercase text-white/60 outline-none"
+                >
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                </select>
+              </div>
+            )}
+
             {loading ? (
               <p className="text-white/40 animate-pulse font-mono text-sm">Loading submissions...</p>
             ) : examsWithSubs.length === 0 ? (
@@ -298,7 +332,7 @@ const Submissions = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {examsWithSubs.map((exam) => {
+                {filteredExams.map((exam) => {
                   const isExpanded = expandedExams.has(exam.id);
                   return (
                     <div
