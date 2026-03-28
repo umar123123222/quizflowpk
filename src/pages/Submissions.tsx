@@ -187,11 +187,7 @@ const Submissions = () => {
           (students || []).map((s) => [s.id, s])
         );
 
-        results.push({
-          ...exam,
-          teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
-          hasTextQuestions: examsWithText.has(exam.id),
-          submissions: subs.map((s) => {
+        const submissions = subs.map((s) => {
             const answersObj = (s as any).answers as Record<string, any> | null;
             return {
               id: s.id,
@@ -204,8 +200,34 @@ const Submissions = () => {
                 email: null,
                 phone: null,
               },
+              _studentId: s.student_id,
             };
-          }),
+          });
+
+        // Label attempts for students with multiple submissions
+        const byStudent = new Map<string, typeof submissions>();
+        submissions.forEach((s) => {
+          const key = (s as any)._studentId;
+          if (!byStudent.has(key)) byStudent.set(key, []);
+          byStudent.get(key)!.push(s);
+        });
+        byStudent.forEach((studentSubs) => {
+          if (studentSubs.length > 1) {
+            // Sort oldest first for labeling
+            const sorted = [...studentSubs].sort(
+              (a, b) => new Date(a.submitted_at || 0).getTime() - new Date(b.submitted_at || 0).getTime()
+            );
+            sorted.forEach((s, i) => {
+              s.attemptLabel = `Attempt ${i + 1}`;
+            });
+          }
+        });
+
+        results.push({
+          ...exam,
+          teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
+          hasTextQuestions: examsWithText.has(exam.id),
+          submissions,
         });
       }
 
