@@ -162,7 +162,6 @@ const TakeExam = () => {
       full_name: studentInfo.fullName,
       email: studentInfo.email,
       phone: studentInfo.phone,
-      created_by: "00000000-0000-0000-0000-000000000000",
     };
     if (exam.organization_id) {
       studentInsert.organization_id = exam.organization_id;
