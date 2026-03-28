@@ -627,17 +627,30 @@ const TakeExam = () => {
               </div>
             ) : showScoreAndReview ? (
               <>
-                <div className="flex items-center justify-center gap-6 mt-2">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
-                    <p className="text-xs text-muted-foreground mt-1">Marks Earned</p>
-                  </div>
-                  <div className="w-px h-12 bg-border" />
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-primary">{score}%</div>
-                    <p className="text-xs text-muted-foreground mt-1">Score</p>
-                  </div>
-                </div>
+                {(() => {
+                  const mcqQs = questionResults.filter(q => q.question_type !== "text");
+                  const mcqEarned = mcqQs.reduce((s, q) => s + (q.is_correct ? (q.points ?? 1) : 0), 0);
+                  const mcqTotal = mcqQs.reduce((s, q) => s + (q.points ?? 1), 0);
+                  const grandTotal = questionResults.reduce((s, q) => s + (q.points ?? 1), 0);
+                  return (
+                    <div className="flex items-center justify-center gap-6 mt-2">
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-primary">{mcqEarned}/{mcqTotal}</div>
+                        <p className="text-xs text-muted-foreground mt-1">MCQ Score</p>
+                      </div>
+                      <div className="w-px h-12 bg-border" />
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-primary">{mcqEarned}/{grandTotal}</div>
+                        <p className="text-xs text-muted-foreground mt-1">Total Marks</p>
+                      </div>
+                      <div className="w-px h-12 bg-border" />
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-primary">{score}%</div>
+                        <p className="text-xs text-muted-foreground mt-1">Percentage</p>
+                      </div>
+                    </div>
+                  );
+                })()}
                 <Button
                   variant={showResults ? "outline" : "default"}
                   className="w-full"
