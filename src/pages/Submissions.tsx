@@ -538,6 +538,9 @@ const Submissions = () => {
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Name</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Email</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Phone</TableHead>
+                                  {role === "organization_owner" && (
+                                    <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60">Teacher</TableHead>
+                                  )}
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-right">Score</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-center">Status</TableHead>
                                   <TableHead className="font-mono text-[10px] tracking-wider uppercase text-white/60 text-center">Result</TableHead>
