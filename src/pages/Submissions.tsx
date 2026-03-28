@@ -101,7 +101,7 @@ const Submissions = () => {
     });
   }, [examsWithSubs, searchQuery, scoreFilter, sortOrder, statusFilter]);
 
-  const pendingCount = useMemo(() => examsWithSubs.filter((e) => e.hasTextQuestions).reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
+  const pendingCount = useMemo(() => examsWithSubs.filter((e) => e.hasTextQuestions).reduce((sum, e) => sum + e.submissions.filter((s) => !s.isReviewed).length, 0), [examsWithSubs]);
   const autoCount = useMemo(() => examsWithSubs.filter((e) => !e.hasTextQuestions).reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
   const totalCount = useMemo(() => examsWithSubs.reduce((sum, e) => sum + e.submissions.length, 0), [examsWithSubs]);
 
