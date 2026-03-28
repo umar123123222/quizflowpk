@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, AlertTriangle, ArrowLeft } from "lucide-react";
+import { CheckCircle, XCircle, AlertTriangle, Mail, User, Calendar, FileText } from "lucide-react";
 
 interface QuestionResult {
   question_text: string;
@@ -22,7 +21,9 @@ const ViewSubmission = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [studentName, setStudentName] = useState("");
+  const [studentEmail, setStudentEmail] = useState("");
   const [examTitle, setExamTitle] = useState("");
+  const [submittedAt, setSubmittedAt] = useState<string | null>(null);
   const [score, setScore] = useState<number | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
@@ -32,10 +33,9 @@ const ViewSubmission = () => {
     const fetchSubmission = async () => {
       if (!submissionId) return;
 
-      // Fetch submission
       const { data: sub, error: subErr } = await supabase
         .from("submissions")
-        .select("id, exam_id, student_id, score, answers")
+        .select("id, exam_id, student_id, score, answers, submitted_at")
         .eq("id", submissionId)
         .single();
 
@@ -45,33 +45,25 @@ const ViewSubmission = () => {
         return;
       }
 
-      // Fetch student
-      const { data: student } = await supabase
-        .from("students")
-        .select("full_name")
-        .eq("id", sub.student_id)
-        .single();
+      setSubmittedAt(sub.submitted_at);
 
-      setStudentName(student?.full_name || "Unknown");
+      // Fetch student & exam in parallel
+      const [studentRes, examRes, questionsRes] = await Promise.all([
+        supabase.from("students").select("full_name, email").eq("id", sub.student_id).single(),
+        supabase.from("exams").select("title").eq("id", sub.exam_id).single(),
+        supabase
+          .from("questions")
+          .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index")
+          .eq("exam_id", sub.exam_id)
+          .order("order_index", { ascending: true }),
+      ]);
 
-      // Fetch exam
-      const { data: exam } = await supabase
-        .from("exams")
-        .select("title")
-        .eq("id", sub.exam_id)
-        .single();
-
-      setExamTitle(exam?.title || "Unknown Exam");
-
-      // Fetch questions with correct answers
-      const { data: questions } = await supabase
-        .from("questions")
-        .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index")
-        .eq("exam_id", sub.exam_id)
-        .order("order_index", { ascending: true });
+      setStudentName(studentRes.data?.full_name || "Unknown");
+      setStudentEmail(studentRes.data?.email || "—");
+      setExamTitle(examRes.data?.title || "Unknown Exam");
 
       const answers = (sub.answers as Record<string, string>) || {};
-      const sorted = questions || [];
+      const sorted = questionsRes.data || [];
       let correct = 0;
       const mcqCount = sorted.filter((q) => q.question_type !== "text").length;
 
@@ -103,6 +95,17 @@ const ViewSubmission = () => {
     fetchSubmission();
   }, [submissionId]);
 
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return "—";
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
@@ -125,50 +128,83 @@ const ViewSubmission = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <div className="flex-1 flex flex-col items-center px-4 py-12">
-        {/* Summary */}
-        <div className="max-w-md w-full text-center space-y-6 mb-10">
-          <div className="mx-auto w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-            <CheckCircle className="h-12 w-12 text-primary" />
-          </div>
-          <h1 className="font-serif text-3xl font-bold">Submission Details</h1>
-          <div className="space-y-2">
-            <p className="text-muted-foreground text-lg">
-              Student: <span className="font-semibold text-foreground">{studentName}</span>
-            </p>
-            <p className="text-muted-foreground">
-              Exam: <span className="font-semibold text-foreground">{examTitle}</span>
-            </p>
-          </div>
-          <div className="flex items-center justify-center gap-6 mt-2">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
-              <p className="text-xs text-muted-foreground mt-1">Correct Answers</p>
-            </div>
-            <div className="w-px h-12 bg-border" />
-            <div className="text-center">
-              <div className="text-4xl font-bold text-primary">{score ?? 0}%</div>
-              <p className="text-xs text-muted-foreground mt-1">Score</p>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="max-w-4xl mx-auto px-4 py-10">
+        {/* Header card with student & exam info */}
+        <Card className="mb-8">
+          <CardContent className="pt-6 pb-6">
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+              {/* Left: student info */}
+              <div className="space-y-3">
+                <h1 className="font-serif text-2xl md:text-3xl font-bold">Submission Details</h1>
+                <div className="space-y-1.5 text-sm">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <User className="h-4 w-4 shrink-0" />
+                    <span>Student: <span className="font-semibold text-foreground">{studentName}</span></span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Mail className="h-4 w-4 shrink-0" />
+                    <span>Email: <span className="font-medium text-foreground">{studentEmail}</span></span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <FileText className="h-4 w-4 shrink-0" />
+                    <span>Exam: <span className="font-semibold text-foreground">{examTitle}</span></span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Calendar className="h-4 w-4 shrink-0" />
+                    <span>Submitted: <span className="font-medium text-foreground">{formatDate(submittedAt)}</span></span>
+                  </div>
+                </div>
+              </div>
 
-        {/* Detailed Results */}
-        <div className="max-w-3xl w-full space-y-4 pb-8">
-          <h3 className="font-serif text-lg font-semibold">Answer Review</h3>
+              {/* Right: score */}
+              <div className="flex items-center gap-6 md:gap-8 shrink-0">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Correct</p>
+                </div>
+                <div className="w-px h-14 bg-border" />
+                <div className="text-center">
+                  <div className={`text-4xl font-bold ${
+                    (score ?? 0) >= 70
+                      ? "text-green-500"
+                      : (score ?? 0) >= 40
+                      ? "text-yellow-500"
+                      : "text-destructive"
+                  }`}>
+                    {score ?? 0}%
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">Score</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Questions */}
+        <h2 className="font-serif text-xl font-semibold mb-4">Answer Review</h2>
+        <div className="space-y-4 pb-10">
           {questionResults.map((q, index) => {
             const isText = q.question_type === "text";
             return (
-              <Card key={index} className={`overflow-hidden border-l-4 ${isText ? "border-l-muted" : q.is_correct ? "border-l-primary" : "border-l-destructive"}`}>
+              <Card
+                key={index}
+                className={`overflow-hidden border-l-4 ${
+                  isText
+                    ? "border-l-muted"
+                    : q.is_correct
+                    ? "border-l-green-500"
+                    : "border-l-destructive"
+                }`}
+              >
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium flex items-center gap-2">
                     {isText ? (
                       <span className="h-4 w-4 text-muted-foreground text-xs font-mono">✍</span>
                     ) : q.is_correct ? (
-                      <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
                     ) : (
-                      <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                      <XCircle className="h-5 w-5 text-destructive shrink-0" />
                     )}
                     <span className="text-primary font-bold">Q{index + 1}.</span>
                     {q.question_text}
@@ -195,20 +231,32 @@ const ViewSubmission = () => {
                         .map((opt) => {
                           const isStudentAnswer = q.student_answer === opt.key;
                           const isCorrectAnswer = q.correct_answer === opt.key;
-                          let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2";
+
+                          let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2 transition-colors";
                           if (isCorrectAnswer) {
-                            classes += " border-primary bg-primary/10 text-foreground";
+                            classes += " border-green-500 bg-green-500/10 text-foreground";
                           } else if (isStudentAnswer && !q.is_correct) {
                             classes += " border-destructive bg-destructive/10 text-foreground";
                           } else {
                             classes += " border-border text-muted-foreground";
                           }
+
                           return (
                             <div key={opt.key} className={classes}>
-                              <span className="font-semibold">{opt.key}.</span>
+                              <span className="font-semibold w-6">{opt.key}.</span>
                               <span className="flex-1">{opt.value}</span>
-                              {isCorrectAnswer && <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0" />}
-                              {isStudentAnswer && !q.is_correct && <span className="text-xs text-destructive font-medium">Student's answer</span>}
+                              {isCorrectAnswer && (
+                                <span className="flex items-center gap-1 shrink-0">
+                                  <CheckCircle className="h-4 w-4 text-green-500" />
+                                  <span className="text-xs text-green-500 font-medium">Correct</span>
+                                </span>
+                              )}
+                              {isStudentAnswer && !q.is_correct && (
+                                <span className="flex items-center gap-1 shrink-0">
+                                  <XCircle className="h-4 w-4 text-destructive" />
+                                  <span className="text-xs text-destructive font-medium">Student's pick</span>
+                                </span>
+                              )}
                             </div>
                           );
                         })}
