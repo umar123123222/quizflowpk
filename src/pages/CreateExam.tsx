@@ -63,6 +63,9 @@ const CreateExam = () => {
 
   const [title, setTitle] = useState("");
   const [totalMarks, setTotalMarks] = useState<number | "">(""); 
+  const [customMarking, setCustomMarking] = useState(false);
+  const [defaultMcqMarks, setDefaultMcqMarks] = useState<number | "">(2);
+  const [defaultTextMarks, setDefaultTextMarks] = useState<number | "">(5);
   const [timeLimit, setTimeLimit] = useState<number | "">(30);
   const [resultVisibility, setResultVisibility] = useState<"immediate" | "after_exam_ends">("immediate");
   const [questions, setQuestions] = useState<Question[]>([createEmptyQuestion()]);
