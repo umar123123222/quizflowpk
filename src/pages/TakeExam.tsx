@@ -1318,7 +1318,7 @@ const TakeExam = () => {
                   onChange={(e) => setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
                   placeholder="Type your answer here..."
                   rows={4}
-                  className="w-full rounded-md border border-border bg-background text-foreground text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full rounded-md border border-[hsl(220_27%_92%)] bg-card text-foreground text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e09615]/40"
                 />
               ) : (
                 <RadioGroup
