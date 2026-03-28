@@ -25,11 +25,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+interface ExamQuestion {
+  id: string;
+  question_text: string;
+  order_index: number;
+}
+
 interface ExamWithSubmissions {
   id: string;
   title: string;
   teacher_name?: string;
   hasTextQuestions?: boolean;
+  questions?: ExamQuestion[];
   submissions: {
     id: string;
     score: number | null;
@@ -38,6 +45,7 @@ interface ExamWithSubmissions {
     isReviewed?: boolean;
     passFail?: string | null;
     attemptLabel?: string;
+    answers?: Record<string, any>;
     student: {
       full_name: string;
       email: string | null;
@@ -154,14 +162,21 @@ const Submissions = () => {
 
       if (!exams || exams.length === 0) { setLoading(false); return; }
 
-      // Check which exams have text questions
+      // Fetch all questions for all exams (for text question detection + CSV export)
       const examIds = exams.map((e) => e.id);
-      const { data: textQs } = await supabase
+      const { data: allQuestions } = await supabase
         .from("questions")
-        .select("exam_id")
+        .select("id, exam_id, question_text, question_type, order_index")
         .in("exam_id", examIds)
-        .eq("question_type", "text");
-      const examsWithText = new Set((textQs || []).map((q) => q.exam_id));
+        .order("order_index", { ascending: true });
+      const examsWithText = new Set(
+        (allQuestions || []).filter((q) => q.question_type === "text").map((q) => q.exam_id)
+      );
+      const questionsByExam = new Map<string, ExamQuestion[]>();
+      (allQuestions || []).forEach((q) => {
+        if (!questionsByExam.has(q.exam_id)) questionsByExam.set(q.exam_id, []);
+        questionsByExam.get(q.exam_id)!.push({ id: q.id, question_text: q.question_text, order_index: q.order_index });
+      });
 
       // Get submissions with student info for all exams
       const results: ExamWithSubmissions[] = [];
@@ -198,6 +213,7 @@ const Submissions = () => {
               isReviewed: answersObj?._reviewed === true,
               passFail: (s as any).pass_fail as string | null,
               attemptLabel: undefined as string | undefined,
+              answers: answersObj || {},
               student: studentMap.get(s.student_id) || {
                 full_name: "Unknown",
                 email: null,
@@ -230,6 +246,7 @@ const Submissions = () => {
           ...exam,
           teacher_name: exam.created_by ? teacherMap.get(exam.created_by) : undefined,
           hasTextQuestions: examsWithText.has(exam.id),
+          questions: questionsByExam.get(exam.id) || [],
           submissions,
         });
       }
@@ -359,11 +376,16 @@ const Submissions = () => {
                   className="shrink-0 border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] text-white/75 hover:text-white/95 font-mono text-[10px] tracking-wider uppercase"
                   onClick={() => {
                     const isOwner = role === "organization_owner";
-                    const header = isOwner
+                    // Find max question count across all exams for dynamic columns
+                    const maxQs = Math.max(...examsWithSubs.map((e) => (e.questions || []).length), 0);
+                    const qHeaders = Array.from({ length: maxQs }, (_, i) => `Q${i + 1} - Question`);
+                    const baseHeader = isOwner
                       ? ["Exam", "Teacher", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]
                       : ["Exam", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"];
+                    const header = [...baseHeader, ...qHeaders];
                     const rows: string[][] = [header];
                     examsWithSubs.forEach((exam) => {
+                      const sortedQs = [...(exam.questions || [])].sort((a, b) => a.order_index - b.order_index);
                       exam.submissions.forEach((sub) => {
                         const violations = sub.violations && sub.violations.length > 0
                           ? sub.violations.map((v) => v.type).join("; ")
@@ -383,6 +405,10 @@ const Submissions = () => {
                           sub.passFail || "—",
                           violations,
                           date,
+                          // Question text columns
+                          ...sortedQs.map((q) => q.question_text),
+                          // Pad remaining columns if this exam has fewer questions
+                          ...Array.from({ length: maxQs - sortedQs.length }, () => ""),
                         ];
                         rows.push(row);
                       });
