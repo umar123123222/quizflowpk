@@ -135,6 +135,15 @@ const Submissions = () => {
 
       if (!exams || exams.length === 0) { setLoading(false); return; }
 
+      // Check which exams have text questions
+      const examIds = exams.map((e) => e.id);
+      const { data: textQs } = await supabase
+        .from("questions")
+        .select("exam_id")
+        .in("exam_id", examIds)
+        .eq("question_type", "text");
+      const examsWithText = new Set((textQs || []).map((q) => q.exam_id));
+
       // Get submissions with student info for all exams
       const results: ExamWithSubmissions[] = [];
       for (const exam of exams) {
