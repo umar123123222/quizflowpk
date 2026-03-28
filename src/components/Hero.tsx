@@ -26,9 +26,9 @@ const Hero = () => {
             style={{ color: '#e8e3d5', fontFamily: "'Playfair Display', serif", fontWeight: 900, fontSize: 'clamp(3rem, 5vw, 5.5rem)', lineHeight: 1.1 }}
           >
             Build engaging quizzes{" "}
-            <span style={{ color: '#5b7fa6', opacity: 0.7 }}>in</span>
+            <span style={{ color: '#1E3A5F', opacity: 0.9 }}>in</span>
             <br />
-            <span style={{ color: '#e8c87a' }}>minutes</span>
+            <span style={{ color: '#F59E0B' }}>minutes</span>
           </h1>
 
           <p
@@ -45,7 +45,7 @@ const Hero = () => {
               to="/signup"
               className="inline-flex items-center gap-2 text-base transition-transform duration-200 hover:-translate-y-px"
               style={{
-                backgroundColor: '#e8c87a',
+                backgroundColor: '#F59E0B',
                 color: '#0a0d14',
                 borderRadius: '8px',
                 padding: '0.85rem 2rem',
@@ -84,9 +84,9 @@ const Hero = () => {
             }}
           >
             {[
-              { number: '50K+', label: 'Quizzes Created', color: '#e8c87a' },
-              { number: '2M+', label: 'Students Reached', color: '#4a9eff' },
-              { number: '98%', label: 'Satisfaction Rate', color: '#4acf8e' },
+              { number: '50K+', label: 'Quizzes Created', color: '#F59E0B' },
+              { number: '2M+', label: 'Students Reached', color: '#1E3A5F' },
+              { number: '98%', label: 'Satisfaction Rate', color: '#F59E0B' },
             ].map((stat, i) => (
               <div
                 key={i}

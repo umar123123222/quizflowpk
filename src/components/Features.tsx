@@ -5,37 +5,37 @@ const features = [
     icon: Brain,
     title: "AI Question Generator",
     description: "Paste any content and let AI craft perfect questions automatically.",
-    color: "#e8c87a",
+    color: "#F59E0B",
   },
   {
     icon: Zap,
     title: "Instant Publishing",
     description: "Share quizzes with a link or embed them anywhere in seconds.",
-    color: "#4a9eff",
+    color: "#1E3A5F",
   },
   {
     icon: BarChart3,
     title: "Real-Time Analytics",
     description: "Track scores, completion rates, and identify knowledge gaps.",
-    color: "#4acf8e",
+    color: "#F59E0B",
   },
   {
     icon: Palette,
     title: "Custom Branding",
     description: "Match your brand with custom colors, logos, and themes.",
-    color: "#c084fc",
+    color: "#1E3A5F",
   },
   {
     icon: Share2,
     title: "Team Collaboration",
     description: "Build quizzes together with your team in real time.",
-    color: "#4a9eff",
+    color: "#F59E0B",
   },
   {
     icon: Shield,
     title: "Anti-Cheat Protection",
     description: "Randomized questions, time limits, and proctoring tools.",
-    color: "#f87171",
+    color: "#1E3A5F",
   },
 ];
 
@@ -46,7 +46,7 @@ const Features = () => {
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <div
             className="mb-4 text-[11px] font-semibold tracking-[0.2em] uppercase"
-            style={{ color: "#e8c87a", fontFamily: "'DM Mono', monospace" }}
+            style={{ color: "#F59E0B", fontFamily: "'DM Mono', monospace" }}
           >
             Why QuizFlow
           </div>

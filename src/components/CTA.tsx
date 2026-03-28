@@ -10,12 +10,12 @@ const CTA = () => {
           className="relative mx-auto max-w-4xl overflow-hidden rounded-3xl p-12 text-center md:p-16"
           style={{
             background: 'linear-gradient(135deg, #1a1d2e 0%, #0d1018 100%)',
-            border: '1px solid rgba(232,200,122,0.15)',
+            border: '1px solid rgba(245,158,11,0.15)',
           }}
         >
           {/* Decorative circles */}
-          <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full" style={{ backgroundColor: 'rgba(232,200,122,0.05)' }} />
-          <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full" style={{ backgroundColor: 'rgba(232,200,122,0.05)' }} />
+          <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full" style={{ backgroundColor: 'rgba(245,158,11,0.05)' }} />
+          <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full" style={{ backgroundColor: 'rgba(245,158,11,0.05)' }} />
 
           <h2
             className="relative mb-4 text-3xl font-bold sm:text-4xl"
@@ -31,7 +31,7 @@ const CTA = () => {
             asChild
             size="lg"
             className="relative text-base px-8 py-6 border-0 font-medium"
-            style={{ backgroundColor: '#e8c87a', color: '#0a0d14', borderRadius: '8px' }}
+            style={{ backgroundColor: '#F59E0B', color: '#0a0d14', borderRadius: '8px' }}
           >
             <Link to="/signup">
               Get Started Free

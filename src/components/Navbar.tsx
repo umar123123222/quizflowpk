@@ -10,10 +10,10 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <div className="rounded-lg p-1.5" style={{ backgroundColor: '#e8c87a' }}>
+          <div className="rounded-lg p-1.5" style={{ backgroundColor: '#F59E0B' }}>
             <Zap className="h-5 w-5" style={{ color: '#0a0d14' }} />
           </div>
-          <span className="text-xl font-bold font-serif" style={{ color: '#e8c87a' }}>QuizFlow</span>
+          <span className="text-xl font-bold font-serif" style={{ color: '#F59E0B' }}>QuizFlow</span>
         </div>
 
         <div className="hidden items-center gap-8 md:flex">
@@ -23,7 +23,7 @@ const Navbar = () => {
               href="#"
               className="text-sm font-medium transition-colors"
               style={{ color: 'rgba(232,227,213,0.6)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#e8c87a')}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#F59E0B')}
               onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(232,227,213,0.6)')}
             >
               {item}
@@ -39,7 +39,7 @@ const Navbar = () => {
             size="sm"
             asChild
             className="font-medium border-0"
-            style={{ backgroundColor: '#e8c87a', color: '#0a0d14', borderRadius: '6px' }}
+            style={{ backgroundColor: '#F59E0B', color: '#0a0d14', borderRadius: '6px' }}
           >
             <Link to="/signup">Sign up</Link>
           </Button>
