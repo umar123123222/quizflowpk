@@ -196,7 +196,7 @@ const TeacherDashboard = () => {
                 <button
                   key={action.title}
                   onClick={action.onClick}
-                  className="group flex items-center gap-4 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-4 text-left transition-all duration-200 hover:border-[hsl(var(--dashboard-gold))]"
+                  className="group flex items-center gap-4 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-dark-card))] p-4 text-left transition-all duration-200 hover:border-[hsl(var(--dashboard-gold))]"
                 >
                   <div
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md"
