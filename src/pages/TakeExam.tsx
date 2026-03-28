@@ -287,18 +287,22 @@ const TakeExam = () => {
     // Calculate score & build results
     const { data: fullQuestions } = await supabase
       .from("questions")
-        .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index")
+        .select("id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, order_index, points")
         .eq("exam_id", examId)
       .order("order_index", { ascending: true });
 
     const sorted = fullQuestions || [];
-    let correct = 0;
-    const mcqCount = sorted.filter((q: any) => (q as any).question_type !== "text").length;
+    let mcqEarnedPoints = 0;
+    let mcqTotalPoints = 0;
     const results = sorted.map((q: any) => {
       const studentAnswer = answers[q.id] || null;
       const qType = q.question_type || "mcq";
+      const qPoints = q.points ?? 1;
       const isCorrect = qType === "mcq" ? studentAnswer === q.correct_answer : false;
-      if (isCorrect) correct++;
+      if (qType !== "text") {
+        mcqTotalPoints += qPoints;
+        if (isCorrect) mcqEarnedPoints += qPoints;
+      }
       return {
         question_text: q.question_text,
         question_type: qType,
@@ -309,11 +313,16 @@ const TakeExam = () => {
         option_b: q.option_b,
         option_c: q.option_c,
         option_d: q.option_d,
+        points: qPoints,
       };
     });
 
-    const total = mcqCount;
-    const calculatedScore = total > 0 ? Math.round((correct / total) * 100) : 0;
+    const totalPoints = sorted.reduce((sum: number, q: any) => sum + (q.points ?? 1), 0);
+    const hasTextQs = sorted.some((q: any) => q.question_type === "text");
+    // For mixed exams, score is based on MCQ only (text graded later); for MCQ-only, full score
+    const calculatedScore = hasTextQs
+      ? (totalPoints > 0 ? Math.round((mcqEarnedPoints / totalPoints) * 100) : 0)
+      : (totalPoints > 0 ? Math.round((mcqEarnedPoints / totalPoints) * 100) : 0);
 
     // Submit — include custom fields in the answers payload
     const submissionAnswers: Record<string, any> = { ...answers };
