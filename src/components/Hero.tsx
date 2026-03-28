@@ -43,13 +43,14 @@ const Hero = () => {
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center opacity-0 animate-fade-up [animation-delay:300ms]">
             <Link
               to="/signup"
-              className="inline-flex items-center gap-2 text-base font-semibold"
+              className="inline-flex items-center gap-2 text-base transition-transform duration-200 hover:-translate-y-px"
               style={{
-                background: 'linear-gradient(to right, #1e2d45 60%, #e8a020 100%)',
-                color: '#ffffff',
-                borderRadius: '10px',
-                padding: '1rem 2.2rem',
+                backgroundColor: '#e8c87a',
+                color: '#0a0d14',
+                borderRadius: '8px',
+                padding: '0.85rem 2rem',
                 textDecoration: 'none',
+                fontWeight: 500,
               }}
             >
               Get Started Free
@@ -57,13 +58,15 @@ const Hero = () => {
             </Link>
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 text-base font-semibold"
+              className="inline-flex items-center gap-2 text-base transition-colors duration-200"
               style={{
-                backgroundColor: '#1e2d45',
-                color: '#ffffff',
-                borderRadius: '10px',
-                padding: '1rem 2.2rem',
+                backgroundColor: 'transparent',
+                color: '#e8e3d5',
+                border: '1px solid rgba(232,227,213,0.2)',
+                borderRadius: '8px',
+                padding: '0.85rem 2rem',
                 textDecoration: 'none',
+                fontWeight: 500,
               }}
             >
               See How It Works
