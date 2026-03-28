@@ -605,11 +605,14 @@ const TakeExam = () => {
 
             {hasTextQuestions ? (
               <div className="space-y-4 mt-4">
-                <div className="border border-border rounded-lg p-5 bg-muted/30">
-                  <Clock className="h-8 w-8 text-primary mx-auto mb-3" />
-                  <p className="text-foreground font-semibold text-lg">Pending Review</p>
-                  <p className="text-muted-foreground text-sm mt-2">
-                    Your responses have been submitted and are awaiting instructor review. You will receive your results once your answers have been evaluated.
+                <div className="border border-border rounded-lg p-6 bg-muted/30">
+                  <Clock className="h-10 w-10 text-primary mx-auto mb-4" />
+                  <p className="text-foreground font-semibold text-lg">Submitted Successfully</p>
+                  <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
+                    Your exam has been submitted successfully. Your instructor is reviewing your responses and your result will be available soon.
+                  </p>
+                  <p className="text-muted-foreground/60 text-xs mt-4">
+                    No score, pass/fail status, or answer review will be shown until your instructor publishes the result.
                   </p>
                 </div>
               </div>
