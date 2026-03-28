@@ -820,6 +820,86 @@ const TakeExam = () => {
               </CardContent>
             </Card>
           )}
+
+          {/* Answer review section */}
+          {ps && (
+            ps.canReview ? (
+              <div className="space-y-4">
+                <Button
+                  variant={showPrevReview ? "outline" : "default"}
+                  className="w-full"
+                  onClick={() => setShowPrevReview(!showPrevReview)}
+                >
+                  {showPrevReview ? "Hide Answers" : "Review Your Answers"}
+                </Button>
+                {showPrevReview && (
+                  <div className="space-y-3">
+                    {ps.questions.map((q, index) => {
+                      const isText = q.question_type === "text";
+                      return (
+                        <Card key={q.id} className={`overflow-hidden border-l-4 ${isText ? "border-l-muted" : q.is_correct ? "border-l-primary" : "border-l-destructive"}`}>
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-sm font-medium flex items-center gap-2">
+                              {isText ? (
+                                <span className="h-4 w-4 text-muted-foreground text-xs font-mono">✍</span>
+                              ) : q.is_correct ? (
+                                <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                              ) : (
+                                <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                              )}
+                              <span className="text-primary font-bold">Q{index + 1}.</span>
+                              {q.question_text}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-2 pt-0">
+                            {isText ? (
+                              <div className="p-2.5 rounded-md border border-border text-sm">
+                                <span className="text-muted-foreground text-xs font-medium block mb-1">Your Answer:</span>
+                                <p className="text-foreground">{q.student_answer || <span className="italic text-muted-foreground">Not answered</span>}</p>
+                              </div>
+                            ) : (
+                              <>
+                                {[
+                                  { key: "A", value: q.option_a },
+                                  { key: "B", value: q.option_b },
+                                  { key: "C", value: q.option_c },
+                                  { key: "D", value: q.option_d },
+                                ].filter((opt) => opt.value).map((opt) => {
+                                  const isStudentAnswer = q.student_answer === opt.key;
+                                  const isCorrectAnswer = q.correct_answer === opt.key;
+                                  let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2";
+                                  if (isCorrectAnswer) {
+                                    classes += " border-primary bg-primary/10 text-foreground";
+                                  } else if (isStudentAnswer && !q.is_correct) {
+                                    classes += " border-destructive bg-destructive/10 text-foreground";
+                                  } else {
+                                    classes += " border-border text-muted-foreground";
+                                  }
+                                  return (
+                                    <div key={opt.key} className={classes}>
+                                      <span className="font-semibold">{opt.key}.</span>
+                                      <span className="flex-1">{opt.value}</span>
+                                      {isCorrectAnswer && <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0" />}
+                                      {isStudentAnswer && !q.is_correct && <span className="text-xs text-destructive font-medium">Your answer</span>}
+                                    </div>
+                                  );
+                                })}
+                                {!q.student_answer && (
+                                  <p className="text-xs text-muted-foreground italic">Not answered</p>
+                                )}
+                              </>
+                            )}
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-center text-sm text-muted-foreground">Answer review is not available for this exam.</p>
+            )
+          )}
         </div>
       </div>
     );
