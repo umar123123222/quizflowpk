@@ -371,13 +371,30 @@ const TakeExam = () => {
           .in("student_id", studentIds);
 
         if (existingSubs && existingSubs.length > 0) {
-          setAlreadySubmitted(true);
-          toast({
-            title: "Already Submitted",
-            description: "You have already attempted this exam. Only one attempt is allowed.",
-            variant: "destructive",
-          });
-          return;
+          // Check if student has been granted a reattempt
+          const { data: reattempt } = await supabase
+            .from("exam_reattempts" as any)
+            .select("id")
+            .eq("exam_id", examId)
+            .eq("student_email", data.email.trim().toLowerCase())
+            .eq("used", false)
+            .maybeSingle();
+
+          if (reattempt) {
+            // Mark reattempt as used
+            await supabase
+              .from("exam_reattempts" as any)
+              .update({ used: true })
+              .eq("id", (reattempt as any).id);
+          } else {
+            setAlreadySubmitted(true);
+            toast({
+              title: "Already Submitted",
+              description: "You have already attempted this exam. Only one attempt is allowed.",
+              variant: "destructive",
+            });
+            return;
+          }
         }
       }
     }

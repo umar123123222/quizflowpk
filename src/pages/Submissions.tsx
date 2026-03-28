@@ -540,6 +540,69 @@ const Submissions = () => {
           </main>
         </div>
       </div>
+
+      {/* Reattempt Dialog */}
+      <Dialog open={!!reattemptDialogExamId} onOpenChange={(open) => { if (!open) setReattemptDialogExamId(null); }}>
+        <DialogContent className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/90 sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl text-white/90 flex items-center gap-2">
+              <RotateCcw className="h-5 w-5 text-[hsl(var(--dashboard-gold))]" />
+              Allow Reattempt
+            </DialogTitle>
+            <DialogDescription className="text-white/40">
+              Enter the email addresses of students you want to allow to retake this exam.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 mt-2">
+            {reattemptEmails.map((email, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <Input
+                  type="email"
+                  placeholder="student@example.com"
+                  value={email}
+                  onChange={(e) => {
+                    const updated = [...reattemptEmails];
+                    updated[idx] = e.target.value;
+                    setReattemptEmails(updated);
+                  }}
+                  className="flex-1 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 font-mono text-xs"
+                />
+                {reattemptEmails.length > 1 && (
+                  <button
+                    onClick={() => setReattemptEmails((prev) => prev.filter((_, i) => i !== idx))}
+                    className="text-white/20 hover:text-destructive transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              onClick={() => setReattemptEmails((prev) => [...prev, ""])}
+              className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-white/30 hover:text-[hsl(var(--dashboard-gold))] transition-colors"
+            >
+              <Plus className="h-3 w-3" />
+              Add another email
+            </button>
+          </div>
+          <DialogFooter className="mt-4">
+            <Button
+              variant="outline"
+              onClick={() => setReattemptDialogExamId(null)}
+              className="border-[hsl(var(--dashboard-border))] text-white/60"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveReattempts}
+              disabled={savingReattempts}
+              className="bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
+            >
+              {savingReattempts ? "Saving..." : "Grant Reattempt"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 };
