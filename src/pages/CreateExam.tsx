@@ -815,7 +815,7 @@ const CreateExam = () => {
                           onChange={(e) => updateQuestion(qIndex, "correctAnswer", e.target.value)}
                           placeholder="Enter the expected answer for reference..."
                           rows={3}
-                          className="w-full rounded-md bg-[hsl(var(--dashboard-bg))] border border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                          className="w-full rounded-md bg-[hsl(var(--dashboard-card))] border border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
                         />
                         <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.4)]">
                           Students will type their answer in a text field
@@ -1051,7 +1051,7 @@ const CreateExam = () => {
                   className={`rounded-lg border p-4 text-left transition-all ${
                     resultVisibility === "immediate"
                       ? "border-[#e09615] bg-[#e09615]/10"
-                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] hover:border-[hsl(var(--dashboard-text)/.2)]"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-[hsl(var(--dashboard-text)/.2)]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -1081,7 +1081,7 @@ const CreateExam = () => {
                   className={`rounded-lg border p-4 text-left transition-all ${
                     resultVisibility === "after_exam_ends"
                       ? "border-[#e09615] bg-[#e09615]/10"
-                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] hover:border-[hsl(var(--dashboard-text)/.2)]"
+                      : "border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] hover:border-[hsl(var(--dashboard-text)/.2)]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
