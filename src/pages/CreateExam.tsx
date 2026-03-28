@@ -274,7 +274,22 @@ const CreateExam = () => {
       // Calculate points per question
       const getQuestionPoints = (q: Question): number => {
         if (customMarking) {
-          if (q.marks !== "" && q.marks > 0) return q.marks;
+          // If this question has explicit marks, use them
+          if (q.marks !== "" && typeof q.marks === "number" && q.marks > 0) return q.marks;
+
+          // If total marks is set, distribute remaining among unassigned
+          if (typeof totalMarks === "number" && totalMarks > 0) {
+            const assigned = questions.reduce((sum, qq) => {
+              if (qq.marks !== "" && typeof qq.marks === "number" && qq.marks > 0) return sum + qq.marks;
+              return sum;
+            }, 0);
+            const unassignedCount = questions.filter((qq) => qq.marks === "" || qq.marks === 0).length;
+            if (unassignedCount > 0) {
+              const remaining = totalMarks - assigned;
+              return Math.round((remaining / unassignedCount) * 100) / 100;
+            }
+          }
+
           // Fall back to default per type
           const defaultVal = q.type === "mcq" ? defaultMcqMarks : defaultTextMarks;
           return typeof defaultVal === "number" && defaultVal > 0 ? defaultVal : 1;
