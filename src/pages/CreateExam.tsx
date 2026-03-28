@@ -691,16 +691,31 @@ const CreateExam = () => {
                           </button>
                         </div>
                       </div>
-                      {questions.length > 1 && (
-                        <button
-                          onClick={() => removeQuestion(qIndex)}
-                          className="flex items-center gap-1 font-mono text-[10px] tracking-wider uppercase text-white/20 hover:text-red-400 transition-colors"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                          Remove
-                        </button>
-                      )}
-                    </div>
+                      <div className="flex items-center gap-3">
+                        {customMarking && (
+                          <div className="flex items-center gap-1.5">
+                            <Input
+                              type="number"
+                              value={q.marks}
+                              onChange={(e) => updateQuestion(qIndex, "marks", e.target.value ? Number(e.target.value) : "")}
+                              placeholder={`${q.type === "mcq" ? (defaultMcqMarks || 1) : (defaultTextMarks || 1)}`}
+                              min={0.5}
+                              step={0.5}
+                              className="w-16 h-7 bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 text-xs text-center focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                            />
+                            <span className="font-mono text-[9px] text-white/25">marks</span>
+                          </div>
+                        )}
+                        {questions.length > 1 && (
+                          <button
+                            onClick={() => removeQuestion(qIndex)}
+                            className="flex items-center gap-1 font-mono text-[10px] tracking-wider uppercase text-white/20 hover:text-red-400 transition-colors"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            Remove
+                          </button>
+                        )}
+                      </div>
 
                     {/* Question text */}
                     <Input
