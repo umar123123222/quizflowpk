@@ -51,6 +51,7 @@ const TakeExam = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const [score, setScore] = useState<number | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
@@ -368,27 +369,25 @@ const TakeExam = () => {
     );
   }
 
-  // Submitted — detailed results
+  // Submitted — full-screen success state
   if (submitted) {
-    const getOptionText = (q: typeof questionResults[0], key: string) => {
-      if (key === "A") return q.option_a;
-      if (key === "B") return q.option_b;
-      if (key === "C") return q.option_c || "";
-      if (key === "D") return q.option_d || "";
-      return "";
-    };
-
     return (
-      <div className="min-h-screen bg-background text-foreground">
-        {/* Score header */}
-        <div className="bg-card border-b border-border">
-          <div className="max-w-3xl mx-auto px-4 py-8 text-center space-y-3">
-            <CheckCircle className="h-14 w-14 text-primary mx-auto" />
-            <h2 className="font-serif text-2xl font-bold">Exam Submitted!</h2>
-            <p className="text-muted-foreground">
-              Thank you, <span className="font-semibold text-foreground">{studentInfo?.fullName}</span>.
-            </p>
-            <div className="flex items-center justify-center gap-6 mt-4">
+      <div className="min-h-screen bg-background text-foreground flex flex-col">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="mx-auto w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+              <CheckCircle className="h-12 w-12 text-primary" />
+            </div>
+            <h1 className="font-serif text-3xl font-bold">Exam Submitted Successfully</h1>
+            <div className="space-y-2">
+              <p className="text-muted-foreground text-lg">
+                Thank you, <span className="font-semibold text-foreground">{studentInfo?.fullName}</span>
+              </p>
+              <p className="text-muted-foreground">
+                Exam: <span className="font-semibold text-foreground">{exam?.title}</span>
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-6 mt-2">
               <div className="text-center">
                 <div className="text-4xl font-bold text-primary">{correctCount}/{totalCount}</div>
                 <p className="text-xs text-muted-foreground mt-1">Correct Answers</p>
@@ -399,77 +398,88 @@ const TakeExam = () => {
                 <p className="text-xs text-muted-foreground mt-1">Score</p>
               </div>
             </div>
+            <p className="text-sm text-muted-foreground italic border border-border rounded-lg p-3 bg-muted/30">
+              Your result will be reviewed by your instructor.
+            </p>
+            <Button
+              variant={showResults ? "outline" : "default"}
+              className="w-full"
+              onClick={() => setShowResults(!showResults)}
+            >
+              {showResults ? "Hide Results" : "View Detailed Results"}
+            </Button>
           </div>
         </div>
 
-        {/* Question-by-question results */}
-        <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
-          <h3 className="font-serif text-lg font-semibold">Review Your Answers</h3>
-          {questionResults.map((q, index) => {
-            const isText = q.question_type === "text";
-            return (
-              <Card key={index} className={`overflow-hidden border-l-4 ${isText ? "border-l-muted" : q.is_correct ? "border-l-primary" : "border-l-destructive"}`}>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium flex items-center gap-2">
-                    {isText ? (
-                      <span className="h-4 w-4 text-muted-foreground text-xs font-mono">✍</span>
-                    ) : q.is_correct ? (
-                      <CheckCircle className="h-4 w-4 text-primary shrink-0" />
-                    ) : (
-                      <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
-                    )}
-                    <span className="text-primary font-bold">Q{index + 1}.</span>
-                    {q.question_text}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2 pt-0">
-                  {isText ? (
-                    <div className="space-y-2">
-                      <div className="p-2.5 rounded-md border border-border text-sm">
-                        <span className="text-muted-foreground text-xs font-medium block mb-1">Your Answer:</span>
-                        <p className="text-foreground">{q.student_answer || <span className="italic text-muted-foreground">Not answered</span>}</p>
-                      </div>
-                      <p className="text-xs text-muted-foreground">Text answers will be reviewed by the teacher.</p>
-                    </div>
-                  ) : (
-                    <>
-                      {[
-                        { key: "A", value: q.option_a },
-                        { key: "B", value: q.option_b },
-                        { key: "C", value: q.option_c },
-                        { key: "D", value: q.option_d },
-                      ]
-                        .filter((opt) => opt.value)
-                        .map((opt) => {
-                          const isStudentAnswer = q.student_answer === opt.key;
-                          const isCorrectAnswer = q.correct_answer === opt.key;
-                          let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2";
-                          if (isCorrectAnswer) {
-                            classes += " border-primary bg-primary/10 text-foreground";
-                          } else if (isStudentAnswer && !q.is_correct) {
-                            classes += " border-destructive bg-destructive/10 text-foreground";
-                          } else {
-                            classes += " border-border text-muted-foreground";
-                          }
-                          return (
-                            <div key={opt.key} className={classes}>
-                              <span className="font-semibold">{opt.key}.</span>
-                              <span className="flex-1">{opt.value}</span>
-                              {isCorrectAnswer && <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0" />}
-                              {isStudentAnswer && !q.is_correct && <span className="text-xs text-destructive font-medium">Your answer</span>}
-                            </div>
-                          );
-                        })}
-                      {!q.student_answer && (
-                        <p className="text-xs text-muted-foreground italic">Not answered</p>
+        {showResults && (
+          <div className="max-w-3xl mx-auto w-full px-4 pb-8 space-y-4">
+            <h3 className="font-serif text-lg font-semibold">Review Your Answers</h3>
+            {questionResults.map((q, index) => {
+              const isText = q.question_type === "text";
+              return (
+                <Card key={index} className={`overflow-hidden border-l-4 ${isText ? "border-l-muted" : q.is_correct ? "border-l-primary" : "border-l-destructive"}`}>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      {isText ? (
+                        <span className="h-4 w-4 text-muted-foreground text-xs font-mono">✍</span>
+                      ) : q.is_correct ? (
+                        <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                      ) : (
+                        <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
                       )}
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+                      <span className="text-primary font-bold">Q{index + 1}.</span>
+                      {q.question_text}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 pt-0">
+                    {isText ? (
+                      <div className="space-y-2">
+                        <div className="p-2.5 rounded-md border border-border text-sm">
+                          <span className="text-muted-foreground text-xs font-medium block mb-1">Your Answer:</span>
+                          <p className="text-foreground">{q.student_answer || <span className="italic text-muted-foreground">Not answered</span>}</p>
+                        </div>
+                        <p className="text-xs text-muted-foreground">Text answers will be reviewed by the teacher.</p>
+                      </div>
+                    ) : (
+                      <>
+                        {[
+                          { key: "A", value: q.option_a },
+                          { key: "B", value: q.option_b },
+                          { key: "C", value: q.option_c },
+                          { key: "D", value: q.option_d },
+                        ]
+                          .filter((opt) => opt.value)
+                          .map((opt) => {
+                            const isStudentAnswer = q.student_answer === opt.key;
+                            const isCorrectAnswer = q.correct_answer === opt.key;
+                            let classes = "p-2.5 rounded-md border text-sm flex items-center gap-2";
+                            if (isCorrectAnswer) {
+                              classes += " border-primary bg-primary/10 text-foreground";
+                            } else if (isStudentAnswer && !q.is_correct) {
+                              classes += " border-destructive bg-destructive/10 text-foreground";
+                            } else {
+                              classes += " border-border text-muted-foreground";
+                            }
+                            return (
+                              <div key={opt.key} className={classes}>
+                                <span className="font-semibold">{opt.key}.</span>
+                                <span className="flex-1">{opt.value}</span>
+                                {isCorrectAnswer && <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0" />}
+                                {isStudentAnswer && !q.is_correct && <span className="text-xs text-destructive font-medium">Your answer</span>}
+                              </div>
+                            );
+                          })}
+                        {!q.student_answer && (
+                          <p className="text-xs text-muted-foreground italic">Not answered</p>
+                        )}
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   }
