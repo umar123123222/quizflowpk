@@ -185,7 +185,7 @@ const ExamsList = () => {
                           </button>
                         )}
                         <button
-                          onClick={() => copyExamLink(exam.id)}
+                          onClick={() => copyExamLink(exam.code)}
                           title="Copy shareable link"
                           className={`flex items-center justify-center rounded-md border border-[hsl(var(--dashboard-border))] px-2.5 py-1.5 text-white/30 transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-gold))] ${role === "organization_owner" ? "flex-1" : ""}`}
                         >
