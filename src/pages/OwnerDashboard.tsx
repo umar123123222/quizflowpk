@@ -139,7 +139,7 @@ const OwnerDashboard = () => {
               </h1>
               {user?.user_metadata?.full_name && (
                 <p className="font-serif text-lg md:text-xl text-white/50 mt-2">
-                  {user.user_metadata.gender === "female" ? "Miss" : "Mr."}{" "}
+                  {user.user_metadata.gender === "male" ? "Mr." : "Miss"}{" "}
                   <span className="text-[hsl(var(--dashboard-gold))]">{user.user_metadata.full_name.split(" ")[0]}</span>
                 </p>
               )}
