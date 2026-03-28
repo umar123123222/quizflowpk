@@ -204,6 +204,7 @@ const CreateExam = () => {
         const insertData: any = {
             title: title.trim(),
             time_limit: timeLimit || null,
+            result_visibility: resultVisibility,
             created_by: user!.id,
             is_published: true,
           };
