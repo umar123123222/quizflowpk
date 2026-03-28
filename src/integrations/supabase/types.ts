@@ -61,6 +61,45 @@ export type Database = {
           },
         ]
       }
+      organization_form_settings: {
+        Row: {
+          created_at: string | null
+          email_required: boolean
+          email_visible: boolean
+          id: string
+          name_required: boolean
+          name_visible: boolean
+          organization_id: string
+          phone_required: boolean
+          phone_visible: boolean
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_required?: boolean
+          email_visible?: boolean
+          id?: string
+          name_required?: boolean
+          name_visible?: boolean
+          organization_id: string
+          phone_required?: boolean
+          phone_visible?: boolean
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_required?: boolean
+          email_visible?: boolean
+          id?: string
+          name_required?: boolean
+          name_visible?: boolean
+          organization_id?: string
+          phone_required?: boolean
+          phone_visible?: boolean
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       organization_teachers: {
         Row: {
           contact_number: string | null
