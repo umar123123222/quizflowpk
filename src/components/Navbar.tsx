@@ -28,6 +28,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle variant="landing" />
           <Button variant="ghost" size="sm" asChild className="font-medium" style={{ color: 'rgba(232,227,213,0.5)' }}>
             <Link to="/login">Log in</Link>
           </Button>
