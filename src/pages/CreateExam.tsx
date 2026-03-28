@@ -88,9 +88,10 @@ const CreateExam = () => {
           setQuestions(
             qs.map((q) => ({
               id: q.id,
+              type: ((q as any).question_type || "mcq") as QuestionType,
               text: q.question_text,
-              options: [q.option_a, q.option_b, q.option_c || "", q.option_d || ""] as [string, string, string, string],
-              correctAnswer: q.correct_answer,
+              options: [q.option_a || "", q.option_b || "", q.option_c || "", q.option_d || ""] as [string, string, string, string],
+              correctAnswer: q.correct_answer || "",
             }))
           );
         }
