@@ -354,7 +354,7 @@ const CreateExam = () => {
             </div>
 
             {/* Exam Details */}
-            <div className="grid gap-4 sm:grid-cols-2 mb-8">
+            <div className="grid gap-4 sm:grid-cols-3 mb-8">
               <div className="space-y-2">
                 <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35">
                   Exam Title
@@ -365,6 +365,22 @@ const CreateExam = () => {
                   placeholder="e.g. Midterm Mathematics"
                   className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                 />
+              </div>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35">
+                  Total Marks (Optional)
+                </label>
+                <Input
+                  type="number"
+                  value={totalMarks}
+                  onChange={(e) => setTotalMarks(e.target.value ? Number(e.target.value) : "")}
+                  placeholder={`Default: ${questions.length} (1 per question)`}
+                  min={1}
+                  className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                />
+                <p className="font-mono text-[9px] text-white/25">
+                  Leave empty to use 1 mark per question
+                </p>
               </div>
               <div className="space-y-2">
                 <label className="font-mono text-[10px] tracking-[0.15em] uppercase text-white/35">
