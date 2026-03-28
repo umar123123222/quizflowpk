@@ -395,6 +395,7 @@ const Submissions = () => {
                     for (let i = 0; i < maxQs; i++) {
                       qHeaders.push(`Q${i + 1} - Question`);
                       qHeaders.push(`Q${i + 1} - Student Answer`);
+                      qHeaders.push(`Q${i + 1} - Correct Answer`);
                     }
                     const baseHeader = isOwner
                       ? ["Exam", "Teacher", "Name", "Email", "Phone", "Score", "Status", "Result", "Violations", "Date"]
