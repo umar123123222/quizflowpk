@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Building2, GraduationCap } from "lucide-react";
+import { Building2, GraduationCap, Eye, EyeOff } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +21,7 @@ const Signup = () => {
   const [selectedOrgId, setSelectedOrgId] = useState("");
   const [organizations, setOrganizations] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { signUp } = useAuth();
   const { toast } = useToast();
 
@@ -83,7 +84,17 @@ const Signup = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+              <div className="relative">
+                <Input id="password" type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className="pr-10" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={18} color="#e09615" /> : <Eye size={18} color="#e09615" />}
+                </button>
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="backupEmail">Recovery Email <span className="text-muted-foreground text-xs">(optional)</span></Label>
