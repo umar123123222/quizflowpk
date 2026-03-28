@@ -991,14 +991,16 @@ const TakeExam = () => {
                   onValueChange={(val) => setAnswers((prev) => ({ ...prev, [q.id]: val }))}
                   className="space-y-2"
                 >
-                  {[
-                    { key: "A", value: q.option_a },
-                    { key: "B", value: q.option_b },
-                    { key: "C", value: q.option_c },
-                    { key: "D", value: q.option_d },
-                  ]
-                    .filter((opt) => opt.value)
-                    .map((opt) => (
+                  {(() => {
+                    const labels = ["A", "B", "C", "D"];
+                    const qMap = optionShuffleMap[q.id];
+                    // Build options: if shuffle map exists, display shuffled; otherwise original
+                    const opts = labels.map((displayKey) => {
+                      const origKey = qMap ? qMap[displayKey] : displayKey;
+                      const value = origKey ? (q as any)[`option_${origKey.toLowerCase()}`] : null;
+                      return { key: displayKey, value };
+                    }).filter((opt) => opt.value);
+                    return opts.map((opt) => (
                       <div key={opt.key} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors cursor-pointer">
                         <RadioGroupItem value={opt.key} id={`${q.id}-${opt.key}`} />
                         <Label htmlFor={`${q.id}-${opt.key}`} className="cursor-pointer flex-1 text-sm">
@@ -1006,7 +1008,8 @@ const TakeExam = () => {
                           {opt.value}
                         </Label>
                       </div>
-                    ))}
+                    ));
+                  })()}
                 </RadioGroup>
               )}
             </CardContent>
