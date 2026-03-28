@@ -193,10 +193,10 @@ const OwnerDashboard = () => {
                     />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-[hsl(var(--dashboard-text)/.9)] group-hover:text-[hsl(var(--dashboard-gold))] transition-colors">
+                    <p className="text-sm font-medium text-white/90 group-hover:text-[hsl(var(--dashboard-gold))] transition-colors">
                       {action.title}
                     </p>
-                    <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.5)] mt-0.5">
+                    <p className="font-mono text-[10px] text-white/50 mt-0.5">
                       {action.subtitle}
                     </p>
                   </div>
