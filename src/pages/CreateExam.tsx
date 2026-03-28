@@ -696,7 +696,7 @@ const CreateExam = () => {
               </div>
             </div>
 
-            <div className="space-y-6 mb-8">
+            <div className="space-y-6 mb-8 rounded-xl bg-[hsl(var(--dashboard-questions-bg))] p-6 -mx-2">
               {questions.map((q, qIndex) => (
                 <div
                   key={q.id}
