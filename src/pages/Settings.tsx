@@ -169,7 +169,7 @@ const Settings = () => {
     "flex items-center gap-2.5 px-5 py-4 border-b border-[hsl(var(--dashboard-border))]";
   const labelClass = "font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)]";
   const inputClass =
-    "bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]";
+    "bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]";
 
   return (
     <SidebarProvider>
