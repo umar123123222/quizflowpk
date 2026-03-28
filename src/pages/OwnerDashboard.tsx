@@ -30,11 +30,11 @@ const OwnerDashboard = () => {
     },
   });
 
-  const { data: studentCount = 0 } = useQuery({
-    queryKey: ["studentCount"],
+  const { data: teacherCount = 0 } = useQuery({
+    queryKey: ["teacherCount"],
     queryFn: async () => {
       const { count, error } = await supabase
-        .from("students")
+        .from("organization_teachers")
         .select("*", { count: "exact", head: true });
       if (error) throw error;
       return count ?? 0;
@@ -54,7 +54,7 @@ const OwnerDashboard = () => {
 
   const stats = [
     { label: "Total Exams", value: examCount, icon: FileText, accent: "var(--dashboard-gold)" },
-    { label: "Total Students", value: studentCount, icon: Users, accent: "var(--dashboard-blue)" },
+    { label: "Total Teachers", value: teacherCount, icon: Users, accent: "var(--dashboard-blue)" },
     { label: "Total Submissions", value: submissionCount, icon: ClipboardList, accent: "var(--dashboard-green)" },
   ];
 
