@@ -100,6 +100,8 @@
     --dashboard-dark-card: 228 25% 12%;
     --dashboard-text: 0 0% 100%;
     --dashboard-text-muted: 220 15% 72%;
+    --dashboard-questions-bg: 228 20% 10%;
+    --dashboard-toggle-off: 0 0% 15%;
   }
 }
 
