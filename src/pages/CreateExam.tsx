@@ -79,6 +79,7 @@ const CreateExam = () => {
         if (exam) {
           setTitle(exam.title);
           setTimeLimit(exam.time_limit ?? 30);
+          setResultVisibility((exam as any).result_visibility || "immediate");
           if (exam.code) setSavedExamCode(exam.code);
         }
         const { data: qs } = await supabase
