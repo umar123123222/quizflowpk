@@ -154,15 +154,19 @@ const TakeExam = () => {
     }
 
     // Register student
+    const studentInsert: any = {
+      full_name: studentInfo.fullName,
+      email: studentInfo.email,
+      phone: studentInfo.phone,
+      created_by: "00000000-0000-0000-0000-000000000000",
+    };
+    if (exam.organization_id) {
+      studentInsert.organization_id = exam.organization_id;
+    }
+
     const { data: studentData, error: studentError } = await supabase
       .from("students")
-      .insert({
-        full_name: studentInfo.fullName,
-        email: studentInfo.email,
-        phone: studentInfo.phone,
-        organization_id: exam.organization_id,
-        created_by: "00000000-0000-0000-0000-000000000000",
-      })
+      .insert(studentInsert)
       .select("id")
       .single();
 
