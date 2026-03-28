@@ -356,8 +356,7 @@ const ViewSubmission = () => {
           </CardContent>
         </Card>
 
-        {/* MCQ Summary for mixed exams */}
-        {hasTextQuestions && (
+
         {/* Questions */}
         <h2 className="font-serif text-xl font-semibold mb-4">
           {hasTextQuestions ? "Text Answers — Manual Scoring" : "Answer Review"}
