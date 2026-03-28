@@ -241,6 +241,8 @@ const CreateExam = () => {
             title: title.trim(),
             time_limit: timeLimit || null,
             result_visibility: resultVisibility,
+            start_time: buildDatetime(startTime, startHour, startMinute),
+            end_time: buildDatetime(endTime, endHour, endMinute),
             created_by: user!.id,
             is_published: true,
           };
