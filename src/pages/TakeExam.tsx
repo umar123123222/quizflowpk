@@ -546,28 +546,38 @@ const TakeExam = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <RadioGroup
-                value={answers[q.id] || ""}
-                onValueChange={(val) => setAnswers((prev) => ({ ...prev, [q.id]: val }))}
-                className="space-y-2"
-              >
-                {[
-                  { key: "A", value: q.option_a },
-                  { key: "B", value: q.option_b },
-                  { key: "C", value: q.option_c },
-                  { key: "D", value: q.option_d },
-                ]
-                  .filter((opt) => opt.value)
-                  .map((opt) => (
-                    <div key={opt.key} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors cursor-pointer">
-                      <RadioGroupItem value={opt.key} id={`${q.id}-${opt.key}`} />
-                      <Label htmlFor={`${q.id}-${opt.key}`} className="cursor-pointer flex-1 text-sm">
-                        <span className="font-semibold text-primary mr-2">{opt.key}.</span>
-                        {opt.value}
-                      </Label>
-                    </div>
-                  ))}
-              </RadioGroup>
+              {q.question_type === "text" ? (
+                <textarea
+                  value={answers[q.id] || ""}
+                  onChange={(e) => setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
+                  placeholder="Type your answer here..."
+                  rows={4}
+                  className="w-full rounded-md border border-border bg-background text-foreground text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+              ) : (
+                <RadioGroup
+                  value={answers[q.id] || ""}
+                  onValueChange={(val) => setAnswers((prev) => ({ ...prev, [q.id]: val }))}
+                  className="space-y-2"
+                >
+                  {[
+                    { key: "A", value: q.option_a },
+                    { key: "B", value: q.option_b },
+                    { key: "C", value: q.option_c },
+                    { key: "D", value: q.option_d },
+                  ]
+                    .filter((opt) => opt.value)
+                    .map((opt) => (
+                      <div key={opt.key} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors cursor-pointer">
+                        <RadioGroupItem value={opt.key} id={`${q.id}-${opt.key}`} />
+                        <Label htmlFor={`${q.id}-${opt.key}`} className="cursor-pointer flex-1 text-sm">
+                          <span className="font-semibold text-primary mr-2">{opt.key}.</span>
+                          {opt.value}
+                        </Label>
+                      </div>
+                    ))}
+                </RadioGroup>
+              )}
             </CardContent>
           </Card>
         ))}
