@@ -49,52 +49,81 @@ const Login = () => {
 
   if (isDark) {
     return (
-      <div className="flex min-h-screen items-center justify-center px-4" style={{ backgroundColor: "#0d0f14" }}>
-        <div className="absolute top-4 right-4">
-          <ThemeToggle variant="landing" />
+      <div className="flex min-h-screen">
+        {/* Left branding panel - 45% */}
+        <div
+          className="hidden md:flex w-[45%] flex-col items-center justify-center relative overflow-hidden"
+          style={{ backgroundColor: "#0d0f14" }}
+        >
+          <div className="absolute inset-0 opacity-[0.03]" style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)`,
+            backgroundSize: "32px 32px",
+          }} />
+          <div className="relative z-10 flex flex-col items-center text-center px-8">
+            <div className="flex items-center gap-3 mb-6">
+              <GraduationCap className="h-10 w-10" style={{ color: "#e09615" }} />
+              <span className="font-serif text-3xl font-bold tracking-wide" style={{ color: "#e09615" }}>QuizFlow</span>
+            </div>
+            <p className="text-lg font-light max-w-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
+              Build, distribute, and evaluate exams — effortlessly.
+            </p>
+            <div className="mt-8 w-10 h-0.5" style={{ backgroundColor: "#e09615" }} />
+          </div>
         </div>
-        <div className="w-full max-w-md rounded-[14px] border border-[#2d3250] p-8" style={{ backgroundColor: "#13161e" }}>
-          <div className="flex flex-col items-center mb-6">
+
+        {/* Right form panel - 55% */}
+        <div
+          className="flex-1 md:w-[55%] flex flex-col items-center justify-center px-6 relative"
+          style={{ backgroundColor: "#13161e" }}
+        >
+          <div className="absolute top-4 right-4">
+            <ThemeToggle variant="landing" />
+          </div>
+          <div className="md:hidden flex flex-col items-center mb-6">
             <div className="flex items-center gap-2.5 mb-1">
               <GraduationCap className="h-8 w-8" style={{ color: "#e09615" }} />
               <span className="font-serif text-2xl font-bold" style={{ color: "#e09615" }}>QuizFlow</span>
             </div>
           </div>
-          <h1 className="text-xl font-serif font-bold text-white text-center mb-1">Welcome back</h1>
-          <p className="text-sm text-center mb-6" style={{ color: "#6b7494" }}>Sign in to your account</p>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-[#9aa0b4] font-medium text-sm">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="bg-[#1e2235] border-[#3a4060] text-white placeholder:text-[#6b7494] focus-visible:ring-[#e09615]/40"
-              />
+          <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
+            <div>
+              <h1 className="text-2xl font-serif font-bold text-white">Welcome back</h1>
+              <p className="text-sm mt-1" style={{ color: "#6b7494" }}>Sign in to your account</p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-[#9aa0b4] font-medium text-sm">Password</Label>
-              <div className="relative">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-[#9aa0b4] font-medium text-sm">Email</Label>
                 <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="pr-10 bg-[#1e2235] border-[#3a4060] text-white placeholder:text-[#6b7494] focus-visible:ring-[#e09615]/40"
+                  className="bg-[#1e2235] border-[#3a4060] text-white placeholder:text-[#6b7494] focus-visible:ring-[#e09615]/40"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
-                  tabIndex={-1}
-                >
-                  {showPassword ? <EyeOff size={18} color="#e09615" /> : <Eye size={18} color="#e09615" />}
-                </button>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-[#9aa0b4] font-medium text-sm">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="pr-10 bg-[#1e2235] border-[#3a4060] text-white placeholder:text-[#6b7494] focus-visible:ring-[#e09615]/40"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff size={18} color="#e09615" /> : <Eye size={18} color="#e09615" />}
+                  </button>
+                </div>
               </div>
             </div>
             <Button
@@ -105,16 +134,16 @@ const Login = () => {
             >
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
+            <div className="flex flex-col items-center gap-2">
+              <Link to="/forgot-password" className="text-sm hover:underline" style={{ color: "#e09615" }}>
+                Forgot Password?
+              </Link>
+              <p className="text-sm" style={{ color: "#6b7494" }}>
+                Don't have an account?{" "}
+                <Link to="/signup" className="font-medium hover:underline" style={{ color: "#e09615" }}>Sign up</Link>
+              </p>
+            </div>
           </form>
-          <div className="flex flex-col items-center gap-2 mt-5">
-            <Link to="/forgot-password" className="text-sm hover:underline" style={{ color: "#e09615" }}>
-              Forgot Password?
-            </Link>
-            <p className="text-sm" style={{ color: "#6b7494" }}>
-              Don't have an account?{" "}
-              <Link to="/signup" className="font-medium hover:underline" style={{ color: "#e09615" }}>Sign up</Link>
-            </p>
-          </div>
         </div>
       </div>
     );
