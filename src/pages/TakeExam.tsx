@@ -1182,7 +1182,7 @@ const TakeExam = () => {
         }} />
 
         {/* Header bar */}
-        <header className="relative z-20 w-full px-5 sm:px-8 py-4 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <header className="relative z-20 w-full px-5 sm:px-8 py-2.5 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="flex items-center gap-2.5">
             <GraduationCap className="h-6 w-6" style={{ color: "#F59E0B" }} />
             <span className="text-lg font-bold tracking-tight" style={{ color: "#F59E0B", fontFamily: "'Playfair Display', serif" }}>QuizFlow</span>
@@ -1194,8 +1194,8 @@ const TakeExam = () => {
         </header>
 
         {/* Main content */}
-        <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 relative z-10">
-          <div className="w-full max-w-[1080px] flex flex-col lg:flex-row gap-5 items-stretch">
+        <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-3 relative z-10">
+          <div className="w-full max-w-[1080px] flex flex-col lg:flex-row gap-4 items-stretch">
 
             {/* ═══ LEFT PANEL — RULES ═══ */}
             <div
@@ -1208,22 +1208,22 @@ const TakeExam = () => {
               }}
             >
               {/* Amber accent stripe */}
-              <div className="h-[5px]" style={{ background: "linear-gradient(90deg, #F59E0B 0%, #F59E0B 50%, rgba(245,158,11,0.2) 100%)" }} />
+              <div className="h-[3px]" style={{ background: "linear-gradient(90deg, #F59E0B 0%, #F59E0B 50%, rgba(245,158,11,0.2) 100%)" }} />
 
-              <div className="p-5 sm:p-6">
+              <div className="p-4 sm:p-5">
                 {/* Section heading */}
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)" }}>
-                    <ShieldAlert className="h-5 w-5" style={{ color: "#F59E0B" }} />
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)" }}>
+                    <ShieldAlert className="h-4 w-4" style={{ color: "#F59E0B" }} />
                   </div>
                   <div>
-                    <h2 className="text-[15px] font-bold" style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif", fontSize: "18px" }}>Exam Guidelines</h2>
-                    <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.3)" }}>Read all rules before proceeding</p>
+                    <h2 className="text-[15px] font-bold" style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif" }}>Exam Guidelines</h2>
+                    <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>Read all rules before proceeding</p>
                   </div>
                 </div>
 
                 {/* Stat boxes */}
-                <div className="grid grid-cols-3 gap-2 mb-5">
+                <div className="grid grid-cols-3 gap-2 mb-3">
                   {[
                     { value: questionCount, label: "Questions", sub: questionBreakdown, color: "#F59E0B" },
                     { value: exam?.time_limit || "∞", label: "Minutes", sub: null, color: "#F59E0B" },
@@ -1250,19 +1250,19 @@ const TakeExam = () => {
                     { icon: <Eye className="h-[15px] w-[15px]" />, text: exam?.result_visibility === "after_exam_ends" ? "Results available after exam period ends" : "Results shown immediately after submission", critical: false },
                     { icon: <Link2 className="h-[15px] w-[15px]" />, text: "Revisit this link anytime to check your result", critical: false },
                   ].map((rule, i) => (
-                    <div key={i} className="flex items-start gap-3 px-3 py-2.5 rounded-lg relative" style={{
+                    <div key={i} className="flex items-start gap-2.5 px-2.5 py-1.5 rounded-lg relative" style={{
                       background: "transparent",
                       borderLeft: rule.critical ? "2px solid rgba(239,68,68,0.6)" : "2px solid transparent",
                       animation: `fadeSlideUp 0.4s ease-out ${0.15 + i * 0.07}s both`,
                     }}>
-                      <span className="shrink-0 mt-0.5 h-7 w-7 rounded-lg flex items-center justify-center" style={{
+                      <span className="shrink-0 mt-0.5 h-6 w-6 rounded-md flex items-center justify-center" style={{
                         background: "rgba(255,255,255,0.04)",
                         border: "1px solid rgba(255,255,255,0.06)",
                         color: "rgba(255,255,255,0.35)",
                       }}>
                         {rule.icon}
                       </span>
-                      <span className="text-[13px] leading-relaxed pt-0.5" style={{
+                      <span className="text-[12px] leading-snug pt-0.5" style={{
                         color: "rgba(255,255,255,0.45)",
                       }}>
                         {rule.text}
@@ -1305,27 +1305,27 @@ const TakeExam = () => {
                 animation: "fadeSlideRight 0.6s ease-out 0.1s both",
               }}
             >
-              <div className="p-5 sm:p-7">
+              <div className="p-4 sm:p-5">
                 {/* Exam metadata stepper */}
-                <div className="flex items-center gap-2 mb-5 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold" style={{ background: "rgba(245,158,11,0.1)", color: "#F59E0B", border: "1px solid rgba(245,158,11,0.15)" }}>
+                <div className="flex items-center gap-1.5 mb-3 flex-wrap">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold" style={{ background: "rgba(245,158,11,0.1)", color: "#F59E0B", border: "1px solid rgba(245,158,11,0.15)" }}>
                     <BookOpen className="h-3 w-3" />
                     Examination
                   </span>
                   <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.15)" }}>›</span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium" style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium" style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.06)" }}>
                     Registration
                   </span>
                   <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.15)" }}>›</span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium" style={{ background: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium" style={{ background: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.04)" }}>
                     Start
                   </span>
                 </div>
 
                 {/* Form header */}
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold" style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif" }}>{exam?.title || "Examination"}</h2>
-                  <p className="text-[13px] mt-1.5 leading-relaxed" style={{ color: "rgba(255,255,255,0.4)" }}>
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold" style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif" }}>{exam?.title || "Examination"}</h2>
+                  <p className="text-[12px] mt-1 leading-relaxed" style={{ color: "rgba(255,255,255,0.4)" }}>
                     {exam?.description || "Complete the registration form below to begin your examination"}
                   </p>
                 </div>
@@ -1343,7 +1343,7 @@ const TakeExam = () => {
                         if (!fullOrder.includes(d)) fullOrder.push(d);
                       }
 
-                      const inputBaseClass = "w-full h-12 rounded-xl text-sm outline-none transition-all duration-200";
+                      const inputBaseClass = "w-full h-10 rounded-xl text-sm outline-none transition-all duration-200";
                       const inputBaseStyle = {
                         background: "rgba(255,255,255,0.035)",
                         border: "1px solid rgba(255,255,255,0.1)",
@@ -1362,7 +1362,7 @@ const TakeExam = () => {
 
                       const renderField = (key: string, label: string, icon: React.ReactNode, type: string, placeholder: string, fieldProps: any, optional?: boolean) => (
                         <div key={key} className="relative group" style={{ animation: `fadeSlideUp 0.35s ease-out ${0.2}s both` }}>
-                          <label className="block text-[12px] font-semibold uppercase tracking-wider mb-1" style={{ color: "rgba(255,255,255,0.45)" }}>
+                          <label className="block text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: "rgba(255,255,255,0.45)" }}>
                             {label}{optional ? <span className="normal-case tracking-normal font-normal ml-1.5" style={{ color: "rgba(255,255,255,0.25)" }}>(Optional)</span> : ""}
                           </label>
                           <div className="relative">
@@ -1417,7 +1417,7 @@ const TakeExam = () => {
                           if (!cf) return null;
                           return (
                             <div key={cf.id} style={{ animation: "fadeSlideUp 0.35s ease-out 0.2s both" }}>
-                              <label className="block text-[12px] font-semibold uppercase tracking-wider mb-1" style={{ color: "rgba(255,255,255,0.45)" }}>
+                              <label className="block text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: "rgba(255,255,255,0.45)" }}>
                                 {cf.field_label}
                                 {!cf.is_required && <span className="normal-case tracking-normal font-normal ml-1.5" style={{ color: "rgba(255,255,255,0.25)" }}>(Optional)</span>}
                               </label>
@@ -1460,7 +1460,7 @@ const TakeExam = () => {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="w-full h-[52px] mt-4 rounded-xl font-bold text-[15px] tracking-wide transition-all duration-300 relative overflow-hidden group flex items-center justify-center gap-2"
+                      className="w-full h-[44px] mt-2 rounded-xl font-bold text-[14px] tracking-wide transition-all duration-300 relative overflow-hidden group flex items-center justify-center gap-2"
                       style={{
                         background: "linear-gradient(135deg, #F59E0B, #D97706)",
                         color: "#080810",
