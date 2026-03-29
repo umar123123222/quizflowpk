@@ -540,13 +540,13 @@ const CreateExam = () => {
               </div>
 
               {customMarking && (
-                <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-4 space-y-3">
-                  <p className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.65)]">
+                <div className="rounded-[10px] border dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] dark:bg-[hsl(var(--dashboard-card))] bg-[#252a40] p-4 space-y-3">
+                  <p className="font-mono text-[9px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.65)] text-[#6b7494]">
                     Default marks per question type (can be overridden individually)
                   </p>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-1.5">
-                      <label className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.75)] flex items-center gap-1.5">
+                      <label className="font-mono text-[9px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.75)] text-[#9aa0b4] flex items-center gap-1.5">
                         <ListChecks className="h-3 w-3" />
                         MCQ Default Marks
                       </label>
@@ -557,11 +557,11 @@ const CreateExam = () => {
                         placeholder="2"
                         min={0.5}
                         step={0.5}
-                        className="h-8 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                        className="h-8 dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] dark:text-[hsl(var(--dashboard-text)/.9)] text-white dark:placeholder:text-[hsl(var(--dashboard-text)/.7)] placeholder:text-[#6b7494] text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.75)] flex items-center gap-1.5">
+                      <label className="font-mono text-[9px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.75)] text-[#9aa0b4] flex items-center gap-1.5">
                         <FileText className="h-3 w-3" />
                         Text Default Marks
                       </label>
@@ -572,7 +572,7 @@ const CreateExam = () => {
                         placeholder="5"
                         min={0.5}
                         step={0.5}
-                        className="h-8 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                        className="h-8 dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] dark:text-[hsl(var(--dashboard-text)/.9)] text-white dark:placeholder:text-[hsl(var(--dashboard-text)/.7)] placeholder:text-[#6b7494] text-xs focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                       />
                     </div>
                   </div>
