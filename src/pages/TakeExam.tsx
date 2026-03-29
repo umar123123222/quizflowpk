@@ -1223,7 +1223,7 @@ const TakeExam = () => {
                 </div>
 
                 {/* Stat boxes */}
-                <div className="grid grid-cols-3 gap-2 mb-5">
+                <div className="grid grid-cols-3 gap-2 mb-3">
                   {[
                     { value: questionCount, label: "Questions", sub: questionBreakdown, color: "#F59E0B" },
                     { value: exam?.time_limit || "∞", label: "Minutes", sub: null, color: "#F59E0B" },
