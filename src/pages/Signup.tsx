@@ -78,8 +78,8 @@ const Signup = () => {
   const formContent = (
     <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
       <div>
-        <h1 className={`text-xl font-serif font-bold ${headingColor} ${isDark ? "text-center" : ""}`}>Create your account</h1>
-        <p className={`text-sm mt-1 ${mutedClass} ${isDark ? "text-center" : ""}`}>Choose your role and get started</p>
+        <h1 className={`text-xl font-serif font-bold ${headingColor}`}>Create your account</h1>
+        <p className={`text-sm mt-1 ${mutedClass}`}>Sign up to get started</p>
       </div>
       <div className="space-y-4">
         <div className="space-y-2">
