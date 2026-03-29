@@ -100,10 +100,27 @@ const ViewSubmission = () => {
             .from("organization_custom_fields")
             .select("id, field_label")
             .in("id", cfIds);
-          if (cfDefs) {
+          if (cfDefs && cfDefs.length > 0) {
             const labels: Record<string, string> = {};
             cfDefs.forEach((cf: any) => { labels[cf.id] = cf.field_label; });
             setCustomFieldLabels(labels);
+          } else if (examRes.data?.organization_id) {
+            // Fields were deleted/recreated — fetch current org fields and map by position
+            const { data: orgFields } = await supabase
+              .from("organization_custom_fields")
+              .select("id, field_label")
+              .eq("organization_id", examRes.data.organization_id)
+              .order("sort_order", { ascending: true });
+            if (orgFields && orgFields.length > 0) {
+              const labels: Record<string, string> = {};
+              const cfIdArray = cfIds;
+              orgFields.forEach((of: any, idx: number) => {
+                if (idx < cfIdArray.length) {
+                  labels[cfIdArray[idx]] = of.field_label;
+                }
+              });
+              setCustomFieldLabels(labels);
+            }
           }
         }
       }
