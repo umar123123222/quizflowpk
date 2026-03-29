@@ -391,9 +391,10 @@ const StudentFormSettings = () => {
                       disabled={defaultKey === "name" || !settings[defaultKey].visible}
                     />
                   ) : cf ? (
-                    <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded ${cf.is_required ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-text-muted)/.08)] text-[#9aa0b4]"}`}>
-                      {cf.is_required ? "Req" : "Opt"}
-                    </span>
+                    <Switch
+                      checked={cf.is_required}
+                      onCheckedChange={(checked) => toggleCustomRequiredMutation.mutate({ fieldId: cf.id, isRequired: checked })}
+                    />
                   ) : null}
                 </div>
 
