@@ -1305,9 +1305,9 @@ const TakeExam = () => {
                 animation: "fadeSlideRight 0.6s ease-out 0.1s both",
               }}
             >
-              <div className="p-5 sm:p-7">
+              <div className="p-4 sm:p-5">
                 {/* Exam metadata stepper */}
-                <div className="flex items-center gap-2 mb-5 flex-wrap">
+                <div className="flex items-center gap-1.5 mb-3 flex-wrap">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold" style={{ background: "rgba(245,158,11,0.1)", color: "#F59E0B", border: "1px solid rgba(245,158,11,0.15)" }}>
                     <BookOpen className="h-3 w-3" />
                     Examination
