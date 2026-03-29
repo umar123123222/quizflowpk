@@ -889,7 +889,7 @@ const CreateExam = () => {
           {/* Step indicator */}
           <div className="flex gap-2 mt-1">
             <div className="flex-1 h-1 rounded-full" style={{ backgroundColor: '#e09615' }} />
-            <div className={`flex-1 h-1 rounded-full transition-colors ${publishStep >= 2 ? "" : "bg-white/10"}`} style={publishStep >= 2 ? { backgroundColor: '#e09615' } : {}} />
+            <div className={`flex-1 h-1 rounded-full transition-colors ${publishStep >= 2 ? "" : "bg-[hsl(var(--dashboard-border))]"}`} style={publishStep >= 2 ? { backgroundColor: '#e09615' } : {}} />
           </div>
 
           {publishStep === 1 && (

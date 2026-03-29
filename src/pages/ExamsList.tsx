@@ -222,7 +222,7 @@ const ExamsList = () => {
                           className={`shrink-0 ml-2 inline-flex items-center rounded-full px-2 py-0.5 font-mono text-[9px] tracking-wider uppercase ${
                             exam.is_published
                               ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
-                              : "bg-white/5 text-[hsl(var(--dashboard-text)/.7)]"
+                              : "bg-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.7)]"
                           }`}
                         >
                           {exam.is_published ? "Published" : "Draft"}

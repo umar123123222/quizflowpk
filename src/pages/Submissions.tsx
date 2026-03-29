@@ -511,8 +511,8 @@ const Submissions = () => {
                       statusFilter === tab.key
                         ? tab.key === "pending_review"
                           ? "bg-[hsl(var(--dashboard-gold)/0.25)] text-[hsl(var(--dashboard-gold))]"
-                          : "bg-white/10 text-[hsl(var(--dashboard-text)/.75)]"
-                        : "bg-white/5 text-[hsl(var(--dashboard-text)/.65)]"
+                          : "bg-[hsl(var(--dashboard-gold)/0.1)] text-[hsl(var(--dashboard-text)/.75)]"
+                        : "bg-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.65)]"
                     }`}>
                       {tab.count}
                     </span>
