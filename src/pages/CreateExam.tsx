@@ -767,7 +767,7 @@ const CreateExam = () => {
                       value={q.text}
                       onChange={(e) => updateQuestion(qIndex, "text", e.target.value)}
                       placeholder="Enter your question..."
-                      className="mb-4 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                      className="mb-4 dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] dark:text-[hsl(var(--dashboard-text)/.9)] text-white dark:placeholder:text-[hsl(var(--dashboard-text)/.7)] placeholder:text-[#6b7494] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                     />
 
                     {q.type === "mcq" ? (
