@@ -79,7 +79,7 @@ const Signup = () => {
     <div className="flex min-h-screen">
       {/* Left panel — dark navy branding */}
       <div
-        className="hidden md:flex md:w-[42%] flex-col items-center justify-center relative overflow-hidden border-r-2 border-[#e09615]"
+        className={`hidden md:flex md:w-[42%] flex-col items-center justify-center relative overflow-hidden ${isDark ? "border-r border-[#2d3250]" : "border-r-2 border-[#e09615]"}`}
         style={{ backgroundColor: isDark ? "#0d0f14" : "#1e2235" }}
       >
         <div className="absolute inset-0 opacity-[0.03]" style={{
