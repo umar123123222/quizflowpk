@@ -79,7 +79,7 @@ const Signup = () => {
     <div className="flex min-h-screen">
       {/* Left panel — dark navy branding */}
       <div
-        className="hidden md:flex md:w-[42%] flex-col items-center justify-center relative overflow-hidden border-r-2 border-[#e09615]"
+        className={`hidden md:flex md:w-[42%] flex-col items-center justify-center relative overflow-hidden ${isDark ? "border-r border-[#2d3250]" : "border-r-2 border-[#e09615]"}`}
         style={{ backgroundColor: isDark ? "#0d0f14" : "#1e2235" }}
       >
         <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -96,14 +96,14 @@ const Signup = () => {
           <p className="text-lg font-light max-w-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
             Build, distribute, and evaluate exams — effortlessly.
           </p>
-          <div className="mt-8 h-px w-16" style={{ backgroundColor: "rgba(224,150,21,0.3)" }} />
+          <div className="mt-8 w-10 h-0.5" style={{ backgroundColor: "#e09615" }} />
         </div>
       </div>
 
       {/* Right panel — form */}
       <div
         className="flex-1 flex flex-col items-center justify-center px-6 py-10 relative overflow-y-auto"
-        style={{ backgroundColor: isDark ? "#13161e" : "#ffffff" }}
+        style={{ backgroundColor: isDark ? "#1a1d28" : "#ffffff" }}
       >
         <div className="absolute top-4 right-4">
           <ThemeToggle variant="landing" />
