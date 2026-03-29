@@ -1252,7 +1252,7 @@ const TakeExam = () => {
                   ].map((rule, i) => (
                     <div key={i} className="flex items-start gap-2.5 px-2.5 py-1.5 rounded-lg relative" style={{
                       background: "transparent",
-                      borderLeft: rule.critical ? "2px solid rgba(239,68,68,0.45)" : "2px solid transparent",
+                      borderLeft: rule.critical ? "2px solid rgba(239,68,68,0.6)" : "2px solid transparent",
                       animation: `fadeSlideUp 0.4s ease-out ${0.15 + i * 0.07}s both`,
                     }}>
                       <span className="shrink-0 mt-0.5 h-6 w-6 rounded-md flex items-center justify-center" style={{
