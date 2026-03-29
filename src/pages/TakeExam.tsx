@@ -1267,9 +1267,6 @@ const TakeExam = () => {
                       }}>
                         {rule.text}
                       </span>
-                      {rule.critical && (
-                        <span className="shrink-0 mt-2 h-2 w-2 rounded-full" style={{ background: "#ef4444", boxShadow: "0 0 6px rgba(239,68,68,0.4)" }} />
-                      )}
                     </div>
                   ))}
                 </div>
