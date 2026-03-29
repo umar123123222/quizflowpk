@@ -175,15 +175,40 @@ const Signup = () => {
     </form>
   );
 
-  // Dark mode: centered card layout
+  // Dark mode: split two-column layout
   if (isDark) {
     return (
-      <div className="flex min-h-screen items-center justify-center px-4" style={{ backgroundColor: "#0d0f14" }}>
-        <div className="absolute top-4 right-4">
-          <ThemeToggle variant="landing" />
+      <div className="flex min-h-screen">
+        {/* Left branding panel - 45% */}
+        <div
+          className="hidden md:flex w-[45%] flex-col items-center justify-center relative overflow-hidden"
+          style={{ backgroundColor: "#0d0f14" }}
+        >
+          <div className="absolute inset-0 opacity-[0.03]" style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)`,
+            backgroundSize: "32px 32px",
+          }} />
+          <div className="relative z-10 flex flex-col items-center text-center px-8">
+            <div className="flex items-center gap-3 mb-6">
+              <GraduationCap className="h-10 w-10" style={{ color: "#e09615" }} />
+              <span className="font-serif text-3xl font-bold tracking-wide" style={{ color: "#e09615" }}>QuizFlow</span>
+            </div>
+            <p className="text-lg font-light max-w-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
+              Build, distribute, and evaluate exams — effortlessly.
+            </p>
+            <div className="mt-8 w-10 h-0.5" style={{ backgroundColor: "#e09615" }} />
+          </div>
         </div>
-        <div className="w-full max-w-md rounded-[14px] border border-[#2d3250] p-8 overflow-y-auto max-h-[90vh]" style={{ backgroundColor: "#13161e" }}>
-          <div className="flex flex-col items-center mb-6">
+
+        {/* Right form panel - 55% */}
+        <div
+          className="flex-1 md:w-[55%] flex flex-col items-center justify-center px-6 py-10 relative overflow-y-auto"
+          style={{ backgroundColor: "#13161e" }}
+        >
+          <div className="absolute top-4 right-4">
+            <ThemeToggle variant="landing" />
+          </div>
+          <div className="md:hidden flex flex-col items-center mb-6">
             <div className="flex items-center gap-2.5 mb-1">
               <GraduationCap className="h-8 w-8" style={{ color: "#e09615" }} />
               <span className="font-serif text-2xl font-bold" style={{ color: "#e09615" }}>QuizFlow</span>
