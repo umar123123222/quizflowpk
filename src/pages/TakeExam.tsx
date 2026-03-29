@@ -1250,7 +1250,7 @@ const TakeExam = () => {
                     { icon: <Eye className="h-[15px] w-[15px]" />, text: exam?.result_visibility === "after_exam_ends" ? "Results available after exam period ends" : "Results shown immediately after submission", critical: false },
                     { icon: <Link2 className="h-[15px] w-[15px]" />, text: "Revisit this link anytime to check your result", critical: false },
                   ].map((rule, i) => (
-                    <div key={i} className="flex items-start gap-3 px-3 py-2.5 rounded-lg relative" style={{
+                    <div key={i} className="flex items-start gap-2.5 px-2.5 py-1.5 rounded-lg relative" style={{
                       background: "transparent",
                       borderLeft: rule.critical ? "2px solid rgba(239,68,68,0.6)" : "2px solid transparent",
                       animation: `fadeSlideUp 0.4s ease-out ${0.15 + i * 0.07}s both`,
