@@ -125,7 +125,7 @@ const Login = () => {
     <div className="flex min-h-screen">
       <div
         className="hidden md:flex md:w-1/2 flex-col items-center justify-center relative overflow-hidden border-r-2 border-[#e09615]"
-        style={{ backgroundColor: "#1e2235" }}
+        style={{ backgroundColor: "#0d0f14" }}
       >
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)`,
