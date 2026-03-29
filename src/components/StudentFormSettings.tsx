@@ -103,7 +103,6 @@ const StudentFormSettings = () => {
     enabled: !!org?.id,
   });
 
-  // Build field order from saved data + custom fields
   useEffect(() => {
     if (existingSettings) {
       setSettings({
@@ -116,13 +115,11 @@ const StudentFormSettings = () => {
         ? (existingSettings.field_order as string[])
         : ["name", "email", "phone"];
 
-      // Merge: add any custom fields not in saved order
       const allCustomIds = customFields.map((cf) => `custom:${cf.id}`);
       const merged = [...savedOrder];
       for (const cid of allCustomIds) {
         if (!merged.includes(cid)) merged.push(cid);
       }
-      // Remove stale custom entries
       const validIds = new Set(["name", "email", "phone", ...allCustomIds]);
       setFieldOrder(merged.filter((id) => validIds.has(id)));
     } else {
@@ -131,7 +128,6 @@ const StudentFormSettings = () => {
     }
   }, [existingSettings, customFields]);
 
-  // Build ordered items for display
   const orderedItems: OrderItem[] = fieldOrder.map((key) => {
     if (key === "name" || key === "email" || key === "phone") {
       return { type: "default", key, label: DEFAULT_FIELD_LABELS[key] };
@@ -227,7 +223,6 @@ const StudentFormSettings = () => {
       }).select("id").single();
       if (error) throw error;
 
-      // Add to field order
       if (data) {
         const newOrder = [...fieldOrder, `custom:${data.id}`];
         setFieldOrder(newOrder);
@@ -254,7 +249,6 @@ const StudentFormSettings = () => {
         .delete()
         .eq("id", fieldId);
       if (error) throw error;
-      // Remove from order
       setFieldOrder((prev) => prev.filter((k) => k !== `custom:${fieldId}`));
     },
     onSuccess: () => {
@@ -288,11 +282,11 @@ const StudentFormSettings = () => {
     "rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] overflow-hidden";
   const sectionHeaderClass =
     "flex items-center gap-2.5 px-5 py-4 border-b border-[hsl(var(--dashboard-border))]";
-  const labelClass = "font-mono text-[10px] tracking-[0.15em] uppercase text-white/35";
+  const labelClass = "font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text-muted))]";
   const inputClass =
-    "bg-[hsl(var(--dashboard-bg))] border-[hsl(var(--dashboard-border))] text-white/80 placeholder:text-white/20 focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]";
+    "bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text))] placeholder:text-[hsl(var(--dashboard-text-muted)/.4)] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]";
   const selectClass =
-    "w-full rounded-md px-3 py-2 text-[12px] font-mono bg-[hsl(var(--dashboard-bg))] border border-[hsl(var(--dashboard-border))] text-white/80 outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]";
+    "w-full rounded-md px-3 py-2 text-[12px] font-mono bg-[hsl(var(--dashboard-card))] border border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text))] outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]";
 
   if (isLoading || loadingCustom) return null;
 
@@ -308,14 +302,14 @@ const StudentFormSettings = () => {
         </span>
       </div>
       <div className="p-5 space-y-5">
-        <p className="font-mono text-[9px] text-white/20">
+        <p className="font-mono text-[9px] text-[#9aa0b4]">
           Drag to reorder fields. Configure visibility and requirements for each field.
         </p>
 
         {/* Unified ordered field list */}
         <div className="rounded-md border border-[hsl(var(--dashboard-border))] overflow-hidden">
           {/* Header */}
-          <div className="grid grid-cols-[24px_1fr_60px_60px_32px] gap-2 px-3 py-2.5 bg-[hsl(var(--dashboard-bg))] border-b border-[hsl(var(--dashboard-border))]">
+          <div className="grid grid-cols-[24px_1fr_60px_60px_32px] gap-2 px-3 py-2.5 bg-[hsl(var(--dashboard-questions-bg))] border-b border-[hsl(var(--dashboard-border))]">
             <span />
             <span className={labelClass}>Field</span>
             <span className={`${labelClass} text-center`}>Visible</span>
@@ -342,16 +336,16 @@ const StudentFormSettings = () => {
                 }`}
               >
                 {/* Drag handle */}
-                <GripVertical className="h-3.5 w-3.5 text-white/15 hover:text-white/40 transition-colors" />
+                <GripVertical className="h-3.5 w-3.5 text-[hsl(var(--dashboard-text-muted)/.3)] hover:text-[hsl(var(--dashboard-text-muted)/.6)] transition-colors" />
 
                 {/* Label + meta */}
                 <div className="min-w-0">
-                  <span className="font-mono text-[11px] text-white/70 block truncate">{item.label}</span>
+                  <span className="font-mono text-[11px] text-[hsl(var(--dashboard-text))] block truncate">{item.label}</span>
                   {cf && (
                     <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="font-mono text-[8px] text-white/25 capitalize">{cf.field_type}</span>
+                      <span className="font-mono text-[8px] text-[#9aa0b4] capitalize">{cf.field_type}</span>
                       {cf.field_type === "dropdown" && (
-                        <span className="font-mono text-[8px] text-white/15 truncate">
+                        <span className="font-mono text-[8px] text-[hsl(var(--dashboard-text-muted)/.4)] truncate">
                           ({cf.dropdown_options.join(", ")})
                         </span>
                       )}
@@ -368,7 +362,7 @@ const StudentFormSettings = () => {
                       disabled={defaultKey === "name"}
                     />
                   ) : (
-                    <span className="font-mono text-[9px] text-white/25">Always</span>
+                    <span className="font-mono text-[9px] text-[#9aa0b4]">Always</span>
                   )}
                 </div>
 
@@ -381,7 +375,7 @@ const StudentFormSettings = () => {
                       disabled={defaultKey === "name" || !settings[defaultKey].visible}
                     />
                   ) : cf ? (
-                    <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded ${cf.is_required ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]" : "bg-white/5 text-white/25"}`}>
+                    <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded ${cf.is_required ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-text-muted)/.08)] text-[#9aa0b4]"}`}>
                       {cf.is_required ? "Req" : "Opt"}
                     </span>
                   ) : null}
@@ -392,7 +386,7 @@ const StudentFormSettings = () => {
                   {!isDefault && cf && (
                     <button
                       onClick={() => deleteFieldMutation.mutate(cf.id)}
-                      className="p-1 rounded text-white/15 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+                      className="p-1 rounded text-[hsl(var(--dashboard-text-muted)/.3)] hover:text-red-400 hover:bg-red-400/10 transition-colors"
                       title="Delete field"
                     >
                       <Trash2 className="h-3 w-3" />
@@ -404,7 +398,7 @@ const StudentFormSettings = () => {
           })}
         </div>
 
-        <p className="font-mono text-[9px] text-white/20">
+        <p className="font-mono text-[9px] text-[#9aa0b4]">
           Name is always visible and required. Drag the ⠿ handle to reorder.
         </p>
 
@@ -413,7 +407,7 @@ const StudentFormSettings = () => {
             variant="outline"
             size="sm"
             onClick={() => setShowAddForm(true)}
-            className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase border-[hsl(var(--dashboard-border))] text-white/50 hover:text-white/80 hover:bg-[hsl(var(--dashboard-border))]"
+            className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text-muted))] hover:text-[hsl(var(--dashboard-text))] hover:bg-[hsl(var(--dashboard-questions-bg))]"
           >
             <Plus className="h-3 w-3" /> Add Custom Field
           </Button>
@@ -421,14 +415,14 @@ const StudentFormSettings = () => {
 
         {/* Add custom field form */}
         {showAddForm && (
-          <div className="rounded-md border border-[hsl(var(--dashboard-gold)/0.3)] bg-[hsl(var(--dashboard-bg))] p-4 space-y-3">
+          <div className="rounded-md border border-[hsl(var(--dashboard-gold)/0.3)] bg-[hsl(var(--dashboard-questions-bg))] p-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] font-semibold">
                 New Custom Field
               </span>
               <button
                 onClick={() => setShowAddForm(false)}
-                className="text-white/20 hover:text-white/50"
+                className="text-[hsl(var(--dashboard-text-muted)/.4)] hover:text-[hsl(var(--dashboard-text-muted))]"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -474,7 +468,7 @@ const StudentFormSettings = () => {
                 checked={newRequired}
                 onCheckedChange={setNewRequired}
               />
-              <span className="font-mono text-[11px] text-white/60">
+              <span className="font-mono text-[11px] text-[hsl(var(--dashboard-text-muted))]">
                 {newRequired ? "Required" : "Optional"}
               </span>
             </div>
@@ -482,7 +476,7 @@ const StudentFormSettings = () => {
             <Button
               onClick={() => addFieldMutation.mutate()}
               disabled={addFieldMutation.isPending || !newLabel.trim()}
-              className="flex items-center gap-2 bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-mono text-[11px] tracking-wider uppercase font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
+              className="flex items-center gap-2 bg-[hsl(var(--dashboard-gold))] text-white font-mono text-[11px] tracking-wider uppercase font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
             >
               {addFieldMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
               {addFieldMutation.isPending ? "Adding..." : "Add Field"}
@@ -493,7 +487,7 @@ const StudentFormSettings = () => {
         <Button
           onClick={() => saveMutation.mutate()}
           disabled={saveMutation.isPending}
-          className="flex items-center gap-2 bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-mono text-[11px] tracking-wider uppercase font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
+          className="flex items-center gap-2 bg-[hsl(var(--dashboard-gold))] text-white font-mono text-[11px] tracking-wider uppercase font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
         >
           {saveMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
           {saveMutation.isPending ? "Saving..." : "Save Settings & Order"}
