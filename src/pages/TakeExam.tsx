@@ -1167,43 +1167,6 @@ const TakeExam = () => {
       textCount > 0 ? `${textCount} written` : null,
     ].filter(Boolean).join(", ");
 
-    const rules = [
-      {
-        icon: <BookOpen className="h-4 w-4 text-primary shrink-0 mt-0.5" />,
-        text: `This exam contains ${questionCount} question${questionCount !== 1 ? "s" : ""}${questionBreakdown ? ` (${questionBreakdown})` : ""}.`,
-      },
-      ...(exam?.time_limit ? [{
-        icon: <Clock className="h-4 w-4 text-primary shrink-0 mt-0.5" />,
-        text: `You have ${exam.time_limit} minute${exam.time_limit !== 1 ? "s" : ""} to complete the exam. The exam will auto-submit when time runs out.`,
-      }] : []),
-      ...(exam?.passing_percentage ? [{
-        icon: <CheckCircle className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />,
-        text: `Passing score is ${exam.passing_percentage}%. You must score at least this to pass.`,
-      }] : []),
-      {
-        icon: <MonitorX className="h-4 w-4 text-destructive shrink-0 mt-0.5" />,
-        text: "Do not switch tabs during the exam. The exam will auto-submit on the 2nd tab switch.",
-      },
-      {
-        icon: <Fullscreen className="h-4 w-4 text-destructive shrink-0 mt-0.5" />,
-        text: "Do not exit fullscreen. If you exit fullscreen, you have 5 seconds to return before auto-submission.",
-      },
-      {
-        icon: <RotateCcw className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />,
-        text: "Each student is allowed only one attempt unless a reattempt is granted by the instructor.",
-      },
-      {
-        icon: <Eye className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />,
-        text: exam?.result_visibility === "after_exam_ends"
-          ? "Results will be available after the exam period ends."
-          : "Results will be shown immediately after submission.",
-      },
-      {
-        icon: <Link2 className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />,
-        text: "To view your result later, visit this same link and re-enter your details.",
-      },
-    ];
-
     return (
       <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-4">
         <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-6 items-start">
