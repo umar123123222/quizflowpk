@@ -1255,7 +1255,7 @@ const TakeExam = () => {
                       borderLeft: rule.critical ? "2px solid rgba(239,68,68,0.6)" : "2px solid transparent",
                       animation: `fadeSlideUp 0.4s ease-out ${0.15 + i * 0.07}s both`,
                     }}>
-                      <span className="shrink-0 mt-0.5 h-7 w-7 rounded-lg flex items-center justify-center" style={{
+                      <span className="shrink-0 mt-0.5 h-6 w-6 rounded-md flex items-center justify-center" style={{
                         background: "rgba(255,255,255,0.04)",
                         border: "1px solid rgba(255,255,255,0.06)",
                         color: "rgba(255,255,255,0.35)",
