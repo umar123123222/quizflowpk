@@ -32,9 +32,9 @@ const Navbar = () => {
               key={item}
               href="#"
               className="text-sm font-medium transition-colors"
-              style={{ color: isDark ? 'rgba(232,227,213,0.6)' : '#6b7494' }}
+              style={{ color: isDark ? 'rgba(232,227,213,0.6)' : '#4a5573' }}
               onMouseEnter={(e) => (e.currentTarget.style.color = '#e09615')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = isDark ? 'rgba(232,227,213,0.6)' : '#6b7494')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = isDark ? 'rgba(232,227,213,0.6)' : '#4a5573')}
             >
               {item}
             </a>
