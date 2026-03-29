@@ -43,7 +43,7 @@ const Navbar = () => {
 
         <div className="flex items-center gap-3">
           <ThemeToggle variant="landing" />
-          <Button variant="ghost" size="sm" asChild className="font-medium" style={{ color: isDark ? 'rgba(232,227,213,0.5)' : '#6b7494' }}>
+          <Button variant="ghost" size="sm" asChild className="font-medium" style={{ color: isDark ? 'rgba(232,227,213,0.5)' : '#4a5573' }}>
             <Link to="/login">Log in</Link>
           </Button>
           <Button

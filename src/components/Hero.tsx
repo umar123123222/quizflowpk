@@ -152,7 +152,7 @@ const Hero = () => {
                 </div>
                 <div
                   className="mt-1 text-[10px] font-medium tracking-widest uppercase"
-                  style={{ color: isDark ? 'rgba(232,227,213,0.4)' : '#6b7494' }}
+                  style={{ color: isDark ? 'rgba(232,227,213,0.4)' : '#586380' }}
                 >
                   {stat.label}
                 </div>

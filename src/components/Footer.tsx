@@ -17,7 +17,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <Logo size="sm" variant={isDark ? "dark" : "light"} />
-          <p className="text-sm" style={{ color: isDark ? 'rgba(232,227,213,0.4)' : '#6b7494' }}>
+          <p className="text-sm" style={{ color: isDark ? 'rgba(232,227,213,0.4)' : '#586380' }}>
             © 2026 QuizFlow. All rights reserved.
           </p>
         </div>

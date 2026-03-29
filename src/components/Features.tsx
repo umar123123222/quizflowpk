@@ -69,7 +69,7 @@ const Features = () => {
               <h3 className="mb-2 text-base font-semibold" style={{ color: isDark ? "#e8e3d5" : "#0f1117" }}>
                 {feature.title}
               </h3>
-              <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(232,227,213,0.45)" : "#6b7494" }}>
+              <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(232,227,213,0.45)" : "#586380" }}>
                 {feature.description}
               </p>
             </div>
