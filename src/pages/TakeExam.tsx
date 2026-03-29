@@ -1362,7 +1362,7 @@ const TakeExam = () => {
 
                       const renderField = (key: string, label: string, icon: React.ReactNode, type: string, placeholder: string, fieldProps: any, optional?: boolean) => (
                         <div key={key} className="relative group" style={{ animation: `fadeSlideUp 0.35s ease-out ${0.2}s both` }}>
-                          <label className="block text-[12px] font-semibold uppercase tracking-wider mb-1" style={{ color: "rgba(255,255,255,0.45)" }}>
+                          <label className="block text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: "rgba(255,255,255,0.45)" }}>
                             {label}{optional ? <span className="normal-case tracking-normal font-normal ml-1.5" style={{ color: "rgba(255,255,255,0.25)" }}>(Optional)</span> : ""}
                           </label>
                           <div className="relative">
