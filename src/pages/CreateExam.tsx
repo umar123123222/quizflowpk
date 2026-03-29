@@ -699,24 +699,24 @@ const CreateExam = () => {
               {questions.map((q, qIndex) => (
                 <div
                   key={q.id}
-                  className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] overflow-hidden"
+                  className="rounded-[10px] border dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] dark:bg-[hsl(var(--dashboard-card))] bg-[#252a40] overflow-hidden"
                 >
                   <div className="h-[2px] bg-[hsl(var(--dashboard-gold))]" />
                   <div className="p-5">
                     {/* Question header */}
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-gold))]">
+                        <span className="font-mono text-[10px] tracking-[0.15em] uppercase dark:text-[hsl(var(--dashboard-gold))] text-[#6b7494]">
                           Question {qIndex + 1}
                         </span>
                         {/* Type toggle */}
-                        <div className="flex rounded-md border border-[hsl(var(--dashboard-border))] overflow-hidden">
+                        <div className="flex rounded-md border dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] overflow-hidden">
                           <button
                             onClick={() => updateQuestion(qIndex, "type", "mcq")}
                             className={`flex items-center gap-1 px-2.5 py-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
                               q.type === "mcq"
-                                ? "bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-bold"
-                                : "text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)]"
+                                ? "bg-[hsl(var(--dashboard-gold))] text-white font-bold"
+                                : "dark:text-[hsl(var(--dashboard-text)/.65)] text-[#6b7494] hover:text-[#9aa0b4]"
                             }`}
                           >
                             <ListChecks className="h-3 w-3" />
@@ -726,8 +726,8 @@ const CreateExam = () => {
                             onClick={() => updateQuestion(qIndex, "type", "text")}
                             className={`flex items-center gap-1 px-2.5 py-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
                               q.type === "text"
-                                ? "bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-bold"
-                                : "text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)]"
+                                ? "bg-[hsl(var(--dashboard-gold))] text-white font-bold"
+                                : "dark:text-[hsl(var(--dashboard-text)/.65)] text-[#6b7494] hover:text-[#9aa0b4]"
                             }`}
                           >
                             <FileText className="h-3 w-3" />
