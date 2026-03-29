@@ -1417,7 +1417,7 @@ const TakeExam = () => {
                           if (!cf) return null;
                           return (
                             <div key={cf.id} style={{ animation: "fadeSlideUp 0.35s ease-out 0.2s both" }}>
-                              <label className="block text-[12px] font-semibold uppercase tracking-wider mb-2" style={{ color: "rgba(255,255,255,0.45)" }}>
+                              <label className="block text-[12px] font-semibold uppercase tracking-wider mb-1" style={{ color: "rgba(255,255,255,0.45)" }}>
                                 {cf.field_label}
                                 {!cf.is_required && <span className="normal-case tracking-normal font-normal ml-1.5" style={{ color: "rgba(255,255,255,0.25)" }}>(Optional)</span>}
                               </label>
