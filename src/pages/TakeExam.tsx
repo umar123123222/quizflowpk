@@ -1244,34 +1244,34 @@ const TakeExam = () => {
                 {/* Rule items */}
                 <div className="space-y-1">
                   {[
-                    { icon: <MonitorX className="h-[15px] w-[15px]" />, text: "Do not switch tabs — auto-submit on 2nd violation", severity: "danger" as const },
-                    { icon: <Fullscreen className="h-[15px] w-[15px]" />, text: "Stay in fullscreen — 5 seconds to return or auto-submit", severity: "danger" as const },
-                    { icon: <RotateCcw className="h-[15px] w-[15px]" />, text: "Single attempt only unless reattempt is granted", severity: "normal" as const },
-                    { icon: <Eye className="h-[15px] w-[15px]" />, text: exam?.result_visibility === "after_exam_ends" ? "Results available after exam period ends" : "Results shown immediately after submission", severity: "normal" as const },
-                    { icon: <Link2 className="h-[15px] w-[15px]" />, text: "Revisit this link anytime to check your result", severity: "normal" as const },
-                  ].map((rule, i) => {
-                    const isDanger = rule.severity === "danger";
-                    return (
-                      <div key={i} className="flex items-start gap-3 px-3 py-2.5 rounded-lg" style={{
-                        background: isDanger ? "rgba(239,68,68,0.04)" : "transparent",
-                        animation: `fadeSlideUp 0.4s ease-out ${0.15 + i * 0.07}s both`,
+                    { icon: <MonitorX className="h-[15px] w-[15px]" />, text: "Do not switch tabs — auto-submit on 2nd violation", critical: true },
+                    { icon: <Fullscreen className="h-[15px] w-[15px]" />, text: "Stay in fullscreen — 5 seconds to return or auto-submit", critical: true },
+                    { icon: <RotateCcw className="h-[15px] w-[15px]" />, text: "Single attempt only unless reattempt is granted", critical: false },
+                    { icon: <Eye className="h-[15px] w-[15px]" />, text: exam?.result_visibility === "after_exam_ends" ? "Results available after exam period ends" : "Results shown immediately after submission", critical: false },
+                    { icon: <Link2 className="h-[15px] w-[15px]" />, text: "Revisit this link anytime to check your result", critical: false },
+                  ].map((rule, i) => (
+                    <div key={i} className="flex items-start gap-3 px-3 py-2.5 rounded-lg relative" style={{
+                      background: "transparent",
+                      borderLeft: rule.critical ? "2px solid rgba(239,68,68,0.6)" : "2px solid transparent",
+                      animation: `fadeSlideUp 0.4s ease-out ${0.15 + i * 0.07}s both`,
+                    }}>
+                      <span className="shrink-0 mt-0.5 h-7 w-7 rounded-lg flex items-center justify-center" style={{
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(255,255,255,0.06)",
+                        color: "rgba(255,255,255,0.35)",
                       }}>
-                        <span className="shrink-0 mt-0.5 h-7 w-7 rounded-lg flex items-center justify-center" style={{
-                          background: isDanger ? "rgba(239,68,68,0.1)" : "rgba(255,255,255,0.04)",
-                          border: `1px solid ${isDanger ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.06)"}`,
-                          color: isDanger ? "#ef4444" : "rgba(255,255,255,0.35)",
-                        }}>
-                          {rule.icon}
-                        </span>
-                        <span className="text-[13px] leading-relaxed pt-0.5" style={{
-                          color: isDanger ? "rgba(239,68,68,0.8)" : "rgba(255,255,255,0.45)",
-                          ...(isDanger ? { animation: "subtlePulse 3s ease-in-out infinite" } : {}),
-                        }}>
-                          {rule.text}
-                        </span>
-                      </div>
-                    );
-                  })}
+                        {rule.icon}
+                      </span>
+                      <span className="text-[13px] leading-relaxed pt-0.5" style={{
+                        color: "rgba(255,255,255,0.45)",
+                      }}>
+                        {rule.text}
+                      </span>
+                      {rule.critical && (
+                        <span className="shrink-0 mt-2 h-2 w-2 rounded-full" style={{ background: "#ef4444", boxShadow: "0 0 6px rgba(239,68,68,0.4)" }} />
+                      )}
+                    </div>
+                  ))}
                 </div>
 
                 {/* Warning banner with blinking dot */}
