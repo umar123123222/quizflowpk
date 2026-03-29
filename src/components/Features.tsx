@@ -37,7 +37,7 @@ const Features = () => {
           >
             Everything you need to quiz smarter
           </h2>
-          <p className="text-base" style={{ color: isDark ? "rgba(232,227,213,0.5)" : "#6b7494" }}>
+          <p className="text-base" style={{ color: isDark ? "rgba(232,227,213,0.5)" : "#586380" }}>
             Powerful features that make creating, sharing, and analyzing quizzes effortless.
           </p>
         </div>
