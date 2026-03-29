@@ -180,7 +180,7 @@ const Settings = () => {
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.95)]" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.8)]">
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.75)]">
                 Org / Settings
               </span>
             </div>
@@ -234,7 +234,7 @@ const Settings = () => {
                       placeholder="your@email.com"
                       className={inputClass}
                     />
-                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.8)]">
+                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.75)]">
                       Changing email requires confirmation via the new address
                     </p>
                   </div>
@@ -246,7 +246,7 @@ const Settings = () => {
                       disabled
                       className={`${inputClass} opacity-70 cursor-not-allowed`}
                     />
-                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.8)]">
+                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.75)]">
                       Your role is assigned by the system and cannot be changed here
                     </p>
                   </div>
@@ -362,7 +362,7 @@ const Settings = () => {
                       placeholder={user?.user_metadata?.backup_email || "backup@email.com"}
                       className={inputClass}
                     />
-                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.8)]">
+                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.75)]">
                       Used for account recovery if you lose access to your primary email
                     </p>
                   </div>

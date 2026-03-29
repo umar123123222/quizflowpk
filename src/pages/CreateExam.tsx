@@ -411,7 +411,7 @@ const CreateExam = () => {
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.95)]" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.8)]">
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.75)]">
                 Org / {isEditMode ? "Edit Exam" : "Create Exam"}
               </span>
             </div>
@@ -622,7 +622,7 @@ const CreateExam = () => {
                             <span className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)]">
                               Remaining: <span className="text-[hsl(var(--dashboard-text)/.8)] font-bold">{Math.round(remaining * 100) / 100}</span>
                               {" → "}
-                              <span className="text-[hsl(var(--dashboard-text)/.8)]">
+                              <span className="text-[hsl(var(--dashboard-text)/.75)]">
                                 {unassignedMcq > 0 && unassignedText > 0
                                   ? `${unassignedCount} questions (${perEach} each)`
                                   : unassignedMcq > 0
@@ -817,7 +817,7 @@ const CreateExam = () => {
                           rows={3}
                           className="w-full rounded-md bg-[hsl(var(--dashboard-card))] border border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
                         />
-                        <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.8)]">
+                        <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.75)]">
                           Students will type their answer in a text field
                         </p>
                       </div>
@@ -877,7 +877,7 @@ const CreateExam = () => {
               <CalendarClock className="h-5 w-5" style={{ color: '#e09615' }} />
               Publish Exam
             </DialogTitle>
-            <DialogDescription className="text-[hsl(var(--dashboard-text)/.8)]">
+            <DialogDescription className="text-[hsl(var(--dashboard-text)/.75)]">
               Step {publishStep} of 2 — {publishStep === 1 ? "Exam Schedule" : "Confirm & Publish"}
             </DialogDescription>
           </DialogHeader>
@@ -1150,7 +1150,7 @@ const CreateExam = () => {
               <Link className="h-5 w-5 text-[hsl(var(--dashboard-gold))]" />
               Exam Created!
             </DialogTitle>
-            <DialogDescription className="text-[hsl(var(--dashboard-text)/.8)]">
+            <DialogDescription className="text-[hsl(var(--dashboard-text)/.75)]">
               Share this link with students to take the exam.
             </DialogDescription>
           </DialogHeader>

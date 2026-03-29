@@ -349,7 +349,7 @@ const Submissions = () => {
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.95)]" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.8)]">
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.75)]">
                 Org / Submissions
               </span>
             </div>
@@ -503,7 +503,7 @@ const Submissions = () => {
                         ? tab.key === "pending_review"
                           ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
                           : "bg-[hsl(var(--dashboard-gold)/0.1)] text-[hsl(var(--dashboard-text)/.9)]"
-                        : "text-[hsl(var(--dashboard-text)/.75)] hover:text-[hsl(var(--dashboard-text)/.7)]"
+                        : "text-[hsl(var(--dashboard-text)/.75)] hover:text-[hsl(var(--dashboard-text)/.9)]"
                     }`}
                   >
                     {tab.label}
@@ -766,7 +766,7 @@ const Submissions = () => {
               <RotateCcw className="h-5 w-5 text-[hsl(var(--dashboard-gold))]" />
               Allow Reattempt
             </DialogTitle>
-            <DialogDescription className="text-[hsl(var(--dashboard-text)/.8)]">
+            <DialogDescription className="text-[hsl(var(--dashboard-text)/.75)]">
               Enter the email addresses of students you want to allow to retake this exam.
             </DialogDescription>
           </DialogHeader>
