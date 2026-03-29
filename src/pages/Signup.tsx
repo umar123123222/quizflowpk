@@ -62,8 +62,8 @@ const Signup = () => {
     ? "bg-[#1e2235] border-[#3a4060] text-white placeholder:text-[#6b7494] focus-visible:ring-[#e09615]/40"
     : "bg-white border-[#d0d4de] text-[#0f1117] placeholder:text-[#6b7494]/60 focus-visible:ring-[#e09615]/40";
 
-  const labelClass = isDark ? "text-[#9aa0b4] font-medium" : "text-[#0f1117] font-medium";
-  const mutedClass = isDark ? "text-[#6b7494]" : "text-[#6b7494]";
+  const labelClass = isDark ? "text-[#9aa0b4] font-medium text-sm" : "text-[#0f1117] font-medium";
+  const mutedClass = "text-[#6b7494]";
   const headingColor = isDark ? "text-white" : "text-[#0f1117]";
 
   const radioSelectedClass = "border-[#e09615] bg-[#e09615]/10";
@@ -75,12 +75,132 @@ const Signup = () => {
     ? "border-[#3a4060] bg-[#1e2235] text-white focus-visible:ring-[#e09615]/40"
     : "border-[#d0d4de] bg-white text-[#0f1117] focus-visible:ring-[#e09615]/40";
 
+  const formContent = (
+    <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
+      <div>
+        <h1 className={`text-xl font-serif font-bold ${headingColor} ${isDark ? "text-center" : ""}`}>Create your account</h1>
+        <p className={`text-sm mt-1 ${mutedClass} ${isDark ? "text-center" : ""}`}>Choose your role and get started</p>
+      </div>
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="fullName" className={labelClass}>Full Name</Label>
+          <Input id="fullName" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} required className={inputClass} />
+        </div>
+        <div className="space-y-2">
+          <Label className={labelClass}>Gender</Label>
+          <RadioGroup value={gender} onValueChange={(v) => setGender(v as "male" | "female")} className="flex gap-4">
+            <Label htmlFor="gender-male" className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2.5 cursor-pointer transition-all ${gender === "male" ? radioSelectedClass : radioUnselectedClass}`}>
+              <RadioGroupItem value="male" id="gender-male" className="sr-only" />
+              <span className={`text-sm font-medium ${isDark ? "text-white" : "text-[#0f1117]"}`}>Male</span>
+            </Label>
+            <Label htmlFor="gender-female" className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2.5 cursor-pointer transition-all ${gender === "female" ? radioSelectedClass : radioUnselectedClass}`}>
+              <RadioGroupItem value="female" id="gender-female" className="sr-only" />
+              <span className={`text-sm font-medium ${isDark ? "text-white" : "text-[#0f1117]"}`}>Female</span>
+            </Label>
+          </RadioGroup>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="email" className={labelClass}>Email</Label>
+          <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputClass} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password" className={labelClass}>Password</Label>
+          <div className="relative">
+            <Input id="password" type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className={`pr-10 ${inputClass}`} />
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none" tabIndex={-1}>
+              {showPassword ? <EyeOff size={18} color="#e09615" /> : <Eye size={18} color="#e09615" />}
+            </button>
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="backupEmail" className={labelClass}>Recovery Email <span className={`text-xs ${mutedClass}`}>(optional)</span></Label>
+          <Input id="backupEmail" type="email" placeholder="backup@email.com" value={backupEmail} onChange={(e) => setBackupEmail(e.target.value)} className={inputClass} />
+          <p className={`text-xs ${mutedClass}`}>Used for password recovery if you lose access to your primary email</p>
+        </div>
+        <div className="space-y-3">
+          <Label className={labelClass}>I am a...</Label>
+          <RadioGroup value={role} onValueChange={(v) => setRole(v as "organization_owner" | "teacher")} className="grid grid-cols-2 gap-3">
+            <Label
+              htmlFor="org-owner"
+              className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 cursor-pointer transition-all ${
+                role === "organization_owner" ? radioSelectedClass : radioUnselectedClass
+              }`}
+            >
+              <RadioGroupItem value="organization_owner" id="org-owner" className="sr-only" />
+              <Building2 className="h-8 w-8" style={{ color: "#e09615" }} />
+              <span className={`text-sm font-medium text-center ${isDark ? "text-white" : "text-[#0f1117]"}`}>Organization Owner</span>
+            </Label>
+            <Label
+              htmlFor="teacher"
+              className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 cursor-pointer transition-all ${
+                role === "teacher" ? radioSelectedClass : radioUnselectedClass
+              }`}
+            >
+              <RadioGroupItem value="teacher" id="teacher" className="sr-only" />
+              <GraduationCap className="h-8 w-8" style={{ color: "#e09615" }} />
+              <span className={`text-sm font-medium ${isDark ? "text-white" : "text-[#0f1117]"}`}>Teacher</span>
+            </Label>
+          </RadioGroup>
+        </div>
+        {role === "teacher" && organizations.length > 0 && (
+          <div className="space-y-2">
+            <Label htmlFor="organization" className={labelClass}>Join an Organization <span className={`text-xs ${mutedClass}`}>(optional)</span></Label>
+            <select
+              id="organization"
+              value={selectedOrgId}
+              onChange={(e) => setSelectedOrgId(e.target.value)}
+              className={`flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${selectClass}`}
+            >
+              <option value="">No organization (independent)</option>
+              {organizations.map((org) => (
+                <option key={org.id} value={org.id}>{org.name}</option>
+              ))}
+            </select>
+            <p className={`text-xs ${mutedClass}`}>Select an organization to join, or sign up independently</p>
+          </div>
+        )}
+      </div>
+      <Button
+        type="submit"
+        className="w-full border-0 font-bold text-sm"
+        disabled={isLoading}
+        style={{ backgroundColor: "#e09615", color: "#fff" }}
+      >
+        {isLoading ? "Creating account..." : "Create account"}
+      </Button>
+      <p className={`text-sm text-center ${mutedClass}`}>
+        Already have an account?{" "}
+        <Link to="/login" className="font-medium hover:underline" style={{ color: "#e09615" }}>Sign in</Link>
+      </p>
+    </form>
+  );
+
+  // Dark mode: centered card layout
+  if (isDark) {
+    return (
+      <div className="flex min-h-screen items-center justify-center px-4" style={{ backgroundColor: "#0d0f14" }}>
+        <div className="absolute top-4 right-4">
+          <ThemeToggle variant="landing" />
+        </div>
+        <div className="w-full max-w-md rounded-[14px] border border-[#2d3250] p-8 overflow-y-auto max-h-[90vh]" style={{ backgroundColor: "#13161e" }}>
+          <div className="flex flex-col items-center mb-6">
+            <div className="flex items-center gap-2.5 mb-1">
+              <GraduationCap className="h-8 w-8" style={{ color: "#e09615" }} />
+              <span className="font-serif text-2xl font-bold" style={{ color: "#e09615" }}>QuizFlow</span>
+            </div>
+          </div>
+          {formContent}
+        </div>
+      </div>
+    );
+  }
+
+  // Light mode: split layout
   return (
     <div className="flex min-h-screen">
-      {/* Left panel — dark navy branding */}
       <div
-        className={`hidden md:flex md:w-[42%] flex-col items-center justify-center relative overflow-hidden ${isDark ? "border-r border-[#2d3250]" : "border-r-2 border-[#e09615]"}`}
-        style={{ backgroundColor: isDark ? "#0d0f14" : "#1e2235" }}
+        className="hidden md:flex md:w-[42%] flex-col items-center justify-center relative overflow-hidden border-r-2 border-[#e09615]"
+        style={{ backgroundColor: "#1e2235" }}
       >
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)`,
@@ -89,9 +209,7 @@ const Signup = () => {
         <div className="relative z-10 flex flex-col items-center text-center px-8">
           <div className="flex items-center gap-3 mb-6">
             <GraduationCap className="h-10 w-10" style={{ color: "#e09615" }} />
-            <span className="font-serif text-3xl font-bold tracking-wide" style={{ color: "#e09615" }}>
-              QuizFlow
-            </span>
+            <span className="font-serif text-3xl font-bold tracking-wide" style={{ color: "#e09615" }}>QuizFlow</span>
           </div>
           <p className="text-lg font-light max-w-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
             Build, distribute, and evaluate exams — effortlessly.
@@ -99,116 +217,14 @@ const Signup = () => {
           <div className="mt-8 w-10 h-0.5" style={{ backgroundColor: "#e09615" }} />
         </div>
       </div>
-
-      {/* Right panel — form */}
-      <div
-        className="flex-1 flex flex-col items-center justify-center px-6 py-10 relative overflow-y-auto"
-        style={{ backgroundColor: isDark ? "#1a1d28" : "#ffffff" }}
-      >
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-10 relative overflow-y-auto" style={{ backgroundColor: "#ffffff" }}>
         <div className="absolute top-4 right-4">
           <ThemeToggle variant="landing" />
         </div>
         <div className="md:hidden mb-8">
           <Logo size="lg" />
         </div>
-
-        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
-          <div>
-            <h1 className={`text-2xl font-serif font-bold ${headingColor}`}>Create your account</h1>
-            <p className={`text-sm mt-1 ${mutedClass}`}>Choose your role and get started</p>
-          </div>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName" className={labelClass}>Full Name</Label>
-              <Input id="fullName" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} required className={inputClass} />
-            </div>
-            <div className="space-y-2">
-              <Label className={labelClass}>Gender</Label>
-              <RadioGroup value={gender} onValueChange={(v) => setGender(v as "male" | "female")} className="flex gap-4">
-                <Label htmlFor="gender-male" className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2.5 cursor-pointer transition-all ${gender === "male" ? radioSelectedClass : radioUnselectedClass}`}>
-                  <RadioGroupItem value="male" id="gender-male" className="sr-only" />
-                  <span className={`text-sm font-medium ${isDark ? "text-white" : "text-[#0f1117]"}`}>Male</span>
-                </Label>
-                <Label htmlFor="gender-female" className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2.5 cursor-pointer transition-all ${gender === "female" ? radioSelectedClass : radioUnselectedClass}`}>
-                  <RadioGroupItem value="female" id="gender-female" className="sr-only" />
-                  <span className={`text-sm font-medium ${isDark ? "text-white" : "text-[#0f1117]"}`}>Female</span>
-                </Label>
-              </RadioGroup>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email" className={labelClass}>Email</Label>
-              <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputClass} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className={labelClass}>Password</Label>
-              <div className="relative">
-                <Input id="password" type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className={`pr-10 ${inputClass}`} />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none" tabIndex={-1}>
-                  {showPassword ? <EyeOff size={18} color="#e09615" /> : <Eye size={18} color="#e09615" />}
-                </button>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="backupEmail" className={labelClass}>Recovery Email <span className={`text-xs ${mutedClass}`}>(optional)</span></Label>
-              <Input id="backupEmail" type="email" placeholder="backup@email.com" value={backupEmail} onChange={(e) => setBackupEmail(e.target.value)} className={inputClass} />
-              <p className={`text-xs ${mutedClass}`}>Used for password recovery if you lose access to your primary email</p>
-            </div>
-            <div className="space-y-3">
-              <Label className={labelClass}>I am a...</Label>
-              <RadioGroup value={role} onValueChange={(v) => setRole(v as "organization_owner" | "teacher")} className="grid grid-cols-2 gap-3">
-                <Label
-                  htmlFor="org-owner"
-                  className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 cursor-pointer transition-all ${
-                    role === "organization_owner" ? radioSelectedClass : radioUnselectedClass
-                  }`}
-                >
-                  <RadioGroupItem value="organization_owner" id="org-owner" className="sr-only" />
-                  <Building2 className="h-8 w-8" style={{ color: "#e09615" }} />
-                  <span className={`text-sm font-medium text-center ${isDark ? "text-white" : "text-[#0f1117]"}`}>Organization Owner</span>
-                </Label>
-                <Label
-                  htmlFor="teacher"
-                  className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 cursor-pointer transition-all ${
-                    role === "teacher" ? radioSelectedClass : radioUnselectedClass
-                  }`}
-                >
-                  <RadioGroupItem value="teacher" id="teacher" className="sr-only" />
-                  <GraduationCap className="h-8 w-8" style={{ color: "#e09615" }} />
-                  <span className={`text-sm font-medium ${isDark ? "text-white" : "text-[#0f1117]"}`}>Teacher</span>
-                </Label>
-              </RadioGroup>
-            </div>
-            {role === "teacher" && organizations.length > 0 && (
-              <div className="space-y-2">
-                <Label htmlFor="organization" className={labelClass}>Join an Organization <span className={`text-xs ${mutedClass}`}>(optional)</span></Label>
-                <select
-                  id="organization"
-                  value={selectedOrgId}
-                  onChange={(e) => setSelectedOrgId(e.target.value)}
-                  className={`flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${selectClass}`}
-                >
-                  <option value="">No organization (independent)</option>
-                  {organizations.map((org) => (
-                    <option key={org.id} value={org.id}>{org.name}</option>
-                  ))}
-                </select>
-                <p className={`text-xs ${mutedClass}`}>Select an organization to join, or sign up independently</p>
-              </div>
-            )}
-          </div>
-          <Button
-            type="submit"
-            className="w-full border-0 font-semibold"
-            disabled={isLoading}
-            style={{ backgroundColor: "#e09615", color: "#fff" }}
-          >
-            {isLoading ? "Creating account..." : "Create account"}
-          </Button>
-          <p className={`text-sm text-center ${mutedClass}`}>
-            Already have an account?{" "}
-            <Link to="/login" className="font-medium hover:underline" style={{ color: "#e09615" }}>Sign in</Link>
-          </p>
-        </form>
+        {formContent}
       </div>
     </div>
   );

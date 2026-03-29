@@ -47,60 +47,24 @@ const Login = () => {
     }
   };
 
-  const inputClass = isDark
-    ? "bg-[#1e2235] border-[#3a4060] text-white placeholder:text-[#6b7494] focus-visible:ring-[#e09615]/40"
-    : "bg-white border-[#d0d4de] text-[#0f1117] placeholder:text-[#6b7494]/60 focus-visible:ring-[#e09615]/40";
-
-  const labelClass = isDark ? "text-[#9aa0b4] font-medium" : "text-[#0f1117] font-medium";
-  const headingColor = isDark ? "text-white" : "text-[#0f1117]";
-  const mutedColor = isDark ? "text-[#6b7494]" : "text-[#6b7494]";
-
-  return (
-    <div className="flex min-h-screen">
-      {/* Left panel — dark navy branding */}
-      <div
-        className={`hidden md:flex md:w-1/2 flex-col items-center justify-center relative overflow-hidden ${isDark ? "border-r border-[#2d3250]" : "border-r-2 border-[#e09615]"}`}
-        style={{ backgroundColor: isDark ? "#0d0f14" : "#1e2235" }}
-      >
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)`,
-          backgroundSize: "32px 32px",
-        }} />
-        <div className="relative z-10 flex flex-col items-center text-center px-8">
-          <div className="flex items-center gap-3 mb-6">
-            <GraduationCap className="h-10 w-10" style={{ color: "#e09615" }} />
-            <span className="font-serif text-3xl font-bold tracking-wide" style={{ color: "#e09615" }}>
-              QuizFlow
-            </span>
-          </div>
-          <p className="text-lg font-light max-w-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
-            Build, distribute, and evaluate exams — effortlessly.
-          </p>
-          <div className="mt-8 w-10 h-0.5" style={{ backgroundColor: "#e09615" }} />
-        </div>
-      </div>
-
-      {/* Right panel — form */}
-      <div
-        className="flex-1 flex flex-col items-center justify-center px-6 relative"
-        style={{ backgroundColor: isDark ? "#1a1d28" : "#ffffff" }}
-      >
+  if (isDark) {
+    return (
+      <div className="flex min-h-screen items-center justify-center px-4" style={{ backgroundColor: "#0d0f14" }}>
         <div className="absolute top-4 right-4">
           <ThemeToggle variant="landing" />
         </div>
-        {/* Mobile logo */}
-        <div className="md:hidden mb-8">
-          <Logo size="lg" />
-        </div>
-
-        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
-          <div>
-            <h1 className={`text-2xl font-serif font-bold ${headingColor}`}>Welcome back</h1>
-            <p className={`text-sm mt-1 ${mutedColor}`}>Sign in to your account</p>
+        <div className="w-full max-w-md rounded-[14px] border border-[#2d3250] p-8" style={{ backgroundColor: "#13161e" }}>
+          <div className="flex flex-col items-center mb-6">
+            <div className="flex items-center gap-2.5 mb-1">
+              <GraduationCap className="h-8 w-8" style={{ color: "#e09615" }} />
+              <span className="font-serif text-2xl font-bold" style={{ color: "#e09615" }}>QuizFlow</span>
+            </div>
           </div>
-          <div className="space-y-4">
+          <h1 className="text-xl font-serif font-bold text-white text-center mb-1">Welcome back</h1>
+          <p className="text-sm text-center mb-6" style={{ color: "#6b7494" }}>Sign in to your account</p>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className={labelClass}>Email</Label>
+              <Label htmlFor="email" className="text-[#9aa0b4] font-medium text-sm">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -108,11 +72,11 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className={inputClass}
+                className="bg-[#1e2235] border-[#3a4060] text-white placeholder:text-[#6b7494] focus-visible:ring-[#e09615]/40"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className={labelClass}>Password</Label>
+              <Label htmlFor="password" className="text-[#9aa0b4] font-medium text-sm">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -121,7 +85,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className={`pr-10 ${inputClass}`}
+                  className="pr-10 bg-[#1e2235] border-[#3a4060] text-white placeholder:text-[#6b7494] focus-visible:ring-[#e09615]/40"
                 />
                 <button
                   type="button"
@@ -133,20 +97,84 @@ const Login = () => {
                 </button>
               </div>
             </div>
-          </div>
-          <Button
-            type="submit"
-            className="w-full border-0 font-semibold"
-            disabled={isLoading}
-            style={{ backgroundColor: "#e09615", color: "#fff" }}
-          >
-            {isLoading ? "Signing in..." : "Sign in"}
-          </Button>
-          <div className="flex flex-col items-center gap-2">
+            <Button
+              type="submit"
+              className="w-full border-0 font-bold text-sm"
+              disabled={isLoading}
+              style={{ backgroundColor: "#e09615", color: "#fff" }}
+            >
+              {isLoading ? "Signing in..." : "Sign in"}
+            </Button>
+          </form>
+          <div className="flex flex-col items-center gap-2 mt-5">
             <Link to="/forgot-password" className="text-sm hover:underline" style={{ color: "#e09615" }}>
               Forgot Password?
             </Link>
-            <p className={`text-sm ${mutedColor}`}>
+            <p className="text-sm" style={{ color: "#6b7494" }}>
+              Don't have an account?{" "}
+              <Link to="/signup" className="font-medium hover:underline" style={{ color: "#e09615" }}>Sign up</Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Light mode: split layout
+  return (
+    <div className="flex min-h-screen">
+      <div
+        className="hidden md:flex md:w-1/2 flex-col items-center justify-center relative overflow-hidden border-r-2 border-[#e09615]"
+        style={{ backgroundColor: "#1e2235" }}
+      >
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)`,
+          backgroundSize: "32px 32px",
+        }} />
+        <div className="relative z-10 flex flex-col items-center text-center px-8">
+          <div className="flex items-center gap-3 mb-6">
+            <GraduationCap className="h-10 w-10" style={{ color: "#e09615" }} />
+            <span className="font-serif text-3xl font-bold tracking-wide" style={{ color: "#e09615" }}>QuizFlow</span>
+          </div>
+          <p className="text-lg font-light max-w-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
+            Build, distribute, and evaluate exams — effortlessly.
+          </p>
+          <div className="mt-8 w-10 h-0.5" style={{ backgroundColor: "#e09615" }} />
+        </div>
+      </div>
+      <div className="flex-1 flex flex-col items-center justify-center px-6 relative" style={{ backgroundColor: "#ffffff" }}>
+        <div className="absolute top-4 right-4">
+          <ThemeToggle variant="landing" />
+        </div>
+        <div className="md:hidden mb-8">
+          <Logo size="lg" />
+        </div>
+        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
+          <div>
+            <h1 className="text-2xl font-serif font-bold text-[#0f1117]">Welcome back</h1>
+            <p className="text-sm mt-1 text-[#6b7494]">Sign in to your account</p>
+          </div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-[#0f1117] font-medium">Email</Label>
+              <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="bg-white border-[#d0d4de] text-[#0f1117] placeholder:text-[#6b7494]/60 focus-visible:ring-[#e09615]/40" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-[#0f1117] font-medium">Password</Label>
+              <div className="relative">
+                <Input id="password" type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required className="pr-10 bg-white border-[#d0d4de] text-[#0f1117] placeholder:text-[#6b7494]/60 focus-visible:ring-[#e09615]/40" />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none" tabIndex={-1}>
+                  {showPassword ? <EyeOff size={18} color="#e09615" /> : <Eye size={18} color="#e09615" />}
+                </button>
+              </div>
+            </div>
+          </div>
+          <Button type="submit" className="w-full border-0 font-semibold" disabled={isLoading} style={{ backgroundColor: "#e09615", color: "#fff" }}>
+            {isLoading ? "Signing in..." : "Sign in"}
+          </Button>
+          <div className="flex flex-col items-center gap-2">
+            <Link to="/forgot-password" className="text-sm hover:underline" style={{ color: "#e09615" }}>Forgot Password?</Link>
+            <p className="text-sm text-[#6b7494]">
               Don't have an account?{" "}
               <Link to="/signup" className="font-medium hover:underline" style={{ color: "#e09615" }}>Sign up</Link>
             </p>
