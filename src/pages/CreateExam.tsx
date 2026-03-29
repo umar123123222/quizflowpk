@@ -607,22 +607,22 @@ const CreateExam = () => {
                       }, 0);
 
                   return (
-                    <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-3 space-y-1">
+                    <div className="rounded-[10px] border dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] dark:bg-[hsl(var(--dashboard-card))] bg-[#252a40] p-3 space-y-1">
                       <div className="flex items-center gap-4 flex-wrap">
-                        <span className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)]">
-                          Total: <span className="text-[hsl(var(--dashboard-gold))] font-bold">{Math.round(computedTotal * 100) / 100}</span>
+                        <span className="font-mono text-[10px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#9aa0b4]">
+                          Total: <span className="dark:text-[hsl(var(--dashboard-gold))] text-white font-bold">{Math.round(computedTotal * 100) / 100}</span>
                         </span>
-                        <span className="text-[hsl(var(--dashboard-text))]/45">|</span>
-                        <span className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)]">
-                          Assigned: <span className="text-[hsl(var(--dashboard-text)/.8)] font-bold">{Math.round(assigned * 100) / 100}</span>
+                        <span className="dark:text-[hsl(var(--dashboard-text))]/45 text-[#3a4060]">|</span>
+                        <span className="font-mono text-[10px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#9aa0b4]">
+                          Assigned: <span className="dark:text-[hsl(var(--dashboard-text)/.8)] text-white font-bold">{Math.round(assigned * 100) / 100}</span>
                         </span>
                         {total && unassignedCount > 0 && (
                           <>
-                            <span className="text-[hsl(var(--dashboard-text))]/45">|</span>
-                            <span className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)]">
-                              Remaining: <span className="text-[hsl(var(--dashboard-text)/.8)] font-bold">{Math.round(remaining * 100) / 100}</span>
+                            <span className="dark:text-[hsl(var(--dashboard-text))]/45 text-[#3a4060]">|</span>
+                            <span className="font-mono text-[10px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#9aa0b4]">
+                              Remaining: <span className="dark:text-[hsl(var(--dashboard-text)/.8)] text-white font-bold">{Math.round(remaining * 100) / 100}</span>
                               {" → "}
-                              <span className="text-[hsl(var(--dashboard-text)/.75)]">
+                              <span className="dark:text-[hsl(var(--dashboard-text)/.75)] text-[#9aa0b4]">
                                 {unassignedMcq > 0 && unassignedText > 0
                                   ? `${unassignedCount} questions (${perEach} each)`
                                   : unassignedMcq > 0
@@ -635,8 +635,8 @@ const CreateExam = () => {
                         )}
                         {!total && unassignedCount > 0 && (
                           <>
-                            <span className="text-[hsl(var(--dashboard-text))]/45">|</span>
-                            <span className="font-mono text-[10px] tracking-wider text-[hsl(var(--dashboard-text)/.65)]">
+                            <span className="dark:text-[hsl(var(--dashboard-text))]/45 text-[#3a4060]">|</span>
+                            <span className="font-mono text-[10px] tracking-wider dark:text-[hsl(var(--dashboard-text)/.65)] text-[#9aa0b4]">
                               {unassignedMcq > 0 && <span>{unassignedMcq} MCQ × {typeof defaultMcqMarks === "number" ? defaultMcqMarks : 1}</span>}
                               {unassignedMcq > 0 && unassignedText > 0 && <span>{" + "}</span>}
                               {unassignedText > 0 && <span>{unassignedText} Text × {typeof defaultTextMarks === "number" ? defaultTextMarks : 1}</span>}
@@ -650,7 +650,7 @@ const CreateExam = () => {
                         </p>
                       )}
                       {!total && (
-                        <p className="font-mono text-[10px] text-[hsl(var(--dashboard-gold))]">
+                        <p className="font-mono text-[10px] text-[#e09615]">
                           ⚠ Set "Total Marks" above to enable automatic distribution of remaining marks.
                         </p>
                       )}
