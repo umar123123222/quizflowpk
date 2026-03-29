@@ -1317,7 +1317,7 @@ const TakeExam = () => {
                     Registration
                   </span>
                   <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.15)" }}>›</span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium" style={{ background: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium" style={{ background: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.04)" }}>
                     Start
                   </span>
                 </div>
