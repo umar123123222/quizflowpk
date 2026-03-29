@@ -1118,7 +1118,7 @@ const CreateExam = () => {
                 </div>
                 {questions.some(q => q.type === "text") && (
                   <div className="flex items-center gap-2 text-xs text-[hsl(var(--dashboard-text)/.7)]">
-                    <AlertTriangle className="h-3.5 w-3.5 text-yellow-500" />
+                    <AlertTriangle className="h-3.5 w-3.5 <AlertTriangle className="h-3.5 w-3.5 text-[#e09615]" />" />
                     <span>Text questions will require manual review</span>
                   </div>
                 )}
