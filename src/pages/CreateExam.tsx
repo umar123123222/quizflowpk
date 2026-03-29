@@ -783,11 +783,15 @@ const CreateExam = () => {
                               <RadioGroupItem
                                 value={optionLabels[oIndex]}
                                 id={`q${qIndex}-opt${oIndex}`}
-                                className="border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[hsl(var(--dashboard-gold))]"
+                                className="dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-green-500 data-[state=checked]:text-green-500"
                               />
                               <Label
                                 htmlFor={`q${qIndex}-opt${oIndex}`}
-                                className="font-mono text-[11px] font-bold text-[hsl(var(--dashboard-text)/.8)] w-4 shrink-0"
+                                className={`font-mono text-[11px] font-bold w-4 shrink-0 ${
+                                  q.correctAnswer === optionLabels[oIndex]
+                                    ? "text-white"
+                                    : "dark:text-[hsl(var(--dashboard-text)/.8)] text-[#6b7494]"
+                                }`}
                               >
                                 {optionLabels[oIndex]}
                               </Label>
@@ -795,7 +799,7 @@ const CreateExam = () => {
                                 value={opt}
                                 onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
                                 placeholder={`Option ${optionLabels[oIndex]}`}
-                                className="flex-1 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                                className={`flex-1 dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] dark:text-[hsl(var(--dashboard-text)/.9)] text-white dark:placeholder:text-[hsl(var(--dashboard-text)/.7)] placeholder:text-[#6b7494] text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]`}
                               />
                             </div>
                           ))}
