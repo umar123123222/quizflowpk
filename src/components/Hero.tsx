@@ -71,7 +71,7 @@ const Hero = () => {
           <p
             className="mb-10 opacity-0 animate-fade-up [animation-delay:200ms] mx-auto"
             style={{
-              color: isDark ? 'rgba(232,227,213,0.55)' : '#6b7494',
+              color: isDark ? 'rgba(232,227,213,0.55)' : '#586380',
               fontFamily: "'DM Sans', sans-serif",
               fontWeight: 300,
               maxWidth: '520px',
