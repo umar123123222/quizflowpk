@@ -76,7 +76,7 @@ const Login = () => {
           <p className="text-lg font-light max-w-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
             Build, distribute, and evaluate exams — effortlessly.
           </p>
-          <div className="mt-8 h-px w-16" style={{ backgroundColor: "rgba(224,150,21,0.3)" }} />
+          <div className="mt-8 w-10 h-0.5" style={{ backgroundColor: "#e09615" }} />
         </div>
       </div>
 
