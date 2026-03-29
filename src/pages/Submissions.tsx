@@ -348,8 +348,8 @@ const Submissions = () => {
           {/* Topbar */}
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.6)] hover:text-[hsl(var(--dashboard-text)/.8)]" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.6)]">
+              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.95)]" />
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.75)]">
                 Org / Submissions
               </span>
             </div>
@@ -366,7 +366,7 @@ const Submissions = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.45)] transition-colors hover:text-[hsl(var(--dashboard-text)/.7)]"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] transition-colors hover:text-[hsl(var(--dashboard-text)/.9)]"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -381,7 +381,7 @@ const Submissions = () => {
                 <h1 className="font-serif text-3xl md:text-4xl font-bold text-[hsl(var(--dashboard-text)/.95)]">
                   Submissions
                 </h1>
-                <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.5)] mt-2">
+                <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.7)] mt-2">
                   Student attempts across all exams
                 </p>
               </div>
@@ -503,7 +503,7 @@ const Submissions = () => {
                         ? tab.key === "pending_review"
                           ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]"
                           : "bg-[hsl(var(--dashboard-gold)/0.1)] text-[hsl(var(--dashboard-text)/.9)]"
-                        : "text-[hsl(var(--dashboard-text)/.55)] hover:text-[hsl(var(--dashboard-text)/.7)]"
+                        : "text-[hsl(var(--dashboard-text)/.75)] hover:text-[hsl(var(--dashboard-text)/.9)]"
                     }`}
                   >
                     {tab.label}
@@ -512,7 +512,7 @@ const Submissions = () => {
                         ? tab.key === "pending_review"
                           ? "bg-[hsl(var(--dashboard-gold)/0.25)] text-[hsl(var(--dashboard-gold))]"
                           : "bg-white/10 text-[hsl(var(--dashboard-text)/.75)]"
-                        : "bg-white/5 text-[hsl(var(--dashboard-text)/.45)]"
+                        : "bg-white/5 text-[hsl(var(--dashboard-text)/.65)]"
                     }`}>
                       {tab.count}
                     </span>
@@ -525,12 +525,12 @@ const Submissions = () => {
             {examsWithSubs.length > 0 && (
               <div className="mb-6 flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[hsl(var(--dashboard-text)/.5)]" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[hsl(var(--dashboard-text)/.7)]" />
                   <Input
                     placeholder="Search by name, email, or phone..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 h-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] font-mono text-xs"
+                    className="pl-9 h-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] font-mono text-xs"
                   />
                 </div>
                 <select
@@ -556,11 +556,11 @@ const Submissions = () => {
             )}
 
             {loading ? (
-              <p className="text-[hsl(var(--dashboard-text)/.6)] animate-pulse font-mono text-sm">Loading submissions...</p>
+              <p className="text-[hsl(var(--dashboard-text)/.8)] animate-pulse font-mono text-sm">Loading submissions...</p>
             ) : examsWithSubs.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-center">
-                <ClipboardList className="h-12 w-12 text-[hsl(var(--dashboard-text))]/30 mb-4" />
-                <p className="text-[hsl(var(--dashboard-text)/.6)] font-mono text-sm">No exams found</p>
+                <ClipboardList className="h-12 w-12 text-[hsl(var(--dashboard-text))]/50 mb-4" />
+                <p className="text-[hsl(var(--dashboard-text)/.8)] font-mono text-sm">No exams found</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -580,27 +580,27 @@ const Submissions = () => {
                           {isExpanded ? (
                             <ChevronDown className="h-4 w-4 text-[hsl(var(--dashboard-gold))]" />
                           ) : (
-                            <ChevronRight className="h-4 w-4 text-[hsl(var(--dashboard-text)/.5)]" />
+                            <ChevronRight className="h-4 w-4 text-[hsl(var(--dashboard-text)/.7)]" />
                           )}
                           <div>
-                            <span className="font-serif text-base font-semibold text-[hsl(var(--dashboard-text))]/92">
+                            <span className="font-serif text-base font-semibold text-[hsl(var(--dashboard-text))]/95">
                               {exam.title}
                             </span>
                             {exam.teacher_name && (
-                              <span className="ml-2 font-mono text-[10px] text-[hsl(var(--dashboard-text)/.5)]">
+                              <span className="ml-2 font-mono text-[10px] text-[hsl(var(--dashboard-text)/.7)]">
                                 by {exam.teacher_name}
                               </span>
                             )}
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.5)]">
+                          <span className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)]">
                             {exam.submissions.length} submission{exam.submissions.length !== 1 ? "s" : ""}
                           </span>
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 px-2 text-[10px] font-mono tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] hover:text-[hsl(var(--dashboard-gold))] hover:bg-[hsl(var(--dashboard-gold)/0.08)]"
+                            className="h-7 px-2 text-[10px] font-mono tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)] hover:text-[hsl(var(--dashboard-gold))] hover:bg-[hsl(var(--dashboard-gold)/0.08)]"
                             onClick={(e) => {
                               e.stopPropagation();
                               setReattemptDialogExamId(exam.id);
@@ -617,25 +617,25 @@ const Submissions = () => {
                       {isExpanded && (
                         <div className="border-t border-[hsl(var(--dashboard-border))]">
                           {exam.submissions.length === 0 ? (
-                            <p className="px-5 py-6 text-center font-mono text-xs text-[hsl(var(--dashboard-text)/.45)]">
+                            <p className="px-5 py-6 text-center font-mono text-xs text-[hsl(var(--dashboard-text)/.65)]">
                               No submissions yet
                             </p>
                           ) : (
                             <Table>
                               <TableHeader>
                                 <TableRow className="border-[hsl(var(--dashboard-border))] hover:bg-transparent">
-                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)]">Name</TableHead>
-                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)]">Email</TableHead>
-                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)]">Phone</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)]">Name</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)]">Email</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)]">Phone</TableHead>
                                   {role === "organization_owner" && (
-                                    <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)]">Teacher</TableHead>
+                                    <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)]">Teacher</TableHead>
                                   )}
-                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] text-right">Score</TableHead>
-                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] text-center">Status</TableHead>
-                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] text-center">Result</TableHead>
-                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)]">Violations</TableHead>
-                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] text-right">Date</TableHead>
-                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] text-center">Details</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)] text-right">Score</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)] text-center">Status</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)] text-center">Result</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)]">Violations</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)] text-right">Date</TableHead>
+                                  <TableHead className="font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)] text-center">Details</TableHead>
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
@@ -644,7 +644,7 @@ const Submissions = () => {
                                     key={sub.id}
                                     className="border-[hsl(var(--dashboard-border))] hover:bg-[hsl(var(--dashboard-gold)/0.03)]"
                                   >
-                                    <TableCell className="text-sm text-[hsl(var(--dashboard-text))]/85 font-medium">
+                                    <TableCell className="text-sm text-[hsl(var(--dashboard-text))]/95 font-medium">
                                       {sub.student.full_name}
                                       {sub.attemptLabel && (
                                         <span className="ml-2 inline-block rounded bg-[hsl(var(--dashboard-gold)/0.15)] px-1.5 py-0.5 font-mono text-[9px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))]">
@@ -694,7 +694,7 @@ const Submissions = () => {
                                     <TableCell className="text-center">
                                       {(() => {
                                         const pf = sub.passFail;
-                                        if (!pf) return <span className="text-xs text-[hsl(var(--dashboard-text))]/30">—</span>;
+                                        if (!pf) return <span className="text-xs text-[hsl(var(--dashboard-text))]/50">—</span>;
                                         const isPass = pf === "PASS";
                                         return (
                                           <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
@@ -725,17 +725,17 @@ const Submissions = () => {
                                           ))}
                                         </div>
                                       ) : (
-                                        <span className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.4)]">No violations</span>
+                                        <span className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.8)]">No violations</span>
                                       )}
                                     </TableCell>
-                                    <TableCell className="font-mono text-[11px] text-[hsl(var(--dashboard-text)/.6)] text-right">
+                                    <TableCell className="font-mono text-[11px] text-[hsl(var(--dashboard-text)/.8)] text-right">
                                       {formatDate(sub.submitted_at)}
                                     </TableCell>
                                     <TableCell className="text-center">
                                       <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="h-7 px-2 text-[10px] font-mono tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] hover:text-[hsl(var(--dashboard-text)/.8)]"
+                                        className="h-7 px-2 text-[10px] font-mono tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.95)]"
                                         onClick={() => window.open(`/submission/${sub.id}`, "_blank")}
                                       >
                                         <Eye className="h-3 w-3 mr-1" />
@@ -766,7 +766,7 @@ const Submissions = () => {
               <RotateCcw className="h-5 w-5 text-[hsl(var(--dashboard-gold))]" />
               Allow Reattempt
             </DialogTitle>
-            <DialogDescription className="text-[hsl(var(--dashboard-text)/.6)]">
+            <DialogDescription className="text-[hsl(var(--dashboard-text)/.75)]">
               Enter the email addresses of students you want to allow to retake this exam.
             </DialogDescription>
           </DialogHeader>
@@ -782,12 +782,12 @@ const Submissions = () => {
                     updated[idx] = e.target.value;
                     setReattemptEmails(updated);
                   }}
-                  className="flex-1 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] font-mono text-xs"
+                  className="flex-1 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] font-mono text-xs"
                 />
                 {reattemptEmails.length > 1 && (
                   <button
                     onClick={() => setReattemptEmails((prev) => prev.filter((_, i) => i !== idx))}
-                    className="text-[hsl(var(--dashboard-text)/.4)] hover:text-destructive transition-colors"
+                    className="text-[hsl(var(--dashboard-text)/.8)] hover:text-destructive transition-colors"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -796,7 +796,7 @@ const Submissions = () => {
             ))}
             <button
               onClick={() => setReattemptEmails((prev) => [...prev, ""])}
-              className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.5)] hover:text-[hsl(var(--dashboard-gold))] transition-colors"
+              className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-gold))] transition-colors"
             >
               <Plus className="h-3 w-3" />
               Add another email

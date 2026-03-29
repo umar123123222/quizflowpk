@@ -118,8 +118,8 @@ const TeacherDashboard = () => {
           {/* Topbar */}
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.6)] hover:text-[hsl(var(--dashboard-text)/.8)]" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.6)]">
+              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.95)]" />
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.75)]">
                 Teacher / <span className="text-[hsl(var(--dashboard-gold))]">Dashboard</span>
               </span>
             </div>
@@ -136,7 +136,7 @@ const TeacherDashboard = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.45)] transition-colors hover:text-[hsl(var(--dashboard-text)/.7)]"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] transition-colors hover:text-[hsl(var(--dashboard-text)/.9)]"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -148,7 +148,7 @@ const TeacherDashboard = () => {
           <main className="flex-1 p-6 md:p-10">
             {/* Welcome */}
             <div className="mb-10">
-              <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.5)] mb-2">
+              <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.7)] mb-2">
                 {today}
               </p>
               <h1 className="font-serif text-4xl md:text-5xl font-bold text-[hsl(var(--dashboard-text)/.95)]">
@@ -177,7 +177,7 @@ const TeacherDashboard = () => {
                     <p className="font-serif text-3xl font-bold text-[hsl(var(--dashboard-text)/.95)]">
                       {stat.value}
                     </p>
-                    <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.55)] mt-1.5">
+                    <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.75)] mt-1.5">
                       {stat.label}
                     </p>
                   </div>
@@ -187,7 +187,7 @@ const TeacherDashboard = () => {
 
             {/* Quick Actions */}
             <div className="mb-4">
-              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.5)] mb-4">
+              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.7)] mb-4">
                 Quick Actions
               </p>
             </div>
