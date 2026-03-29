@@ -1168,42 +1168,71 @@ const TakeExam = () => {
     ].filter(Boolean).join(", ");
 
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-4">
-        <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-6 items-start">
+      <div className="min-h-screen flex items-center justify-center text-foreground p-4 relative overflow-hidden" style={{ background: "hsl(var(--background))" }}>
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground) / 0.3) 1px, transparent 0)`,
+          backgroundSize: "28px 28px",
+        }} />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.04) 0%, transparent 60%)",
+        }} />
+
+        <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-6 items-start relative z-10">
           {/* Rules Panel */}
-          <Card className="w-full lg:w-[400px] shrink-0 border-primary/20 overflow-hidden">
+          <div className="w-full lg:w-[400px] shrink-0 rounded-xl border border-primary/20 overflow-hidden backdrop-blur-sm"
+            style={{
+              background: "hsl(var(--card) / 0.85)",
+              boxShadow: "0 0 30px -10px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--primary) / 0.05)",
+            }}
+          >
             <div className="h-1 bg-gradient-to-r from-primary via-primary/60 to-transparent" />
-            <CardHeader className="pb-2 pt-5">
+            <div className="px-5 pt-5 pb-2">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
-                  <ShieldAlert className="h-4.5 w-4.5 text-primary" />
+                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center" style={{ boxShadow: "0 0 12px hsl(var(--primary) / 0.15)" }}>
+                  <ShieldAlert className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <CardTitle className="font-serif text-lg leading-tight">Rules & Regulations</CardTitle>
-                  <CardDescription className="text-[11px] mt-0.5">Please read carefully before starting</CardDescription>
+                  <h2 className="font-serif text-lg font-bold leading-tight text-foreground">Rules & Regulations</h2>
+                  <p className="text-[11px] mt-0.5 text-muted-foreground">Please read carefully before starting</p>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="pt-1 pb-5">
-              {/* Exam Info Summary */}
-              <div className="grid grid-cols-2 gap-2 mb-4">
-                <div className="rounded-lg bg-muted/50 border border-border/50 px-3 py-2.5 text-center">
-                  <span className="block text-lg font-bold text-foreground">{questionCount}</span>
+            </div>
+            <div className="px-5 pt-1 pb-5">
+              {/* Exam Info Stats */}
+              <div className="grid grid-cols-2 gap-2.5 mb-4">
+                <div className="rounded-lg border border-border/60 px-3 py-3 text-center relative overflow-hidden"
+                  style={{
+                    background: "hsl(var(--muted) / 0.5)",
+                    boxShadow: "inset 0 1px 8px hsl(var(--primary) / 0.06), 0 1px 2px hsl(var(--background) / 0.3)",
+                  }}
+                >
+                  <span className="block text-xl font-bold text-foreground font-serif">{questionCount}</span>
                   <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                     Question{questionCount !== 1 ? "s" : ""}
                   </span>
                   {questionBreakdown && (
-                    <span className="block text-[9px] text-muted-foreground mt-0.5">{questionBreakdown}</span>
+                    <span className="block text-[9px] text-muted-foreground/80 mt-0.5">{questionBreakdown}</span>
                   )}
                 </div>
-                <div className="rounded-lg bg-muted/50 border border-border/50 px-3 py-2.5 text-center">
-                  <span className="block text-lg font-bold text-foreground">{exam?.time_limit || "∞"}</span>
+                <div className="rounded-lg border border-border/60 px-3 py-3 text-center relative overflow-hidden"
+                  style={{
+                    background: "hsl(var(--muted) / 0.5)",
+                    boxShadow: "inset 0 1px 8px hsl(var(--primary) / 0.06), 0 1px 2px hsl(var(--background) / 0.3)",
+                  }}
+                >
+                  <span className="block text-xl font-bold text-foreground font-serif">{exam?.time_limit || "∞"}</span>
                   <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                     Minute{exam?.time_limit !== 1 ? "s" : ""}
                   </span>
                 </div>
                 {exam?.passing_percentage && (
-                  <div className="rounded-lg bg-green-500/5 border border-green-500/20 px-3 py-2.5 text-center col-span-2">
+                  <div className="rounded-lg border border-green-500/20 px-3 py-2.5 text-center col-span-2"
+                    style={{
+                      background: "hsl(142 76% 36% / 0.06)",
+                      boxShadow: "inset 0 0 12px hsl(142 76% 36% / 0.05)",
+                    }}
+                  >
                     <span className="text-sm font-semibold text-green-600 dark:text-green-400">
                       Passing Score: {exam.passing_percentage}%
                     </span>
@@ -1258,36 +1287,44 @@ const TakeExam = () => {
                 ))}
               </div>
 
-              <div className="mt-4 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2.5">
-                <p className="text-[11px] text-destructive font-medium flex items-center gap-1.5">
-                  <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                  Any violation will be recorded and visible to the examiner.
-                </p>
+              {/* Warning banner with pulsing red left border */}
+              <div className="mt-4 rounded-lg border border-destructive/30 overflow-hidden relative"
+                style={{ background: "hsl(var(--destructive) / 0.06)" }}
+              >
+                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-destructive animate-pulse" />
+                <div className="px-4 py-3">
+                  <p className="text-[12px] text-destructive font-semibold flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 shrink-0" />
+                    Any violation will be recorded and visible to the examiner.
+                  </p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Student Form */}
-          <Card className="w-full lg:flex-1">
-            <CardHeader className="text-center">
-              <CardTitle className="font-serif text-2xl">{exam?.title || "Exam"}</CardTitle>
-              <CardDescription>
+          <div className="w-full lg:flex-1 rounded-xl border border-border/50 overflow-hidden backdrop-blur-sm"
+            style={{
+              background: "hsl(var(--card) / 0.85)",
+              boxShadow: "0 0 30px -10px hsl(var(--foreground) / 0.05), inset 0 1px 0 hsl(var(--foreground) / 0.03)",
+            }}
+          >
+            <div className="px-6 pt-6 pb-3 text-center">
+              <h2 className="font-serif text-2xl font-bold text-foreground">{exam?.title || "Exam"}</h2>
+              <p className="text-sm text-muted-foreground mt-1">
                 {exam?.description || "Please enter your details to start the exam"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div className="px-6 pb-6">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onStudentSubmit)} className="space-y-4">
                   {(() => {
-                    // Build ordered field list
                     const order = formSettings?.field_order || ["name", "email", "phone"];
-                    // Add any custom fields not in order
                     const allCustomIds = customFieldDefs.map((cf) => `custom:${cf.id}`);
                     const fullOrder = [...order];
                     for (const cid of allCustomIds) {
                       if (!fullOrder.includes(cid)) fullOrder.push(cid);
                     }
-                    // Add defaults not in order
                     for (const d of ["name", "email", "phone"]) {
                       if (!fullOrder.includes(d)) fullOrder.push(d);
                     }
@@ -1297,11 +1334,11 @@ const TakeExam = () => {
                         return (
                           <FormField key="name" control={form.control} name="fullName" render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Full Name</FormLabel>
+                              <FormLabel className="text-foreground font-medium text-sm">Full Name</FormLabel>
                               <FormControl>
                                 <div className="relative">
                                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                  <Input placeholder="Enter your full name" className="pl-10" {...field} />
+                                  <Input placeholder="Enter your full name" className="pl-10 border-border/80 bg-background/50 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-shadow" {...field} />
                                 </div>
                               </FormControl>
                               <FormMessage />
@@ -1313,11 +1350,11 @@ const TakeExam = () => {
                         return (
                           <FormField key="email" control={form.control} name="email" render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Email{formSettings && !formSettings.email_required ? " (Optional)" : ""}</FormLabel>
+                              <FormLabel className="text-foreground font-medium text-sm">Email{formSettings && !formSettings.email_required ? " (Optional)" : ""}</FormLabel>
                               <FormControl>
                                 <div className="relative">
                                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                  <Input type="email" placeholder="Enter your email" className="pl-10" {...field} />
+                                  <Input type="email" placeholder="Enter your email" className="pl-10 border-border/80 bg-background/50 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-shadow" {...field} />
                                 </div>
                               </FormControl>
                               <FormMessage />
@@ -1329,11 +1366,11 @@ const TakeExam = () => {
                         return (
                           <FormField key="phone" control={form.control} name="phone" render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Phone Number{formSettings && !formSettings.phone_required ? " (Optional)" : ""}</FormLabel>
+                              <FormLabel className="text-foreground font-medium text-sm">Phone Number{formSettings && !formSettings.phone_required ? " (Optional)" : ""}</FormLabel>
                               <FormControl>
                                 <div className="relative">
                                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                  <Input type="tel" placeholder="Enter your phone number" className="pl-10" {...field} />
+                                  <Input type="tel" placeholder="Enter your phone number" className="pl-10 border-border/80 bg-background/50 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-shadow" {...field} />
                                 </div>
                               </FormControl>
                               <FormMessage />
@@ -1347,7 +1384,7 @@ const TakeExam = () => {
                         if (!cf) return null;
                         return (
                           <div key={cf.id} className="space-y-2">
-                            <Label>
+                            <Label className="text-foreground font-medium text-sm">
                               {cf.field_label}
                               {!cf.is_required && <span className="text-muted-foreground text-xs ml-1">(Optional)</span>}
                             </Label>
@@ -1357,7 +1394,7 @@ const TakeExam = () => {
                                 onChange={(e) =>
                                   setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
                                 }
-                                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                className="w-full rounded-md border border-border/80 bg-background/50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-shadow"
                                 required={cf.is_required}
                               >
                                 <option value="">Select {cf.field_label}</option>
@@ -1374,6 +1411,7 @@ const TakeExam = () => {
                                   setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
                                 }
                                 required={cf.is_required}
+                                className="border-border/80 bg-background/50 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-shadow"
                               />
                             )}
                           </div>
@@ -1383,11 +1421,17 @@ const TakeExam = () => {
                     });
                   })()}
 
-                  <Button type="submit" className="w-full mt-2 border-0 font-semibold" style={{ backgroundColor: "#e09615", color: "#fff" }}>Start Exam</Button>
+                  <Button
+                    type="submit"
+                    className="w-full mt-2 border-0 font-semibold text-white transition-all hover:shadow-lg"
+                    style={{ backgroundColor: "hsl(var(--primary))", boxShadow: "0 4px 14px hsl(var(--primary) / 0.3)" }}
+                  >
+                    Start Exam
+                  </Button>
                 </form>
               </Form>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     );
