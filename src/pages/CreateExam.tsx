@@ -834,14 +834,14 @@ const CreateExam = () => {
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={() => setQuestions((prev) => [...prev, createEmptyQuestion("mcq")])}
-                className="flex items-center justify-center gap-2 rounded-lg border border-dashed dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] px-5 py-3 font-mono text-[11px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#6b7494] transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
+                className="flex items-center justify-center gap-2 rounded-lg border-[1.5px] border-dashed dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] bg-transparent px-5 py-3 font-mono text-[11px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#6b7494] transition-all hover:border-[#e09615] hover:text-[#e09615]"
               >
                 <ListChecks className="h-3.5 w-3.5" />
                 Add MCQ
               </button>
               <button
                 onClick={() => setQuestions((prev) => [...prev, createEmptyQuestion("text")])}
-                className="flex items-center justify-center gap-2 rounded-lg border border-dashed dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] px-5 py-3 font-mono text-[11px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#6b7494] transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
+                className="flex items-center justify-center gap-2 rounded-lg border-[1.5px] border-dashed dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] bg-transparent px-5 py-3 font-mono text-[11px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#6b7494] transition-all hover:border-[#e09615] hover:text-[#e09615]"
               >
                 <FileText className="h-3.5 w-3.5" />
                 Add Text Question
