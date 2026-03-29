@@ -1194,8 +1194,8 @@ const TakeExam = () => {
         </header>
 
         {/* Main content */}
-        <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 relative z-10">
-          <div className="w-full max-w-[1080px] flex flex-col lg:flex-row gap-5 items-stretch">
+        <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-3 relative z-10">
+          <div className="w-full max-w-[1080px] flex flex-col lg:flex-row gap-4 items-stretch">
 
             {/* ═══ LEFT PANEL — RULES ═══ */}
             <div
