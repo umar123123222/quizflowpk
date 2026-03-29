@@ -1208,17 +1208,17 @@ const TakeExam = () => {
               }}
             >
               {/* Amber accent stripe */}
-              <div className="h-[5px]" style={{ background: "linear-gradient(90deg, #F59E0B 0%, #F59E0B 50%, rgba(245,158,11,0.2) 100%)" }} />
+              <div className="h-[3px]" style={{ background: "linear-gradient(90deg, #F59E0B 0%, #F59E0B 50%, rgba(245,158,11,0.2) 100%)" }} />
 
-              <div className="p-5 sm:p-6">
+              <div className="p-4 sm:p-5">
                 {/* Section heading */}
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)" }}>
-                    <ShieldAlert className="h-5 w-5" style={{ color: "#F59E0B" }} />
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)" }}>
+                    <ShieldAlert className="h-4 w-4" style={{ color: "#F59E0B" }} />
                   </div>
                   <div>
-                    <h2 className="text-[15px] font-bold" style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif", fontSize: "18px" }}>Exam Guidelines</h2>
-                    <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.3)" }}>Read all rules before proceeding</p>
+                    <h2 className="text-[15px] font-bold" style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif" }}>Exam Guidelines</h2>
+                    <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>Read all rules before proceeding</p>
                   </div>
                 </div>
 
