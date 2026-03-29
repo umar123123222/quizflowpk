@@ -515,11 +515,11 @@ const CreateExam = () => {
             </div>
 
 
-            {/* Custom Marking Toggle */}
-            <div className="mb-6 space-y-4">
+            {/* Questions Section Block */}
+            <div className="mb-6 space-y-4 dark:bg-transparent dark:border-transparent bg-[#1e2235] border border-[#2d3250] rounded-xl p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.7)]">
+                  <p className="font-mono text-[10px] tracking-[0.15em] uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-white font-semibold">
                     Questions
                   </p>
                 </div>
@@ -529,13 +529,13 @@ const CreateExam = () => {
                   className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase transition-all ${
                     customMarking
                       ? "border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.1)] text-[hsl(var(--dashboard-gold))]"
-                      : "border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)]"
+                      : "dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] text-[#6b7494] hover:text-[#9aa0b4]"
                   }`}
                 >
-                  <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}>
+                  <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "dark:bg-[hsl(var(--dashboard-toggle-off))] bg-[#2d3250]"}`}>
                     <div className={`absolute top-0.5 h-2 w-2 rounded-full bg-white transition-all ${customMarking ? "left-3.5" : "left-0.5"}`} />
                   </div>
-                  Custom Marking
+                  <span className="text-[#6b7494]">Custom Marking</span>
                 </button>
               </div>
 
@@ -658,37 +658,36 @@ const CreateExam = () => {
                   );
                 })()
               )}
-            </div>
 
             {/* Shuffle Settings */}
-            <div className="mb-6 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] p-4 space-y-3">
-              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.7)]">
+            <div className="rounded-lg border dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] dark:bg-[hsl(var(--dashboard-card))] bg-[#252a40] p-4 space-y-3">
+              <p className="font-mono text-[10px] tracking-[0.15em] uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#6b7494]">
                 Shuffle Settings
               </p>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <p className="text-sm text-[hsl(var(--dashboard-text)/.9)]">Shuffle Question Order</p>
-                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.8)]">Each student receives questions in a different random order</p>
+                    <p className="text-sm dark:text-[hsl(var(--dashboard-text)/.9)] text-white/90">Shuffle Question Order</p>
+                    <p className="font-mono text-[9px] dark:text-[hsl(var(--dashboard-text)/.8)] text-[#6b7494]">Each student receives questions in a different random order</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setShuffleQuestions(!shuffleQuestions)}
-                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleQuestions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}
+                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleQuestions ? "bg-[hsl(var(--dashboard-gold))]" : "dark:bg-[hsl(var(--dashboard-toggle-off))] bg-[#2d3250]"}`}
                   >
                     <div className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${shuffleQuestions ? "left-6" : "left-1"}`} />
                   </button>
                 </div>
-                <div className="h-px bg-[hsl(var(--dashboard-border))]" />
+                <div className="h-px dark:bg-[hsl(var(--dashboard-border))] bg-[#2d3250]" />
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <p className="text-sm text-[hsl(var(--dashboard-text)/.9)]">Shuffle MCQ Options</p>
-                    <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.8)]">Answer choices are randomized per student for each MCQ question</p>
+                    <p className="text-sm dark:text-[hsl(var(--dashboard-text)/.9)] text-white/90">Shuffle MCQ Options</p>
+                    <p className="font-mono text-[9px] dark:text-[hsl(var(--dashboard-text)/.8)] text-[#6b7494]">Answer choices are randomized per student for each MCQ question</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setShuffleOptions(!shuffleOptions)}
-                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleOptions ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}
+                    className={`h-6 w-11 shrink-0 rounded-full transition-colors relative ${shuffleOptions ? "bg-[hsl(var(--dashboard-gold))]" : "dark:bg-[hsl(var(--dashboard-toggle-off))] bg-[#2d3250]"}`}
                   >
                     <div className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${shuffleOptions ? "left-6" : "left-1"}`} />
                   </button>
@@ -696,7 +695,7 @@ const CreateExam = () => {
               </div>
             </div>
 
-            <div className="space-y-6 mb-8 rounded-xl bg-[hsl(var(--dashboard-questions-bg))] p-6 -mx-2">
+            <div className="space-y-6 rounded-xl dark:bg-[hsl(var(--dashboard-questions-bg))] bg-transparent p-0 dark:p-6 dark:-mx-2">
               {questions.map((q, qIndex) => (
                 <div
                   key={q.id}
@@ -828,21 +827,22 @@ const CreateExam = () => {
             </div>
 
             {/* Add Question Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={() => setQuestions((prev) => [...prev, createEmptyQuestion("mcq")])}
-                className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-[hsl(var(--dashboard-border))] px-5 py-3 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)] transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
+                className="flex items-center justify-center gap-2 rounded-lg border border-dashed dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] px-5 py-3 font-mono text-[11px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#6b7494] transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
               >
                 <ListChecks className="h-3.5 w-3.5" />
                 Add MCQ
               </button>
               <button
                 onClick={() => setQuestions((prev) => [...prev, createEmptyQuestion("text")])}
-                className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-[hsl(var(--dashboard-border))] px-5 py-3 font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)] transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
+                className="flex items-center justify-center gap-2 rounded-lg border border-dashed dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] px-5 py-3 font-mono text-[11px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#6b7494] transition-all hover:border-[hsl(var(--dashboard-gold))] hover:text-[hsl(var(--dashboard-gold))]"
               >
                 <FileText className="h-3.5 w-3.5" />
                 Add Text Question
               </button>
+            </div>
             </div>
 
             {/* Save Draft + Publish */}
