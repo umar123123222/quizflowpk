@@ -103,7 +103,7 @@ const Signup = () => {
       {/* Right panel — form */}
       <div
         className="flex-1 flex flex-col items-center justify-center px-6 py-10 relative overflow-y-auto"
-        style={{ backgroundColor: isDark ? "#13161e" : "#ffffff" }}
+        style={{ backgroundColor: isDark ? "#1a1d28" : "#ffffff" }}
       >
         <div className="absolute top-4 right-4">
           <ThemeToggle variant="landing" />
