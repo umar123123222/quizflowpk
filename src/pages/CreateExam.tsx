@@ -515,11 +515,11 @@ const CreateExam = () => {
             </div>
 
 
-            {/* Custom Marking Toggle */}
-            <div className="mb-6 space-y-4">
+            {/* Questions Section Block */}
+            <div className="mb-6 space-y-4 dark:bg-transparent dark:border-transparent bg-[#1e2235] border border-[#2d3250] rounded-xl p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.7)]">
+                  <p className="font-mono text-[10px] tracking-[0.15em] uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-white font-semibold">
                     Questions
                   </p>
                 </div>
@@ -529,13 +529,13 @@ const CreateExam = () => {
                   className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase transition-all ${
                     customMarking
                       ? "border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.1)] text-[hsl(var(--dashboard-gold))]"
-                      : "border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)]"
+                      : "dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] text-[#6b7494] hover:text-[#9aa0b4]"
                   }`}
                 >
-                  <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}>
+                  <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "dark:bg-[hsl(var(--dashboard-toggle-off))] bg-[#2d3250]"}`}>
                     <div className={`absolute top-0.5 h-2 w-2 rounded-full bg-white transition-all ${customMarking ? "left-3.5" : "left-0.5"}`} />
                   </div>
-                  Custom Marking
+                  <span className="text-[#6b7494]">Custom Marking</span>
                 </button>
               </div>
 
