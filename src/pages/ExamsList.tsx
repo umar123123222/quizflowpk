@@ -123,8 +123,8 @@ const ExamsList = () => {
           {/* Topbar */}
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.6)] hover:text-[hsl(var(--dashboard-text)/.8)]" />
-              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.6)]">
+              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.8)] hover:text-[hsl(var(--dashboard-text)/.8)]" />
+              <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.8)]">
                 Org / Exams
               </span>
             </div>
@@ -137,7 +137,7 @@ const ExamsList = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.45)] transition-colors hover:text-[hsl(var(--dashboard-text)/.7)]"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.65)] transition-colors hover:text-[hsl(var(--dashboard-text)/.7)]"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -154,12 +154,12 @@ const ExamsList = () => {
             {/* Search & Filter Bar */}
             <div className="flex flex-col sm:flex-row gap-3 mb-8">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[hsl(var(--dashboard-text)/.45)]" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[hsl(var(--dashboard-text)/.65)]" />
                 <Input
                   placeholder="Search exams by name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.5)] font-mono text-xs focus-visible:ring-[hsl(var(--dashboard-gold))]"
+                  className="pl-9 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] font-mono text-xs focus-visible:ring-[hsl(var(--dashboard-gold))]"
                 />
               </div>
               <div className="relative">
@@ -172,7 +172,7 @@ const ExamsList = () => {
                   <option value="published">Published</option>
                   <option value="draft">Draft</option>
                 </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[hsl(var(--dashboard-text)/.45)] pointer-events-none" />
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[hsl(var(--dashboard-text)/.65)] pointer-events-none" />
               </div>
               <div className="relative">
                 <select
@@ -183,27 +183,27 @@ const ExamsList = () => {
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
                 </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[hsl(var(--dashboard-text)/.45)] pointer-events-none" />
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[hsl(var(--dashboard-text)/.65)] pointer-events-none" />
               </div>
             </div>
 
             {loading ? (
               <div className="flex items-center justify-center py-20">
-                <Loader2 className="h-6 w-6 animate-spin text-[hsl(var(--dashboard-text)/.5)]" />
+                <Loader2 className="h-6 w-6 animate-spin text-[hsl(var(--dashboard-text)/.7)]" />
               </div>
             ) : exams.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] mb-4">
-                  <FileText className="h-6 w-6 text-[hsl(var(--dashboard-text)/.4)]" />
+                  <FileText className="h-6 w-6 text-[hsl(var(--dashboard-text)/.8)]" />
                 </div>
                 <p className="text-sm text-[hsl(var(--dashboard-text)/.7)] mb-1">No exams yet</p>
-                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.45)] mb-6">Create your first exam to get started</p>
-                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.45)]">Only teachers can create exams</p>
+                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)] mb-6">Create your first exam to get started</p>
+                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)]">Only teachers can create exams</p>
               </div>
             ) : filteredExams.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <p className="text-sm text-[hsl(var(--dashboard-text)/.7)] mb-1">No exams match your filters</p>
-                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.45)]">Try adjusting your search or filters</p>
+                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)]">Try adjusting your search or filters</p>
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -215,14 +215,14 @@ const ExamsList = () => {
                     <div className="h-[2px] bg-[hsl(var(--dashboard-gold))]" />
                     <div className="p-5">
                       <div className="flex items-start justify-between mb-3">
-                        <h3 className="font-serif text-lg font-bold text-[hsl(var(--dashboard-text))]/92 group-hover:text-[hsl(var(--dashboard-gold))] transition-colors line-clamp-1">
+                        <h3 className="font-serif text-lg font-bold text-[hsl(var(--dashboard-text))]/95 group-hover:text-[hsl(var(--dashboard-gold))] transition-colors line-clamp-1">
                           {exam.title}
                         </h3>
                         <span
                           className={`shrink-0 ml-2 inline-flex items-center rounded-full px-2 py-0.5 font-mono text-[9px] tracking-wider uppercase ${
                             exam.is_published
                               ? "bg-[hsl(var(--dashboard-green)/0.15)] text-[hsl(var(--dashboard-green))]"
-                              : "bg-white/5 text-[hsl(var(--dashboard-text)/.5)]"
+                              : "bg-white/5 text-[hsl(var(--dashboard-text)/.7)]"
                           }`}
                         >
                           {exam.is_published ? "Published" : "Draft"}
@@ -239,20 +239,20 @@ const ExamsList = () => {
                         );
                       })()}
                       {exam.teacher_name && (
-                        <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.5)] mb-2">
+                        <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.7)] mb-2">
                           By: <span className="text-[hsl(var(--dashboard-text)/.7)]">{exam.teacher_name}</span>
                         </p>
                       )}
                       {exam.description && (
-                        <p className="text-xs text-[hsl(var(--dashboard-text)/.55)] mb-3 line-clamp-2">{exam.description}</p>
+                        <p className="text-xs text-[hsl(var(--dashboard-text)/.75)] mb-3 line-clamp-2">{exam.description}</p>
                       )}
                       <div className="flex items-center gap-3 mb-4">
                         {exam.time_limit && (
-                          <span className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.45)]">
+                          <span className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)]">
                             {exam.time_limit} min
                           </span>
                         )}
-                        <span className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.45)]">
+                        <span className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)]">
                           {exam.created_at
                             ? new Date(exam.created_at).toLocaleDateString("en-US", {
                                 month: "short",
@@ -266,7 +266,7 @@ const ExamsList = () => {
                         {role === "teacher" && (
                           <button
                             onClick={() => navigate(`/dashboard/owner/create-exam?edit=${exam.id}`)}
-                            className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-text)/.75)]"
+                            className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.8)] transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-text)/.75)]"
                           >
                             View / Edit
                           </button>
@@ -274,7 +274,7 @@ const ExamsList = () => {
                         <button
                           onClick={() => copyExamLink(exam.code)}
                           title="Copy shareable link"
-                          className={`flex items-center justify-center rounded-md border border-[hsl(var(--dashboard-border))] px-2.5 py-1.5 text-[hsl(var(--dashboard-text)/.5)] transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-gold))] ${role === "organization_owner" ? "flex-1" : ""}`}
+                          className={`flex items-center justify-center rounded-md border border-[hsl(var(--dashboard-border))] px-2.5 py-1.5 text-[hsl(var(--dashboard-text)/.7)] transition-colors hover:border-[hsl(var(--dashboard-gold)/0.4)] hover:text-[hsl(var(--dashboard-gold))] ${role === "organization_owner" ? "flex-1" : ""}`}
                         >
                           <Copy className="h-3.5 w-3.5" />
                           {role === "organization_owner" && <span className="ml-1.5 font-mono text-[10px] tracking-wider uppercase">Copy Link</span>}
