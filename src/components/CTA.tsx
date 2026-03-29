@@ -23,7 +23,7 @@ const CTA = () => {
             background: isDark
               ? 'linear-gradient(135deg, #1a1d2e 0%, #0d1018 100%)'
               : 'linear-gradient(135deg, #1e2235 0%, #1a1d2e 100%)',
-            border: isDark ? '1px solid rgba(245,158,11,0.15)' : '1px solid rgba(224,150,21,0.2)',
+            border: isDark ? '1px solid border: isDark ? '1px solid rgba(224,150,21,0.15)' : '1px solid rgba(224,150,21,0.2)',' : '1px solid rgba(224,150,21,0.2)',
           }}
         >
           <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full" style={{ backgroundColor: 'rgba(224,150,21,0.05)' }} />

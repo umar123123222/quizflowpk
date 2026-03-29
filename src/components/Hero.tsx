@@ -18,7 +18,7 @@ const Hero = () => {
     <section className="relative overflow-hidden pt-32 md:pt-40" style={{ paddingBottom: '4rem' }}>
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full blur-3xl" style={{ backgroundColor: isDark ? 'rgba(232,200,122,0.03)' : 'rgba(224,150,21,0.06)' }} />
+        <div className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full blur-3xl" style={{ backgroundColor: isDark ? '<div className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full blur-3xl" style={{ backgroundColor: isDark ? 'rgba(224,150,21,0.03)' : 'rgba(224,150,21,0.06)' }} />' : 'rgba(224,150,21,0.06)' }} />
         <div className="absolute bottom-0 left-0 h-[400px] w-[400px] rounded-full blur-3xl" style={{ backgroundColor: isDark ? 'rgba(74,158,255,0.03)' : 'rgba(58,107,171,0.06)' }} />
       </div>
 
