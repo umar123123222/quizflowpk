@@ -11,7 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { User, Mail, Phone, Clock, CheckCircle, XCircle, AlertTriangle, Maximize, CalendarClock, ClipboardList, ShieldAlert, BookOpen, RotateCcw, Eye, MonitorX, Fullscreen, Link2 } from "lucide-react";
+import { User, Mail, Phone, Clock, CheckCircle, XCircle, AlertTriangle, Maximize, CalendarClock, ClipboardList, ShieldAlert, BookOpen, RotateCcw, Eye, MonitorX, Fullscreen, Link2, ArrowRight, GraduationCap } from "lucide-react";
 import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -1167,140 +1167,127 @@ const TakeExam = () => {
       textCount > 0 ? `${textCount} written` : null,
     ].filter(Boolean).join(", ");
 
+    const examDate = exam?.start_time ? format(new Date(exam.start_time), "MMM d, yyyy") : format(new Date(), "MMM d, yyyy");
+
     return (
-      <div className="min-h-screen flex flex-col text-foreground relative overflow-hidden" style={{ background: "#0d0d0f" }}>
-        {/* Animated dot-grid background */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.035]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.6) 1px, transparent 0)`,
-          backgroundSize: "24px 24px",
-        }} />
-        {/* Ambient glow */}
+      <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "#080810", fontFamily: "'Inter', sans-serif" }}>
+        {/* Radial gradient glow */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: "radial-gradient(ellipse at 30% 20%, rgba(224,150,21,0.04) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(224,150,21,0.02) 0%, transparent 50%)",
+          background: "radial-gradient(ellipse at 50% 0%, rgba(15,23,60,0.6) 0%, transparent 55%), radial-gradient(ellipse at 80% 100%, rgba(15,20,50,0.3) 0%, transparent 50%)",
+        }} />
+        {/* Dot grid texture */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.7) 1px, transparent 0)`,
+          backgroundSize: "20px 20px",
         }} />
 
-        {/* Top header bar */}
-        <div className="relative z-20 w-full px-6 py-4 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        {/* Header bar */}
+        <header className="relative z-20 w-full px-5 sm:px-8 py-4 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(224,150,21,0.12)" }}>
-              <BookOpen className="h-4 w-4" style={{ color: "#e09615" }} />
-            </div>
-            <span className="font-exam text-lg font-bold tracking-tight" style={{ color: "#e09615" }}>QuizFlow</span>
+            <GraduationCap className="h-6 w-6" style={{ color: "#F59E0B" }} />
+            <span className="text-lg font-bold tracking-tight" style={{ color: "#F59E0B", fontFamily: "'Playfair Display', serif" }}>QuizFlow</span>
           </div>
-          <div className="flex items-center gap-3">
-            {exam?.time_limit && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)" }}>
-                <Clock className="h-3 w-3" />
-                {exam.time_limit} min
-              </div>
-            )}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)" }}>
-              <ClipboardList className="h-3 w-3" />
-              {questionCount} Q{questionCount !== 1 ? "s" : ""}
-            </div>
+          <div className="hidden sm:flex items-center gap-2 text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+            <CalendarClock className="h-3.5 w-3.5" />
+            <span>{examDate}</span>
           </div>
-        </div>
+        </header>
 
         {/* Main content */}
-        <div className="flex-1 flex items-center justify-center px-4 py-6 relative z-10">
-          <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 items-stretch">
+        <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 relative z-10">
+          <div className="w-full max-w-[1080px] flex flex-col lg:flex-row gap-5 items-stretch">
 
-            {/* Left Panel — Rules */}
-            <div className="w-full lg:w-[420px] shrink-0 rounded-2xl overflow-hidden relative" style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.07)",
-              backdropFilter: "blur(12px)",
-            }}>
-              {/* Bold amber accent stripe */}
-              <div className="h-1.5" style={{ background: "linear-gradient(90deg, #e09615, #e09615 60%, transparent)" }} />
+            {/* ═══ LEFT PANEL — RULES ═══ */}
+            <div
+              className="w-full lg:w-[430px] shrink-0 rounded-2xl overflow-hidden"
+              style={{
+                background: "rgba(255,255,255,0.025)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                backdropFilter: "blur(16px)",
+                animation: "fadeSlideLeft 0.6s ease-out both",
+              }}
+            >
+              {/* Amber accent stripe */}
+              <div className="h-[5px]" style={{ background: "linear-gradient(90deg, #F59E0B 0%, #F59E0B 50%, rgba(245,158,11,0.2) 100%)" }} />
 
-              <div className="p-6">
-                {/* Header */}
+              <div className="p-5 sm:p-6">
+                {/* Section heading */}
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(224,150,21,0.1)", boxShadow: "0 0 20px rgba(224,150,21,0.1)" }}>
-                    <ShieldAlert className="h-5 w-5" style={{ color: "#e09615" }} />
+                  <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)" }}>
+                    <ShieldAlert className="h-5 w-5" style={{ color: "#F59E0B" }} />
                   </div>
                   <div>
-                    <h2 className="font-exam text-base font-bold" style={{ color: "#ffffff" }}>Rules & Regulations</h2>
-                    <p className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>Read carefully before starting</p>
+                    <h2 className="text-[15px] font-bold" style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif", fontSize: "18px" }}>Exam Guidelines</h2>
+                    <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.3)" }}>Read all rules before proceeding</p>
                   </div>
                 </div>
 
-                {/* Stats row */}
+                {/* Stat boxes */}
                 <div className="grid grid-cols-3 gap-2 mb-5">
-                  <div className="rounded-xl px-3 py-3 text-center" style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    boxShadow: "inset 0 1px 12px rgba(224,150,21,0.04)",
-                  }}>
-                    <span className="block text-xl font-bold font-exam" style={{ color: "#e09615" }}>{questionCount}</span>
-                    <span className="text-[9px] uppercase tracking-widest font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>
-                      Questions
-                    </span>
-                    {questionBreakdown && (
-                      <span className="block text-[8px] mt-0.5" style={{ color: "rgba(255,255,255,0.25)" }}>{questionBreakdown}</span>
-                    )}
-                  </div>
-                  <div className="rounded-xl px-3 py-3 text-center" style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    boxShadow: "inset 0 1px 12px rgba(224,150,21,0.04)",
-                  }}>
-                    <span className="block text-xl font-bold font-exam" style={{ color: "#e09615" }}>{exam?.time_limit || "∞"}</span>
-                    <span className="text-[9px] uppercase tracking-widest font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>
-                      Minutes
-                    </span>
-                  </div>
-                  <div className="rounded-xl px-3 py-3 text-center" style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    boxShadow: "inset 0 1px 12px rgba(34,197,94,0.04)",
-                  }}>
-                    <span className="block text-xl font-bold font-exam" style={{ color: "#22c55e" }}>{exam?.passing_percentage ?? 50}%</span>
-                    <span className="text-[9px] uppercase tracking-widest font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>
-                      To Pass
-                    </span>
-                  </div>
+                  {[
+                    { value: questionCount, label: "Questions", sub: questionBreakdown, color: "#F59E0B" },
+                    { value: exam?.time_limit || "∞", label: "Minutes", sub: null, color: "#F59E0B" },
+                    { value: `${exam?.passing_percentage ?? 50}%`, label: "To Pass", sub: null, color: "#22c55e" },
+                  ].map((stat, i) => (
+                    <div key={i} className="rounded-xl py-3 px-2 text-center relative" style={{
+                      background: "rgba(255,255,255,0.03)",
+                      border: "1px solid rgba(255,255,255,0.06)",
+                    }}>
+                      <span className="block text-xl font-extrabold" style={{ color: stat.color, fontFamily: "'Playfair Display', serif" }}>{stat.value}</span>
+                      <div className="mx-auto mt-1 mb-1 w-5 h-[2px] rounded-full" style={{ background: stat.color, opacity: 0.5 }} />
+                      <span className="text-[9px] uppercase tracking-[0.12em] font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>{stat.label}</span>
+                      {stat.sub && <span className="block text-[8px] mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>{stat.sub}</span>}
+                    </div>
+                  ))}
                 </div>
 
                 {/* Rule items */}
                 <div className="space-y-1">
                   {[
-                    { icon: <MonitorX className="h-4 w-4" />, text: "Do not switch tabs — auto-submit on 2nd violation", severity: "danger" as const },
-                    { icon: <Fullscreen className="h-4 w-4" />, text: "Stay in fullscreen — 5s to return before auto-submit", severity: "danger" as const },
-                    { icon: <RotateCcw className="h-4 w-4" />, text: "Single attempt only unless reattempt is granted", severity: "normal" as const },
-                    { icon: <Eye className="h-4 w-4" />, text: exam?.result_visibility === "after_exam_ends" ? "Results available after exam period ends" : "Results shown immediately after submission", severity: "normal" as const },
-                    { icon: <Link2 className="h-4 w-4" />, text: "Revisit this link anytime to check your result", severity: "normal" as const },
-                  ].map((rule, i) => (
-                    <div key={i} className="flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors" style={{
-                      background: rule.severity === "danger" ? "rgba(239,68,68,0.05)" : "transparent",
-                    }}>
-                      <span className="shrink-0 mt-0.5 h-7 w-7 rounded-lg flex items-center justify-center" style={{
-                        background: rule.severity === "danger" ? "rgba(239,68,68,0.1)" : "rgba(255,255,255,0.04)",
-                        color: rule.severity === "danger" ? "#ef4444" : "rgba(255,255,255,0.4)",
+                    { icon: <MonitorX className="h-[15px] w-[15px]" />, text: "Do not switch tabs — auto-submit on 2nd violation", severity: "danger" as const },
+                    { icon: <Fullscreen className="h-[15px] w-[15px]" />, text: "Stay in fullscreen — 5 seconds to return or auto-submit", severity: "danger" as const },
+                    { icon: <RotateCcw className="h-[15px] w-[15px]" />, text: "Single attempt only unless reattempt is granted", severity: "normal" as const },
+                    { icon: <Eye className="h-[15px] w-[15px]" />, text: exam?.result_visibility === "after_exam_ends" ? "Results available after exam period ends" : "Results shown immediately after submission", severity: "normal" as const },
+                    { icon: <Link2 className="h-[15px] w-[15px]" />, text: "Revisit this link anytime to check your result", severity: "normal" as const },
+                  ].map((rule, i) => {
+                    const isDanger = rule.severity === "danger";
+                    return (
+                      <div key={i} className="flex items-start gap-3 px-3 py-2.5 rounded-lg" style={{
+                        background: isDanger ? "rgba(239,68,68,0.04)" : "transparent",
+                        animation: `fadeSlideUp 0.4s ease-out ${0.15 + i * 0.07}s both`,
                       }}>
-                        {rule.icon}
-                      </span>
-                      <span className="text-[13px] leading-relaxed pt-0.5" style={{
-                        color: rule.severity === "danger" ? "rgba(239,68,68,0.85)" : "rgba(255,255,255,0.5)",
-                      }}>
-                        {rule.text}
-                      </span>
-                    </div>
-                  ))}
+                        <span className="shrink-0 mt-0.5 h-7 w-7 rounded-lg flex items-center justify-center" style={{
+                          background: isDanger ? "rgba(239,68,68,0.1)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${isDanger ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.06)"}`,
+                          color: isDanger ? "#ef4444" : "rgba(255,255,255,0.35)",
+                        }}>
+                          {rule.icon}
+                        </span>
+                        <span className="text-[13px] leading-relaxed pt-0.5" style={{
+                          color: isDanger ? "rgba(239,68,68,0.8)" : "rgba(255,255,255,0.45)",
+                          ...(isDanger ? { animation: "subtlePulse 3s ease-in-out infinite" } : {}),
+                        }}>
+                          {rule.text}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
 
-                {/* Animated warning banner */}
+                {/* Warning banner with blinking dot */}
                 <div className="mt-5 rounded-xl overflow-hidden relative" style={{
-                  background: "rgba(239,68,68,0.06)",
+                  background: "rgba(239,68,68,0.05)",
                   border: "1px solid rgba(239,68,68,0.15)",
+                  animation: "fadeSlideUp 0.4s ease-out 0.6s both",
                 }}>
-                  <div className="absolute left-0 top-0 bottom-0 w-1 animate-pulse-glow" style={{ background: "#ef4444" }} />
-                  <div className="px-4 py-3.5 flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 animate-pulse" style={{ background: "rgba(239,68,68,0.12)" }}>
-                      <AlertTriangle className="h-4 w-4" style={{ color: "#ef4444" }} />
+                  <div className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: "#ef4444" }} />
+                  <div className="px-4 py-3.5 flex items-start gap-3">
+                    {/* Blinking alert dot */}
+                    <div className="shrink-0 mt-0.5 relative">
+                      <div className="h-2.5 w-2.5 rounded-full" style={{ background: "#ef4444", animation: "blink 1.5s ease-in-out infinite" }} />
+                      <div className="absolute inset-0 h-2.5 w-2.5 rounded-full" style={{ background: "#ef4444", animation: "blink 1.5s ease-in-out infinite", filter: "blur(4px)" }} />
                     </div>
-                    <p className="text-[12px] font-semibold leading-snug" style={{ color: "rgba(239,68,68,0.9)" }}>
+                    <p className="text-[12px] font-medium leading-snug" style={{ color: "rgba(239,68,68,0.85)" }}>
                       All violations are recorded and visible to the examiner. Proceed with integrity.
                     </p>
                   </div>
@@ -1308,24 +1295,44 @@ const TakeExam = () => {
               </div>
             </div>
 
-            {/* Right Panel — Registration Form */}
-            <div className="w-full lg:flex-1 rounded-2xl overflow-hidden relative" style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.07)",
-              backdropFilter: "blur(12px)",
-              boxShadow: "0 4px 40px rgba(0,0,0,0.2)",
-            }}>
-              <div className="p-6 lg:p-8">
+            {/* ═══ RIGHT PANEL — REGISTRATION FORM ═══ */}
+            <div
+              className="w-full lg:flex-1 rounded-2xl overflow-hidden"
+              style={{
+                background: "rgba(255,255,255,0.025)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                backdropFilter: "blur(16px)",
+                boxShadow: "0 8px 50px rgba(0,0,0,0.3)",
+                animation: "fadeSlideRight 0.6s ease-out 0.1s both",
+              }}
+            >
+              <div className="p-5 sm:p-7">
+                {/* Exam metadata stepper */}
+                <div className="flex items-center gap-2 mb-5 flex-wrap">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold" style={{ background: "rgba(245,158,11,0.1)", color: "#F59E0B", border: "1px solid rgba(245,158,11,0.15)" }}>
+                    <BookOpen className="h-3 w-3" />
+                    Examination
+                  </span>
+                  <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.15)" }}>›</span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium" style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    Registration
+                  </span>
+                  <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.15)" }}>›</span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium" style={{ background: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                    Start
+                  </span>
+                </div>
+
                 {/* Form header */}
                 <div className="mb-6">
-                  <h2 className="font-exam text-2xl font-bold" style={{ color: "#ffffff" }}>{exam?.title || "Exam"}</h2>
-                  <p className="text-sm mt-1.5" style={{ color: "rgba(255,255,255,0.4)" }}>
-                    {exam?.description || "Enter your details to begin the examination"}
+                  <h2 className="text-2xl font-bold" style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif" }}>{exam?.title || "Examination"}</h2>
+                  <p className="text-[13px] mt-1.5 leading-relaxed" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    {exam?.description || "Complete the registration form below to begin your examination"}
                   </p>
                 </div>
 
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onStudentSubmit)} className="space-y-4">
+                  <form onSubmit={form.handleSubmit(onStudentSubmit)} className="space-y-5">
                     {(() => {
                       const order = formSettings?.field_order || ["name", "email", "phone"];
                       const allCustomIds = customFieldDefs.map((cf) => `custom:${cf.id}`);
@@ -1337,29 +1344,49 @@ const TakeExam = () => {
                         if (!fullOrder.includes(d)) fullOrder.push(d);
                       }
 
-                      const examInputClass = "pl-10 h-11 rounded-xl text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-0";
-                      const examInputStyle = {
-                        background: "rgba(255,255,255,0.04)",
+                      const inputBaseClass = "w-full h-12 rounded-xl text-sm outline-none transition-all duration-200";
+                      const inputBaseStyle = {
+                        background: "rgba(255,255,255,0.035)",
                         border: "1px solid rgba(255,255,255,0.1)",
                         color: "#ffffff",
+                        fontFamily: "'Inter', sans-serif",
                       };
-                      const examLabelStyle = { color: "rgba(255,255,255,0.6)" };
+                      const focusIn = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+                        e.target.style.borderColor = "rgba(245,158,11,0.5)";
+                        e.target.style.boxShadow = "0 0 0 3px rgba(245,158,11,0.08), 0 0 20px rgba(245,158,11,0.05)";
+                      };
+                      const focusOut = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>, onBlur?: () => void) => {
+                        e.target.style.borderColor = "rgba(255,255,255,0.1)";
+                        e.target.style.boxShadow = "none";
+                        onBlur?.();
+                      };
+
+                      const renderField = (key: string, label: string, icon: React.ReactNode, type: string, placeholder: string, fieldProps: any, optional?: boolean) => (
+                        <div key={key} className="relative group" style={{ animation: `fadeSlideUp 0.35s ease-out ${0.2}s both` }}>
+                          <label className="block text-[12px] font-semibold uppercase tracking-wider mb-2" style={{ color: "rgba(255,255,255,0.45)" }}>
+                            {label}{optional ? <span className="normal-case tracking-normal font-normal ml-1.5" style={{ color: "rgba(255,255,255,0.25)" }}>(Optional)</span> : ""}
+                          </label>
+                          <div className="relative">
+                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.2)" }}>{icon}</span>
+                            <input
+                              type={type}
+                              placeholder={placeholder}
+                              className={`${inputBaseClass} pl-11`}
+                              style={inputBaseStyle}
+                              {...fieldProps}
+                              onFocus={(e: React.FocusEvent<HTMLInputElement>) => focusIn(e)}
+                              onBlur={(e: React.FocusEvent<HTMLInputElement>) => focusOut(e, fieldProps.onBlur)}
+                            />
+                          </div>
+                        </div>
+                      );
 
                       return fullOrder.map((key) => {
                         if (key === "name") {
                           return (
                             <FormField key="name" control={form.control} name="fullName" render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-sm font-medium" style={examLabelStyle}>Full Name</FormLabel>
-                                <FormControl>
-                                  <div className="relative">
-                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: "rgba(255,255,255,0.25)" }} />
-                                    <input placeholder="Enter your full name" className={examInputClass} style={examInputStyle} {...field}
-                                      onFocus={(e) => { e.target.style.borderColor = "rgba(224,150,21,0.5)"; e.target.style.boxShadow = "0 0 0 3px rgba(224,150,21,0.1)"; }}
-                                      onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; field.onBlur(); }}
-                                    />
-                                  </div>
-                                </FormControl>
+                                {renderField("name", "Full Name", <User className="h-4 w-4" />, "text", "Enter your full name", field)}
                                 <FormMessage />
                               </FormItem>
                             )} />
@@ -1369,16 +1396,7 @@ const TakeExam = () => {
                           return (
                             <FormField key="email" control={form.control} name="email" render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-sm font-medium" style={examLabelStyle}>Email{formSettings && !formSettings.email_required ? " (Optional)" : ""}</FormLabel>
-                                <FormControl>
-                                  <div className="relative">
-                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: "rgba(255,255,255,0.25)" }} />
-                                    <input type="email" placeholder="Enter your email" className={examInputClass} style={examInputStyle} {...field}
-                                      onFocus={(e) => { e.target.style.borderColor = "rgba(224,150,21,0.5)"; e.target.style.boxShadow = "0 0 0 3px rgba(224,150,21,0.1)"; }}
-                                      onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; field.onBlur(); }}
-                                    />
-                                  </div>
-                                </FormControl>
+                                {renderField("email", "Email Address", <Mail className="h-4 w-4" />, "email", "Enter your email", field, formSettings ? !formSettings.email_required : false)}
                                 <FormMessage />
                               </FormItem>
                             )} />
@@ -1388,16 +1406,7 @@ const TakeExam = () => {
                           return (
                             <FormField key="phone" control={form.control} name="phone" render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-sm font-medium" style={examLabelStyle}>Phone{formSettings && !formSettings.phone_required ? " (Optional)" : ""}</FormLabel>
-                                <FormControl>
-                                  <div className="relative">
-                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: "rgba(255,255,255,0.25)" }} />
-                                    <input type="tel" placeholder="Enter your phone number" className={examInputClass} style={examInputStyle} {...field}
-                                      onFocus={(e) => { e.target.style.borderColor = "rgba(224,150,21,0.5)"; e.target.style.boxShadow = "0 0 0 3px rgba(224,150,21,0.1)"; }}
-                                      onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; field.onBlur(); }}
-                                    />
-                                  </div>
-                                </FormControl>
+                                {renderField("phone", "Phone Number", <Phone className="h-4 w-4" />, "tel", "Enter your phone number", field, formSettings ? !formSettings.phone_required : false)}
                                 <FormMessage />
                               </FormItem>
                             )} />
@@ -1408,20 +1417,20 @@ const TakeExam = () => {
                           const cf = customFieldDefs.find((c) => c.id === cfId);
                           if (!cf) return null;
                           return (
-                            <div key={cf.id} className="space-y-2">
-                              <label className="text-sm font-medium" style={examLabelStyle}>
+                            <div key={cf.id} style={{ animation: "fadeSlideUp 0.35s ease-out 0.2s both" }}>
+                              <label className="block text-[12px] font-semibold uppercase tracking-wider mb-2" style={{ color: "rgba(255,255,255,0.45)" }}>
                                 {cf.field_label}
-                                {!cf.is_required && <span className="text-xs ml-1" style={{ color: "rgba(255,255,255,0.3)" }}>(Optional)</span>}
+                                {!cf.is_required && <span className="normal-case tracking-normal font-normal ml-1.5" style={{ color: "rgba(255,255,255,0.25)" }}>(Optional)</span>}
                               </label>
                               {cf.field_type === "dropdown" ? (
                                 <select
                                   value={customFieldValues[cf.id] || ""}
                                   onChange={(e) => setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))}
-                                  className="w-full h-11 rounded-xl px-3 text-sm transition-all duration-200"
-                                  style={{ ...examInputStyle, paddingLeft: "12px" }}
+                                  className={inputBaseClass}
+                                  style={{ ...inputBaseStyle, paddingLeft: "14px", paddingRight: "14px" }}
                                   required={cf.is_required}
-                                  onFocus={(e) => { e.target.style.borderColor = "rgba(224,150,21,0.5)"; e.target.style.boxShadow = "0 0 0 3px rgba(224,150,21,0.1)"; }}
-                                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; }}
+                                  onFocus={(e) => focusIn(e)}
+                                  onBlur={(e) => focusOut(e)}
                                 >
                                   <option value="">Select {cf.field_label}</option>
                                   {cf.dropdown_options.map((opt) => (
@@ -1435,10 +1444,10 @@ const TakeExam = () => {
                                   value={customFieldValues[cf.id] || ""}
                                   onChange={(e) => setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))}
                                   required={cf.is_required}
-                                  className="w-full h-11 rounded-xl px-3 text-sm transition-all duration-200"
-                                  style={examInputStyle}
-                                  onFocus={(e) => { e.target.style.borderColor = "rgba(224,150,21,0.5)"; e.target.style.boxShadow = "0 0 0 3px rgba(224,150,21,0.1)"; }}
-                                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; }}
+                                  className={`${inputBaseClass} px-4`}
+                                  style={inputBaseStyle}
+                                  onFocus={(e) => focusIn(e)}
+                                  onBlur={(e) => focusOut(e)}
                                 />
                               )}
                             </div>
@@ -1448,20 +1457,33 @@ const TakeExam = () => {
                       });
                     })()}
 
-                    {/* Amber CTA with shimmer */}
+                    {/* CTA Button with ripple & arrow */}
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="w-full h-12 mt-3 rounded-xl font-exam font-bold text-base tracking-wide transition-all duration-300 relative overflow-hidden group"
+                      className="w-full h-[52px] mt-4 rounded-xl font-bold text-[15px] tracking-wide transition-all duration-300 relative overflow-hidden group flex items-center justify-center gap-2"
                       style={{
-                        background: "linear-gradient(135deg, #e09615, #d4880f)",
-                        color: "#0d0d0f",
-                        boxShadow: "0 4px 20px rgba(224,150,21,0.3), 0 0 40px rgba(224,150,21,0.08)",
+                        background: "linear-gradient(135deg, #F59E0B, #D97706)",
+                        color: "#080810",
+                        boxShadow: "0 4px 24px rgba(245,158,11,0.25), 0 0 60px rgba(245,158,11,0.06)",
+                        fontFamily: "'Inter', sans-serif",
+                      }}
+                      onClick={(e) => {
+                        const btn = e.currentTarget;
+                        const rect = btn.getBoundingClientRect();
+                        const ripple = document.createElement("span");
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        ripple.style.cssText = `position:absolute;border-radius:50%;background:rgba(255,255,255,0.3);width:0;height:0;left:${x}px;top:${y}px;transform:translate(-50%,-50%);pointer-events:none;animation:rippleEffect 0.6s ease-out;`;
+                        btn.appendChild(ripple);
+                        setTimeout(() => ripple.remove(), 600);
                       }}
                     >
-                      <span className="relative z-10">{submitting ? "Starting..." : "Start Exam"}</span>
-                      <div className="absolute inset-0 animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity" style={{
-                        background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
+                      <span className="relative z-10">{submitting ? "Starting..." : "Begin Examination"}</span>
+                      {!submitting && <ArrowRight className="h-4.5 w-4.5 relative z-10 transition-transform group-hover:translate-x-1" />}
+                      {/* Shimmer overlay */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer" style={{
+                        background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)",
                         backgroundSize: "200% 100%",
                       }} />
                     </button>
@@ -1471,6 +1493,33 @@ const TakeExam = () => {
             </div>
           </div>
         </div>
+
+        {/* Inline keyframes */}
+        <style>{`
+          @keyframes fadeSlideLeft {
+            from { opacity: 0; transform: translateX(-24px); }
+            to { opacity: 1; transform: translateX(0); }
+          }
+          @keyframes fadeSlideRight {
+            from { opacity: 0; transform: translateX(24px); }
+            to { opacity: 1; transform: translateX(0); }
+          }
+          @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes subtlePulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+          }
+          @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+          }
+          @keyframes rippleEffect {
+            to { width: 300px; height: 300px; opacity: 0; }
+          }
+        `}</style>
       </div>
     );
   }
