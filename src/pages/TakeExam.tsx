@@ -1208,25 +1208,95 @@ const TakeExam = () => {
       <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-4">
         <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-6 items-start">
           {/* Rules Panel */}
-          <Card className="w-full lg:w-[380px] shrink-0 border-primary/20">
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-2">
-                <ShieldAlert className="h-5 w-5 text-primary" />
-                <CardTitle className="font-serif text-lg">Rules & Regulations</CardTitle>
+          <Card className="w-full lg:w-[400px] shrink-0 border-primary/20 overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-primary via-primary/60 to-transparent" />
+            <CardHeader className="pb-2 pt-5">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
+                  <ShieldAlert className="h-4.5 w-4.5 text-primary" />
+                </div>
+                <div>
+                  <CardTitle className="font-serif text-lg leading-tight">Rules & Regulations</CardTitle>
+                  <CardDescription className="text-[11px] mt-0.5">Please read carefully before starting</CardDescription>
+                </div>
               </div>
-              <CardDescription className="text-xs">Please read carefully before starting</CardDescription>
             </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                {rules.map((rule, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-sm text-muted-foreground leading-relaxed">
-                    {rule.icon}
+            <CardContent className="pt-1 pb-5">
+              {/* Exam Info Summary */}
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                <div className="rounded-lg bg-muted/50 border border-border/50 px-3 py-2.5 text-center">
+                  <span className="block text-lg font-bold text-foreground">{questionCount}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                    Question{questionCount !== 1 ? "s" : ""}
+                  </span>
+                  {questionBreakdown && (
+                    <span className="block text-[9px] text-muted-foreground mt-0.5">{questionBreakdown}</span>
+                  )}
+                </div>
+                <div className="rounded-lg bg-muted/50 border border-border/50 px-3 py-2.5 text-center">
+                  <span className="block text-lg font-bold text-foreground">{exam?.time_limit || "∞"}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                    Minute{exam?.time_limit !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                {exam?.passing_percentage && (
+                  <div className="rounded-lg bg-green-500/5 border border-green-500/20 px-3 py-2.5 text-center col-span-2">
+                    <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                      Passing Score: {exam.passing_percentage}%
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Rules List */}
+              <div className="space-y-0">
+                {[
+                  {
+                    icon: <MonitorX className="h-3.5 w-3.5" />,
+                    text: "Do not switch tabs. Auto-submit on 2nd tab switch.",
+                    severity: "danger" as const,
+                  },
+                  {
+                    icon: <Fullscreen className="h-3.5 w-3.5" />,
+                    text: "Do not exit fullscreen. 5 seconds to return before auto-submit.",
+                    severity: "danger" as const,
+                  },
+                  {
+                    icon: <RotateCcw className="h-3.5 w-3.5" />,
+                    text: "One attempt only unless reattempt is granted.",
+                    severity: "normal" as const,
+                  },
+                  {
+                    icon: <Eye className="h-3.5 w-3.5" />,
+                    text: exam?.result_visibility === "after_exam_ends"
+                      ? "Results available after exam period ends."
+                      : "Results shown immediately after submission.",
+                    severity: "normal" as const,
+                  },
+                  {
+                    icon: <Link2 className="h-3.5 w-3.5" />,
+                    text: "Visit this same link later to view your result.",
+                    severity: "normal" as const,
+                  },
+                ].map((rule, i) => (
+                  <div
+                    key={i}
+                    className={`flex items-start gap-2.5 px-3 py-2.5 rounded-md text-[13px] leading-relaxed ${
+                      rule.severity === "danger"
+                        ? "text-destructive/90"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    <span className={`shrink-0 mt-0.5 ${rule.severity === "danger" ? "text-destructive" : "text-muted-foreground/60"}`}>
+                      {rule.icon}
+                    </span>
                     <span>{rule.text}</span>
-                  </li>
+                  </div>
                 ))}
-              </ul>
-              <div className="mt-5 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2.5">
-                <p className="text-xs text-destructive font-medium flex items-center gap-1.5">
+              </div>
+
+              <div className="mt-4 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2.5">
+                <p className="text-[11px] text-destructive font-medium flex items-center gap-1.5">
                   <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
                   Any violation will be recorded and visible to the examiner.
                 </p>
