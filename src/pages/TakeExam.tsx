@@ -1323,9 +1323,9 @@ const TakeExam = () => {
                 </div>
 
                 {/* Form header */}
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold" style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif" }}>{exam?.title || "Examination"}</h2>
-                  <p className="text-[13px] mt-1.5 leading-relaxed" style={{ color: "rgba(255,255,255,0.4)" }}>
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold" style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif" }}>{exam?.title || "Examination"}</h2>
+                  <p className="text-[12px] mt-1 leading-relaxed" style={{ color: "rgba(255,255,255,0.4)" }}>
                     {exam?.description || "Complete the registration form below to begin your examination"}
                   </p>
                 </div>
