@@ -1159,13 +1159,18 @@ const TakeExam = () => {
   // Student info form
   if (!studentInfo) {
     const questionCount = questions.length;
-    const mcqCount = questions.filter(q => q.question_type === "mcq" || q.question_type !== "text").length;
+    const mcqCount = questions.filter(q => q.question_type === "mcq").length;
     const textCount = questions.filter(q => q.question_type === "text").length;
+
+    const questionBreakdown = [
+      mcqCount > 0 ? `${mcqCount} MCQ` : null,
+      textCount > 0 ? `${textCount} written` : null,
+    ].filter(Boolean).join(", ");
 
     const rules = [
       {
         icon: <BookOpen className="h-4 w-4 text-primary shrink-0 mt-0.5" />,
-        text: `This exam contains ${questionCount} question${questionCount !== 1 ? "s" : ""}${mcqCount > 0 && textCount > 0 ? ` (${mcqCount - textCount} MCQ, ${textCount} written)` : ""}.`,
+        text: `This exam contains ${questionCount} question${questionCount !== 1 ? "s" : ""}${questionBreakdown ? ` (${questionBreakdown})` : ""}.`,
       },
       ...(exam?.time_limit ? [{
         icon: <Clock className="h-4 w-4 text-primary shrink-0 mt-0.5" />,
