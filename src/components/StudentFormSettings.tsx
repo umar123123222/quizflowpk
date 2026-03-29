@@ -260,6 +260,22 @@ const StudentFormSettings = () => {
     },
   });
 
+  const toggleCustomRequiredMutation = useMutation({
+    mutationFn: async ({ fieldId, isRequired }: { fieldId: string; isRequired: boolean }) => {
+      const { error } = await supabase
+        .from("organization_custom_fields")
+        .update({ is_required: isRequired })
+        .eq("id", fieldId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["custom-fields"] });
+    },
+    onError: (err: any) => {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
   const toggleVisible = (field: keyof FormSettings) => {
     setSettings((prev) => ({
       ...prev,
