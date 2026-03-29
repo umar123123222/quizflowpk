@@ -818,7 +818,7 @@ const CreateExam = () => {
                           onChange={(e) => updateQuestion(qIndex, "correctAnswer", e.target.value)}
                           placeholder="Enter the expected answer for reference..."
                           rows={3}
-                          className="w-full rounded-md bg-[hsl(var(--dashboard-card))] border border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                          className="w-full rounded-md dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] border dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] dark:text-[hsl(var(--dashboard-text)/.9)] text-white dark:placeholder:text-[hsl(var(--dashboard-text)/.7)] placeholder:text-[#6b7494] text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
                         />
                         <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.75)]">
                           Students will type their answer in a text field
