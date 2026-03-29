@@ -403,6 +403,10 @@ const TakeExam = () => {
     const submissionAnswers: Record<string, any> = { ...translatedAnswers };
     if (studentInfo.customFields && Object.keys(studentInfo.customFields).length > 0) {
       submissionAnswers._customFields = studentInfo.customFields;
+      // Store field labels alongside values for display even if fields are later deleted
+      const cfLabels: Record<string, string> = {};
+      customFieldDefs.forEach((cf) => { cfLabels[cf.id] = cf.field_label; });
+      submissionAnswers._customFieldLabels = cfLabels;
     }
 
     // Determine pass/fail for MCQ-only exams; mixed exams wait for manual review

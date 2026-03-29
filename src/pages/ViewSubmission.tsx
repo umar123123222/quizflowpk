@@ -90,15 +90,21 @@ const ViewSubmission = () => {
 
       if (customFields && Object.keys(customFields).length > 0) {
         setCustomFieldData(customFields);
-        const cfIds = Object.keys(customFields);
-        const { data: cfDefs } = await supabase
-          .from("organization_custom_fields")
-          .select("id, field_label")
-          .in("id", cfIds);
-        if (cfDefs) {
-          const labels: Record<string, string> = {};
-          cfDefs.forEach((cf: any) => { labels[cf.id] = cf.field_label; });
-          setCustomFieldLabels(labels);
+        // First try embedded labels (new format), then fall back to DB lookup
+        const embeddedLabels = answersObj._customFieldLabels as Record<string, string> | undefined;
+        if (embeddedLabels && Object.keys(embeddedLabels).length > 0) {
+          setCustomFieldLabels(embeddedLabels);
+        } else {
+          const cfIds = Object.keys(customFields);
+          const { data: cfDefs } = await supabase
+            .from("organization_custom_fields")
+            .select("id, field_label")
+            .in("id", cfIds);
+          if (cfDefs) {
+            const labels: Record<string, string> = {};
+            cfDefs.forEach((cf: any) => { labels[cf.id] = cf.field_label; });
+            setCustomFieldLabels(labels);
+          }
         }
       }
 
@@ -309,7 +315,7 @@ const ViewSubmission = () => {
                         <div key={fieldId} className="flex items-center gap-2 text-muted-foreground">
                           <ClipboardList className="h-4 w-4 shrink-0" />
                           <span>
-                            {customFieldLabels[fieldId] || fieldId}:{" "}
+                            {customFieldLabels[fieldId] || "Custom Field"}:{" "}
                             <span className="font-medium text-foreground">{value || "—"}</span>
                           </span>
                         </div>
