@@ -1275,20 +1275,19 @@ const TakeExam = () => {
                 </div>
 
                 {/* Warning banner with blinking dot */}
-                <div className="mt-5 rounded-xl overflow-hidden relative" style={{
+                <div className="mt-3 rounded-lg overflow-hidden relative" style={{
                   background: "rgba(239,68,68,0.05)",
                   border: "1px solid rgba(239,68,68,0.15)",
                   animation: "fadeSlideUp 0.4s ease-out 0.6s both",
                 }}>
-                  <div className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: "#ef4444" }} />
-                  <div className="px-4 py-3.5 flex items-start gap-3">
-                    {/* Blinking alert dot */}
-                    <div className="shrink-0 mt-0.5 relative">
-                      <div className="h-2.5 w-2.5 rounded-full" style={{ background: "#ef4444", animation: "blink 1.5s ease-in-out infinite" }} />
-                      <div className="absolute inset-0 h-2.5 w-2.5 rounded-full" style={{ background: "#ef4444", animation: "blink 1.5s ease-in-out infinite", filter: "blur(4px)" }} />
+                  <div className="absolute left-0 top-0 bottom-0 w-[2px]" style={{ background: "#ef4444" }} />
+                  <div className="px-3 py-2 flex items-center gap-2">
+                    <div className="shrink-0 relative">
+                      <div className="h-2 w-2 rounded-full" style={{ background: "#ef4444", animation: "blink 1.5s ease-in-out infinite" }} />
+                      <div className="absolute inset-0 h-2 w-2 rounded-full" style={{ background: "#ef4444", animation: "blink 1.5s ease-in-out infinite", filter: "blur(4px)" }} />
                     </div>
-                    <p className="text-[12px] font-medium leading-snug" style={{ color: "rgba(239,68,68,0.85)" }}>
-                      All violations are recorded and visible to the examiner. Proceed with integrity.
+                    <p className="text-[11px] font-medium leading-snug" style={{ color: "rgba(239,68,68,0.85)" }}>
+                      All violations are recorded and visible to the examiner.
                     </p>
                   </div>
                 </div>
