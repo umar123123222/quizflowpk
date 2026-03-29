@@ -89,7 +89,7 @@ export function OwnerSidebar() {
 
       <SidebarFooter className="px-4 py-4 border-t border-[hsl(228,20%,22%)]">
         <div className="flex items-center gap-3 mb-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgba(224,150,21,0.15)] font-mono text-xs font-medium text-[#e09615]">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e09615] font-mono text-xs font-medium text-white">
             {initials}
           </div>
           {!collapsed && (
