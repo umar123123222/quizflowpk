@@ -315,7 +315,7 @@ const ViewSubmission = () => {
                         <div key={fieldId} className="flex items-center gap-2 text-muted-foreground">
                           <ClipboardList className="h-4 w-4 shrink-0" />
                           <span>
-                            {customFieldLabels[fieldId] || fieldId}:{" "}
+                            {customFieldLabels[fieldId] || "Custom Field"}:{" "}
                             <span className="font-medium text-foreground">{value || "—"}</span>
                           </span>
                         </div>
