@@ -745,9 +745,9 @@ const CreateExam = () => {
                               placeholder={`${q.type === "mcq" ? (defaultMcqMarks || 1) : (defaultTextMarks || 1)}`}
                               min={0.5}
                               step={0.5}
-                              className="w-16 h-7 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] text-xs text-center focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                              className="w-16 h-7 dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] dark:text-[hsl(var(--dashboard-text)/.9)] text-[#e09615] dark:placeholder:text-[hsl(var(--dashboard-text)/.7)] placeholder:text-[#6b7494] text-xs text-center font-bold focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                             />
-                            <span className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.65)]">marks</span>
+                            <span className="font-mono text-[9px] dark:text-[hsl(var(--dashboard-text)/.65)] text-[#6b7494]">marks</span>
                           </div>
                         )}
                         {questions.length > 1 && (
@@ -767,7 +767,7 @@ const CreateExam = () => {
                       value={q.text}
                       onChange={(e) => updateQuestion(qIndex, "text", e.target.value)}
                       placeholder="Enter your question..."
-                      className="mb-4 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                      className="mb-4 dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] dark:text-[hsl(var(--dashboard-text)/.9)] text-white dark:placeholder:text-[hsl(var(--dashboard-text)/.7)] placeholder:text-[#6b7494] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                     />
 
                     {q.type === "mcq" ? (
@@ -783,11 +783,15 @@ const CreateExam = () => {
                               <RadioGroupItem
                                 value={optionLabels[oIndex]}
                                 id={`q${qIndex}-opt${oIndex}`}
-                                className="border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[hsl(var(--dashboard-gold))]"
+                                className="dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-green-500 data-[state=checked]:text-green-500"
                               />
                               <Label
                                 htmlFor={`q${qIndex}-opt${oIndex}`}
-                                className="font-mono text-[11px] font-bold text-[hsl(var(--dashboard-text)/.8)] w-4 shrink-0"
+                                className={`font-mono text-[11px] font-bold w-4 shrink-0 ${
+                                  q.correctAnswer === optionLabels[oIndex]
+                                    ? "text-white"
+                                    : "dark:text-[hsl(var(--dashboard-text)/.8)] text-[#6b7494]"
+                                }`}
                               >
                                 {optionLabels[oIndex]}
                               </Label>
@@ -795,7 +799,7 @@ const CreateExam = () => {
                                 value={opt}
                                 onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
                                 placeholder={`Option ${optionLabels[oIndex]}`}
-                                className="flex-1 bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                                className={`flex-1 dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] dark:text-[hsl(var(--dashboard-text)/.9)] text-white dark:placeholder:text-[hsl(var(--dashboard-text)/.7)] placeholder:text-[#6b7494] text-sm focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]`}
                               />
                             </div>
                           ))}
@@ -814,7 +818,7 @@ const CreateExam = () => {
                           onChange={(e) => updateQuestion(qIndex, "correctAnswer", e.target.value)}
                           placeholder="Enter the expected answer for reference..."
                           rows={3}
-                          className="w-full rounded-md bg-[hsl(var(--dashboard-card))] border border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
+                          className="w-full rounded-md dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] border dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] dark:text-[hsl(var(--dashboard-text)/.9)] text-white dark:placeholder:text-[hsl(var(--dashboard-text)/.7)] placeholder:text-[#6b7494] text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--dashboard-gold)/0.4)]"
                         />
                         <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.75)]">
                           Students will type their answer in a text field
