@@ -1168,268 +1168,306 @@ const TakeExam = () => {
     ].filter(Boolean).join(", ");
 
     return (
-      <div className="min-h-screen flex items-center justify-center text-foreground p-4 relative overflow-hidden" style={{ background: "hsl(var(--background))" }}>
-        {/* Subtle grid background */}
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground) / 0.3) 1px, transparent 0)`,
-          backgroundSize: "28px 28px",
+      <div className="min-h-screen flex flex-col text-foreground relative overflow-hidden" style={{ background: "#0d0d0f" }}>
+        {/* Animated dot-grid background */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.035]" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.6) 1px, transparent 0)`,
+          backgroundSize: "24px 24px",
         }} />
+        {/* Ambient glow */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: "radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.04) 0%, transparent 60%)",
+          background: "radial-gradient(ellipse at 30% 20%, rgba(224,150,21,0.04) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(224,150,21,0.02) 0%, transparent 50%)",
         }} />
 
-        <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-6 items-start relative z-10">
-          {/* Rules Panel */}
-          <div className="w-full lg:w-[400px] shrink-0 rounded-xl border border-primary/20 overflow-hidden backdrop-blur-sm"
-            style={{
-              background: "hsl(var(--card) / 0.85)",
-              boxShadow: "0 0 30px -10px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--primary) / 0.05)",
-            }}
-          >
-            <div className="h-1 bg-gradient-to-r from-primary via-primary/60 to-transparent" />
-            <div className="px-5 pt-5 pb-2">
-              <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center" style={{ boxShadow: "0 0 12px hsl(var(--primary) / 0.15)" }}>
-                  <ShieldAlert className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <h2 className="font-serif text-lg font-bold leading-tight text-foreground">Rules & Regulations</h2>
-                  <p className="text-[11px] mt-0.5 text-muted-foreground">Please read carefully before starting</p>
-                </div>
-              </div>
+        {/* Top header bar */}
+        <div className="relative z-20 w-full px-6 py-4 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(224,150,21,0.12)" }}>
+              <BookOpen className="h-4 w-4" style={{ color: "#e09615" }} />
             </div>
-            <div className="px-5 pt-1 pb-5">
-              {/* Exam Info Stats */}
-              <div className="grid grid-cols-2 gap-2.5 mb-4">
-                <div className="rounded-lg border border-border/60 px-3 py-3 text-center relative overflow-hidden"
-                  style={{
-                    background: "hsl(var(--muted) / 0.5)",
-                    boxShadow: "inset 0 1px 8px hsl(var(--primary) / 0.06), 0 1px 2px hsl(var(--background) / 0.3)",
-                  }}
-                >
-                  <span className="block text-xl font-bold text-foreground font-serif">{questionCount}</span>
-                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
-                    Question{questionCount !== 1 ? "s" : ""}
-                  </span>
-                  {questionBreakdown && (
-                    <span className="block text-[9px] text-muted-foreground/80 mt-0.5">{questionBreakdown}</span>
-                  )}
-                </div>
-                <div className="rounded-lg border border-border/60 px-3 py-3 text-center relative overflow-hidden"
-                  style={{
-                    background: "hsl(var(--muted) / 0.5)",
-                    boxShadow: "inset 0 1px 8px hsl(var(--primary) / 0.06), 0 1px 2px hsl(var(--background) / 0.3)",
-                  }}
-                >
-                  <span className="block text-xl font-bold text-foreground font-serif">{exam?.time_limit || "∞"}</span>
-                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
-                    Minute{exam?.time_limit !== 1 ? "s" : ""}
-                  </span>
-                </div>
-                {exam?.passing_percentage && (
-                  <div className="rounded-lg border border-green-500/20 px-3 py-2.5 text-center col-span-2"
-                    style={{
-                      background: "hsl(142 76% 36% / 0.06)",
-                      boxShadow: "inset 0 0 12px hsl(142 76% 36% / 0.05)",
-                    }}
-                  >
-                    <span className="text-sm font-semibold text-green-600 dark:text-green-400">
-                      Passing Score: {exam.passing_percentage}%
-                    </span>
-                  </div>
-                )}
+            <span className="font-exam text-lg font-bold tracking-tight" style={{ color: "#e09615" }}>QuizFlow</span>
+          </div>
+          <div className="flex items-center gap-3">
+            {exam?.time_limit && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)" }}>
+                <Clock className="h-3 w-3" />
+                {exam.time_limit} min
               </div>
-
-              {/* Rules List */}
-              <div className="space-y-0">
-                {[
-                  {
-                    icon: <MonitorX className="h-3.5 w-3.5" />,
-                    text: "Do not switch tabs. Auto-submit on 2nd tab switch.",
-                    severity: "danger" as const,
-                  },
-                  {
-                    icon: <Fullscreen className="h-3.5 w-3.5" />,
-                    text: "Do not exit fullscreen. 5 seconds to return before auto-submit.",
-                    severity: "danger" as const,
-                  },
-                  {
-                    icon: <RotateCcw className="h-3.5 w-3.5" />,
-                    text: "One attempt only unless reattempt is granted.",
-                    severity: "normal" as const,
-                  },
-                  {
-                    icon: <Eye className="h-3.5 w-3.5" />,
-                    text: exam?.result_visibility === "after_exam_ends"
-                      ? "Results available after exam period ends."
-                      : "Results shown immediately after submission.",
-                    severity: "normal" as const,
-                  },
-                  {
-                    icon: <Link2 className="h-3.5 w-3.5" />,
-                    text: "Visit this same link later to view your result.",
-                    severity: "normal" as const,
-                  },
-                ].map((rule, i) => (
-                  <div
-                    key={i}
-                    className={`flex items-start gap-2.5 px-3 py-2.5 rounded-md text-[13px] leading-relaxed ${
-                      rule.severity === "danger"
-                        ? "text-destructive/90"
-                        : "text-muted-foreground"
-                    }`}
-                  >
-                    <span className={`shrink-0 mt-0.5 ${rule.severity === "danger" ? "text-destructive" : "text-muted-foreground/60"}`}>
-                      {rule.icon}
-                    </span>
-                    <span>{rule.text}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Warning banner with pulsing red left border */}
-              <div className="mt-4 rounded-lg border border-destructive/30 overflow-hidden relative"
-                style={{ background: "hsl(var(--destructive) / 0.06)" }}
-              >
-                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-destructive animate-pulse" />
-                <div className="px-4 py-3">
-                  <p className="text-[12px] text-destructive font-semibold flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 shrink-0" />
-                    Any violation will be recorded and visible to the examiner.
-                  </p>
-                </div>
-              </div>
+            )}
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)" }}>
+              <ClipboardList className="h-3 w-3" />
+              {questionCount} Q{questionCount !== 1 ? "s" : ""}
             </div>
           </div>
+        </div>
 
-          {/* Student Form */}
-          <div className="w-full lg:flex-1 rounded-xl border border-border/50 overflow-hidden backdrop-blur-sm"
-            style={{
-              background: "hsl(var(--card) / 0.85)",
-              boxShadow: "0 0 30px -10px hsl(var(--foreground) / 0.05), inset 0 1px 0 hsl(var(--foreground) / 0.03)",
-            }}
-          >
-            <div className="px-6 pt-6 pb-3 text-center">
-              <h2 className="font-serif text-2xl font-bold text-foreground">{exam?.title || "Exam"}</h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                {exam?.description || "Please enter your details to start the exam"}
-              </p>
+        {/* Main content */}
+        <div className="flex-1 flex items-center justify-center px-4 py-6 relative z-10">
+          <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 items-stretch">
+
+            {/* Left Panel — Rules */}
+            <div className="w-full lg:w-[420px] shrink-0 rounded-2xl overflow-hidden relative" style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.07)",
+              backdropFilter: "blur(12px)",
+            }}>
+              {/* Bold amber accent stripe */}
+              <div className="h-1.5" style={{ background: "linear-gradient(90deg, #e09615, #e09615 60%, transparent)" }} />
+
+              <div className="p-6">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(224,150,21,0.1)", boxShadow: "0 0 20px rgba(224,150,21,0.1)" }}>
+                    <ShieldAlert className="h-5 w-5" style={{ color: "#e09615" }} />
+                  </div>
+                  <div>
+                    <h2 className="font-exam text-base font-bold" style={{ color: "#ffffff" }}>Rules & Regulations</h2>
+                    <p className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>Read carefully before starting</p>
+                  </div>
+                </div>
+
+                {/* Stats row */}
+                <div className="grid grid-cols-3 gap-2 mb-5">
+                  <div className="rounded-xl px-3 py-3 text-center" style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    boxShadow: "inset 0 1px 12px rgba(224,150,21,0.04)",
+                  }}>
+                    <span className="block text-xl font-bold font-exam" style={{ color: "#e09615" }}>{questionCount}</span>
+                    <span className="text-[9px] uppercase tracking-widest font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>
+                      Questions
+                    </span>
+                    {questionBreakdown && (
+                      <span className="block text-[8px] mt-0.5" style={{ color: "rgba(255,255,255,0.25)" }}>{questionBreakdown}</span>
+                    )}
+                  </div>
+                  <div className="rounded-xl px-3 py-3 text-center" style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    boxShadow: "inset 0 1px 12px rgba(224,150,21,0.04)",
+                  }}>
+                    <span className="block text-xl font-bold font-exam" style={{ color: "#e09615" }}>{exam?.time_limit || "∞"}</span>
+                    <span className="text-[9px] uppercase tracking-widest font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>
+                      Minutes
+                    </span>
+                  </div>
+                  <div className="rounded-xl px-3 py-3 text-center" style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    boxShadow: "inset 0 1px 12px rgba(34,197,94,0.04)",
+                  }}>
+                    <span className="block text-xl font-bold font-exam" style={{ color: "#22c55e" }}>{exam?.passing_percentage ?? 50}%</span>
+                    <span className="text-[9px] uppercase tracking-widest font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>
+                      To Pass
+                    </span>
+                  </div>
+                </div>
+
+                {/* Rule items */}
+                <div className="space-y-1">
+                  {[
+                    { icon: <MonitorX className="h-4 w-4" />, text: "Do not switch tabs — auto-submit on 2nd violation", severity: "danger" as const },
+                    { icon: <Fullscreen className="h-4 w-4" />, text: "Stay in fullscreen — 5s to return before auto-submit", severity: "danger" as const },
+                    { icon: <RotateCcw className="h-4 w-4" />, text: "Single attempt only unless reattempt is granted", severity: "normal" as const },
+                    { icon: <Eye className="h-4 w-4" />, text: exam?.result_visibility === "after_exam_ends" ? "Results available after exam period ends" : "Results shown immediately after submission", severity: "normal" as const },
+                    { icon: <Link2 className="h-4 w-4" />, text: "Revisit this link anytime to check your result", severity: "normal" as const },
+                  ].map((rule, i) => (
+                    <div key={i} className="flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors" style={{
+                      background: rule.severity === "danger" ? "rgba(239,68,68,0.05)" : "transparent",
+                    }}>
+                      <span className="shrink-0 mt-0.5 h-7 w-7 rounded-lg flex items-center justify-center" style={{
+                        background: rule.severity === "danger" ? "rgba(239,68,68,0.1)" : "rgba(255,255,255,0.04)",
+                        color: rule.severity === "danger" ? "#ef4444" : "rgba(255,255,255,0.4)",
+                      }}>
+                        {rule.icon}
+                      </span>
+                      <span className="text-[13px] leading-relaxed pt-0.5" style={{
+                        color: rule.severity === "danger" ? "rgba(239,68,68,0.85)" : "rgba(255,255,255,0.5)",
+                      }}>
+                        {rule.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Animated warning banner */}
+                <div className="mt-5 rounded-xl overflow-hidden relative" style={{
+                  background: "rgba(239,68,68,0.06)",
+                  border: "1px solid rgba(239,68,68,0.15)",
+                }}>
+                  <div className="absolute left-0 top-0 bottom-0 w-1 animate-pulse-glow" style={{ background: "#ef4444" }} />
+                  <div className="px-4 py-3.5 flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0 animate-pulse" style={{ background: "rgba(239,68,68,0.12)" }}>
+                      <AlertTriangle className="h-4 w-4" style={{ color: "#ef4444" }} />
+                    </div>
+                    <p className="text-[12px] font-semibold leading-snug" style={{ color: "rgba(239,68,68,0.9)" }}>
+                      All violations are recorded and visible to the examiner. Proceed with integrity.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="px-6 pb-6">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onStudentSubmit)} className="space-y-4">
-                  {(() => {
-                    const order = formSettings?.field_order || ["name", "email", "phone"];
-                    const allCustomIds = customFieldDefs.map((cf) => `custom:${cf.id}`);
-                    const fullOrder = [...order];
-                    for (const cid of allCustomIds) {
-                      if (!fullOrder.includes(cid)) fullOrder.push(cid);
-                    }
-                    for (const d of ["name", "email", "phone"]) {
-                      if (!fullOrder.includes(d)) fullOrder.push(d);
-                    }
 
-                    return fullOrder.map((key) => {
-                      if (key === "name") {
-                        return (
-                          <FormField key="name" control={form.control} name="fullName" render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-foreground font-medium text-sm">Full Name</FormLabel>
-                              <FormControl>
-                                <div className="relative">
-                                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                  <Input placeholder="Enter your full name" className="pl-10 border-border/80 bg-background/50 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-shadow" {...field} />
-                                </div>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )} />
-                        );
-                      }
-                      if (key === "email" && (!formSettings || formSettings.email_visible)) {
-                        return (
-                          <FormField key="email" control={form.control} name="email" render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-foreground font-medium text-sm">Email{formSettings && !formSettings.email_required ? " (Optional)" : ""}</FormLabel>
-                              <FormControl>
-                                <div className="relative">
-                                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                  <Input type="email" placeholder="Enter your email" className="pl-10 border-border/80 bg-background/50 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-shadow" {...field} />
-                                </div>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )} />
-                        );
-                      }
-                      if (key === "phone" && (!formSettings || formSettings.phone_visible)) {
-                        return (
-                          <FormField key="phone" control={form.control} name="phone" render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-foreground font-medium text-sm">Phone Number{formSettings && !formSettings.phone_required ? " (Optional)" : ""}</FormLabel>
-                              <FormControl>
-                                <div className="relative">
-                                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                  <Input type="tel" placeholder="Enter your phone number" className="pl-10 border-border/80 bg-background/50 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-shadow" {...field} />
-                                </div>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )} />
-                        );
-                      }
-                      if (key.startsWith("custom:")) {
-                        const cfId = key.replace("custom:", "");
-                        const cf = customFieldDefs.find((c) => c.id === cfId);
-                        if (!cf) return null;
-                        return (
-                          <div key={cf.id} className="space-y-2">
-                            <Label className="text-foreground font-medium text-sm">
-                              {cf.field_label}
-                              {!cf.is_required && <span className="text-muted-foreground text-xs ml-1">(Optional)</span>}
-                            </Label>
-                            {cf.field_type === "dropdown" ? (
-                              <select
-                                value={customFieldValues[cf.id] || ""}
-                                onChange={(e) =>
-                                  setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
-                                }
-                                className="w-full rounded-md border border-border/80 bg-background/50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-shadow"
-                                required={cf.is_required}
-                              >
-                                <option value="">Select {cf.field_label}</option>
-                                {cf.dropdown_options.map((opt) => (
-                                  <option key={opt} value={opt}>{opt}</option>
-                                ))}
-                              </select>
-                            ) : (
-                              <Input
-                                type={cf.field_type === "number" ? "number" : "text"}
-                                placeholder={`Enter ${cf.field_label.toLowerCase()}`}
-                                value={customFieldValues[cf.id] || ""}
-                                onChange={(e) =>
-                                  setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
-                                }
-                                required={cf.is_required}
-                                className="border-border/80 bg-background/50 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-shadow"
-                              />
-                            )}
-                          </div>
-                        );
-                      }
-                      return null;
-                    });
-                  })()}
+            {/* Right Panel — Registration Form */}
+            <div className="w-full lg:flex-1 rounded-2xl overflow-hidden relative" style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.07)",
+              backdropFilter: "blur(12px)",
+              boxShadow: "0 4px 40px rgba(0,0,0,0.2)",
+            }}>
+              <div className="p-6 lg:p-8">
+                {/* Form header */}
+                <div className="mb-6">
+                  <h2 className="font-exam text-2xl font-bold" style={{ color: "#ffffff" }}>{exam?.title || "Exam"}</h2>
+                  <p className="text-sm mt-1.5" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    {exam?.description || "Enter your details to begin the examination"}
+                  </p>
+                </div>
 
-                  <Button
-                    type="submit"
-                    className="w-full mt-2 border-0 font-semibold text-white transition-all hover:shadow-lg"
-                    style={{ backgroundColor: "hsl(var(--primary))", boxShadow: "0 4px 14px hsl(var(--primary) / 0.3)" }}
-                  >
-                    Start Exam
-                  </Button>
-                </form>
-              </Form>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onStudentSubmit)} className="space-y-4">
+                    {(() => {
+                      const order = formSettings?.field_order || ["name", "email", "phone"];
+                      const allCustomIds = customFieldDefs.map((cf) => `custom:${cf.id}`);
+                      const fullOrder = [...order];
+                      for (const cid of allCustomIds) {
+                        if (!fullOrder.includes(cid)) fullOrder.push(cid);
+                      }
+                      for (const d of ["name", "email", "phone"]) {
+                        if (!fullOrder.includes(d)) fullOrder.push(d);
+                      }
+
+                      const examInputClass = "pl-10 h-11 rounded-xl text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-0";
+                      const examInputStyle = {
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        color: "#ffffff",
+                      };
+                      const examLabelStyle = { color: "rgba(255,255,255,0.6)" };
+
+                      return fullOrder.map((key) => {
+                        if (key === "name") {
+                          return (
+                            <FormField key="name" control={form.control} name="fullName" render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-sm font-medium" style={examLabelStyle}>Full Name</FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: "rgba(255,255,255,0.25)" }} />
+                                    <input placeholder="Enter your full name" className={examInputClass} style={examInputStyle} {...field}
+                                      onFocus={(e) => { e.target.style.borderColor = "rgba(224,150,21,0.5)"; e.target.style.boxShadow = "0 0 0 3px rgba(224,150,21,0.1)"; }}
+                                      onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; field.onBlur(); }}
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )} />
+                          );
+                        }
+                        if (key === "email" && (!formSettings || formSettings.email_visible)) {
+                          return (
+                            <FormField key="email" control={form.control} name="email" render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-sm font-medium" style={examLabelStyle}>Email{formSettings && !formSettings.email_required ? " (Optional)" : ""}</FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: "rgba(255,255,255,0.25)" }} />
+                                    <input type="email" placeholder="Enter your email" className={examInputClass} style={examInputStyle} {...field}
+                                      onFocus={(e) => { e.target.style.borderColor = "rgba(224,150,21,0.5)"; e.target.style.boxShadow = "0 0 0 3px rgba(224,150,21,0.1)"; }}
+                                      onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; field.onBlur(); }}
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )} />
+                          );
+                        }
+                        if (key === "phone" && (!formSettings || formSettings.phone_visible)) {
+                          return (
+                            <FormField key="phone" control={form.control} name="phone" render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-sm font-medium" style={examLabelStyle}>Phone{formSettings && !formSettings.phone_required ? " (Optional)" : ""}</FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: "rgba(255,255,255,0.25)" }} />
+                                    <input type="tel" placeholder="Enter your phone number" className={examInputClass} style={examInputStyle} {...field}
+                                      onFocus={(e) => { e.target.style.borderColor = "rgba(224,150,21,0.5)"; e.target.style.boxShadow = "0 0 0 3px rgba(224,150,21,0.1)"; }}
+                                      onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; field.onBlur(); }}
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )} />
+                          );
+                        }
+                        if (key.startsWith("custom:")) {
+                          const cfId = key.replace("custom:", "");
+                          const cf = customFieldDefs.find((c) => c.id === cfId);
+                          if (!cf) return null;
+                          return (
+                            <div key={cf.id} className="space-y-2">
+                              <label className="text-sm font-medium" style={examLabelStyle}>
+                                {cf.field_label}
+                                {!cf.is_required && <span className="text-xs ml-1" style={{ color: "rgba(255,255,255,0.3)" }}>(Optional)</span>}
+                              </label>
+                              {cf.field_type === "dropdown" ? (
+                                <select
+                                  value={customFieldValues[cf.id] || ""}
+                                  onChange={(e) => setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))}
+                                  className="w-full h-11 rounded-xl px-3 text-sm transition-all duration-200"
+                                  style={{ ...examInputStyle, paddingLeft: "12px" }}
+                                  required={cf.is_required}
+                                  onFocus={(e) => { e.target.style.borderColor = "rgba(224,150,21,0.5)"; e.target.style.boxShadow = "0 0 0 3px rgba(224,150,21,0.1)"; }}
+                                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; }}
+                                >
+                                  <option value="">Select {cf.field_label}</option>
+                                  {cf.dropdown_options.map((opt) => (
+                                    <option key={opt} value={opt}>{opt}</option>
+                                  ))}
+                                </select>
+                              ) : (
+                                <input
+                                  type={cf.field_type === "number" ? "number" : "text"}
+                                  placeholder={`Enter ${cf.field_label.toLowerCase()}`}
+                                  value={customFieldValues[cf.id] || ""}
+                                  onChange={(e) => setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))}
+                                  required={cf.is_required}
+                                  className="w-full h-11 rounded-xl px-3 text-sm transition-all duration-200"
+                                  style={examInputStyle}
+                                  onFocus={(e) => { e.target.style.borderColor = "rgba(224,150,21,0.5)"; e.target.style.boxShadow = "0 0 0 3px rgba(224,150,21,0.1)"; }}
+                                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; }}
+                                />
+                              )}
+                            </div>
+                          );
+                        }
+                        return null;
+                      });
+                    })()}
+
+                    {/* Amber CTA with shimmer */}
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="w-full h-12 mt-3 rounded-xl font-exam font-bold text-base tracking-wide transition-all duration-300 relative overflow-hidden group"
+                      style={{
+                        background: "linear-gradient(135deg, #e09615, #d4880f)",
+                        color: "#0d0d0f",
+                        boxShadow: "0 4px 20px rgba(224,150,21,0.3), 0 0 40px rgba(224,150,21,0.08)",
+                      }}
+                    >
+                      <span className="relative z-10">{submitting ? "Starting..." : "Start Exam"}</span>
+                      <div className="absolute inset-0 animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity" style={{
+                        background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
+                        backgroundSize: "200% 100%",
+                      }} />
+                    </button>
+                  </form>
+                </Form>
+              </div>
             </div>
           </div>
         </div>
