@@ -50,7 +50,7 @@ const Hero = () => {
             Build engaging quizzes{" "}
             <span style={{
               background: isDark
-                ? 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 60%, #c98a1a 100%)'
+                ? 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 60%, #e09615 100%)'
                 : 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 60%, #e09615 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
