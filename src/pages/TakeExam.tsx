@@ -1273,11 +1273,6 @@ const TakeExam = () => {
               <CardTitle className="font-serif text-2xl">{exam?.title || "Exam"}</CardTitle>
               <CardDescription>
                 {exam?.description || "Please enter your details to start the exam"}
-                {exam?.time_limit && (
-                  <span className="block mt-2 text-primary font-medium">
-                    ⏱ Time Limit: {exam.time_limit} minute{exam.time_limit !== 1 ? "s" : ""}
-                  </span>
-                )}
               </CardDescription>
             </CardHeader>
             <CardContent>
