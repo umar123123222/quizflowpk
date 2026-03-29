@@ -1343,7 +1343,7 @@ const TakeExam = () => {
                         if (!fullOrder.includes(d)) fullOrder.push(d);
                       }
 
-                      const inputBaseClass = "w-full h-12 rounded-xl text-sm outline-none transition-all duration-200";
+                      const inputBaseClass = "w-full h-10 rounded-xl text-sm outline-none transition-all duration-200";
                       const inputBaseStyle = {
                         background: "rgba(255,255,255,0.035)",
                         border: "1px solid rgba(255,255,255,0.1)",
