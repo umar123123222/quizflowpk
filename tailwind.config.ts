@@ -18,6 +18,7 @@ export default {
         body: ["DM Sans", "sans-serif"],
         serif: ["Playfair Display", "serif"],
         mono: ["DM Mono", "monospace"],
+        exam: ["Sora", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
