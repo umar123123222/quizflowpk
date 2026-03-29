@@ -1262,7 +1262,7 @@ const TakeExam = () => {
                       }}>
                         {rule.icon}
                       </span>
-                      <span className="text-[13px] leading-relaxed pt-0.5" style={{
+                      <span className="text-[12px] leading-snug pt-0.5" style={{
                         color: "rgba(255,255,255,0.45)",
                       }}>
                         {rule.text}
