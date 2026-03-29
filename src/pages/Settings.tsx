@@ -179,7 +179,7 @@ const Settings = () => {
           {/* Topbar */}
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.8)] hover:text-[hsl(var(--dashboard-text)/.8)]" />
+              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.95)]" />
               <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.8)]">
                 Org / Settings
               </span>
@@ -191,7 +191,7 @@ const Settings = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.65)] transition-colors hover:text-[hsl(var(--dashboard-text)/.7)]"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] transition-colors hover:text-[hsl(var(--dashboard-text)/.9)]"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out

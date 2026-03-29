@@ -410,7 +410,7 @@ const CreateExam = () => {
           {/* Topbar */}
           <header className="h-14 flex items-center justify-between border-b border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-5">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.8)] hover:text-[hsl(var(--dashboard-text)/.8)]" />
+              <SidebarTrigger className="text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.95)]" />
               <span className="inline-flex items-center rounded-full border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-[hsl(var(--dashboard-text)/.8)]">
                 Org / {isEditMode ? "Edit Exam" : "Create Exam"}
               </span>
@@ -424,7 +424,7 @@ const CreateExam = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.65)] transition-colors hover:text-[hsl(var(--dashboard-text)/.7)]"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] transition-colors hover:text-[hsl(var(--dashboard-text)/.9)]"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -529,7 +529,7 @@ const CreateExam = () => {
                   className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase transition-all ${
                     customMarking
                       ? "border-[hsl(var(--dashboard-gold))] bg-[hsl(var(--dashboard-gold)/0.1)] text-[hsl(var(--dashboard-gold))]"
-                      : "border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.7)]"
+                      : "border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)]"
                   }`}
                 >
                   <div className={`h-3 w-6 rounded-full transition-colors relative ${customMarking ? "bg-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-toggle-off))]"}`}>
@@ -717,7 +717,7 @@ const CreateExam = () => {
                             className={`flex items-center gap-1 px-2.5 py-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
                               q.type === "mcq"
                                 ? "bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-bold"
-                                : "text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.7)]"
+                                : "text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)]"
                             }`}
                           >
                             <ListChecks className="h-3 w-3" />
@@ -728,7 +728,7 @@ const CreateExam = () => {
                             className={`flex items-center gap-1 px-2.5 py-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
                               q.type === "text"
                                 ? "bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-bold"
-                                : "text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.7)]"
+                                : "text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)]"
                             }`}
                           >
                             <FileText className="h-3 w-3" />
@@ -1023,7 +1023,7 @@ const CreateExam = () => {
               <div className="flex gap-3 pt-1">
                 <button
                   onClick={() => setShowPublishDialog(false)}
-                  className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.7)] transition-colors"
+                  className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)] transition-colors"
                 >
                   Cancel
                 </button>
@@ -1123,7 +1123,7 @@ const CreateExam = () => {
               <div className="flex gap-3 pt-1">
                 <button
                   onClick={() => setPublishStep(1)}
-                  className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.7)] hover:text-[hsl(var(--dashboard-text)/.7)] transition-colors"
+                  className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)] transition-colors"
                 >
                   ← Back
                 </button>
