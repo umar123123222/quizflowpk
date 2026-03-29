@@ -1158,133 +1158,204 @@ const TakeExam = () => {
 
   // Student info form
   if (!studentInfo) {
+    const questionCount = questions.length;
+    const mcqCount = questions.filter(q => q.question_type === "mcq" || q.question_type !== "text").length;
+    const textCount = questions.filter(q => q.question_type === "text").length;
+
+    const rules = [
+      {
+        icon: <BookOpen className="h-4 w-4 text-primary shrink-0 mt-0.5" />,
+        text: `This exam contains ${questionCount} question${questionCount !== 1 ? "s" : ""}${mcqCount > 0 && textCount > 0 ? ` (${mcqCount - textCount} MCQ, ${textCount} written)` : ""}.`,
+      },
+      ...(exam?.time_limit ? [{
+        icon: <Clock className="h-4 w-4 text-primary shrink-0 mt-0.5" />,
+        text: `You have ${exam.time_limit} minute${exam.time_limit !== 1 ? "s" : ""} to complete the exam. The exam will auto-submit when time runs out.`,
+      }] : []),
+      ...(exam?.passing_percentage ? [{
+        icon: <CheckCircle className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />,
+        text: `Passing score is ${exam.passing_percentage}%. You must score at least this to pass.`,
+      }] : []),
+      {
+        icon: <MonitorX className="h-4 w-4 text-destructive shrink-0 mt-0.5" />,
+        text: "Do not switch tabs during the exam. The exam will auto-submit on the 2nd tab switch.",
+      },
+      {
+        icon: <Fullscreen className="h-4 w-4 text-destructive shrink-0 mt-0.5" />,
+        text: "Do not exit fullscreen. If you exit fullscreen, you have 5 seconds to return before auto-submission.",
+      },
+      {
+        icon: <RotateCcw className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />,
+        text: "Each student is allowed only one attempt unless a reattempt is granted by the instructor.",
+      },
+      {
+        icon: <Eye className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />,
+        text: exam?.result_visibility === "after_exam_ends"
+          ? "Results will be available after the exam period ends."
+          : "Results will be shown immediately after submission.",
+      },
+      {
+        icon: <Link2 className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />,
+        text: "To view your result later, visit this same link and re-enter your details.",
+      },
+    ];
+
     return (
       <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="font-serif text-2xl">{exam?.title || "Exam"}</CardTitle>
-            <CardDescription>
-              {exam?.description || "Please enter your details to start the exam"}
-              {exam?.time_limit && (
-                <span className="block mt-2 text-primary font-medium">
-                  ⏱ Time Limit: {exam.time_limit} minute{exam.time_limit !== 1 ? "s" : ""}
-                </span>
-              )}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onStudentSubmit)} className="space-y-4">
-                {(() => {
-                  // Build ordered field list
-                  const order = formSettings?.field_order || ["name", "email", "phone"];
-                  // Add any custom fields not in order
-                  const allCustomIds = customFieldDefs.map((cf) => `custom:${cf.id}`);
-                  const fullOrder = [...order];
-                  for (const cid of allCustomIds) {
-                    if (!fullOrder.includes(cid)) fullOrder.push(cid);
-                  }
-                  // Add defaults not in order
-                  for (const d of ["name", "email", "phone"]) {
-                    if (!fullOrder.includes(d)) fullOrder.push(d);
-                  }
+        <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-6 items-start">
+          {/* Rules Panel */}
+          <Card className="w-full lg:w-[380px] shrink-0 border-primary/20">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2">
+                <ShieldAlert className="h-5 w-5 text-primary" />
+                <CardTitle className="font-serif text-lg">Rules & Regulations</CardTitle>
+              </div>
+              <CardDescription className="text-xs">Please read carefully before starting</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3">
+                {rules.map((rule, i) => (
+                  <li key={i} className="flex items-start gap-2.5 text-sm text-muted-foreground leading-relaxed">
+                    {rule.icon}
+                    <span>{rule.text}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-5 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2.5">
+                <p className="text-xs text-destructive font-medium flex items-center gap-1.5">
+                  <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+                  Any violation will be recorded and visible to the examiner.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
 
-                  return fullOrder.map((key) => {
-                    if (key === "name") {
-                      return (
-                        <FormField key="name" control={form.control} name="fullName" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Full Name</FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input placeholder="Enter your full name" className="pl-10" {...field} />
-                              </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                      );
+          {/* Student Form */}
+          <Card className="w-full lg:flex-1">
+            <CardHeader className="text-center">
+              <CardTitle className="font-serif text-2xl">{exam?.title || "Exam"}</CardTitle>
+              <CardDescription>
+                {exam?.description || "Please enter your details to start the exam"}
+                {exam?.time_limit && (
+                  <span className="block mt-2 text-primary font-medium">
+                    ⏱ Time Limit: {exam.time_limit} minute{exam.time_limit !== 1 ? "s" : ""}
+                  </span>
+                )}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onStudentSubmit)} className="space-y-4">
+                  {(() => {
+                    // Build ordered field list
+                    const order = formSettings?.field_order || ["name", "email", "phone"];
+                    // Add any custom fields not in order
+                    const allCustomIds = customFieldDefs.map((cf) => `custom:${cf.id}`);
+                    const fullOrder = [...order];
+                    for (const cid of allCustomIds) {
+                      if (!fullOrder.includes(cid)) fullOrder.push(cid);
                     }
-                    if (key === "email" && (!formSettings || formSettings.email_visible)) {
-                      return (
-                        <FormField key="email" control={form.control} name="email" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email{formSettings && !formSettings.email_required ? " (Optional)" : ""}</FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input type="email" placeholder="Enter your email" className="pl-10" {...field} />
-                              </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                      );
+                    // Add defaults not in order
+                    for (const d of ["name", "email", "phone"]) {
+                      if (!fullOrder.includes(d)) fullOrder.push(d);
                     }
-                    if (key === "phone" && (!formSettings || formSettings.phone_visible)) {
-                      return (
-                        <FormField key="phone" control={form.control} name="phone" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Phone Number{formSettings && !formSettings.phone_required ? " (Optional)" : ""}</FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input type="tel" placeholder="Enter your phone number" className="pl-10" {...field} />
-                              </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                      );
-                    }
-                    if (key.startsWith("custom:")) {
-                      const cfId = key.replace("custom:", "");
-                      const cf = customFieldDefs.find((c) => c.id === cfId);
-                      if (!cf) return null;
-                      return (
-                        <div key={cf.id} className="space-y-2">
-                          <Label>
-                            {cf.field_label}
-                            {!cf.is_required && <span className="text-muted-foreground text-xs ml-1">(Optional)</span>}
-                          </Label>
-                          {cf.field_type === "dropdown" ? (
-                            <select
-                              value={customFieldValues[cf.id] || ""}
-                              onChange={(e) =>
-                                setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
-                              }
-                              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                              required={cf.is_required}
-                            >
-                              <option value="">Select {cf.field_label}</option>
-                              {cf.dropdown_options.map((opt) => (
-                                <option key={opt} value={opt}>{opt}</option>
-                              ))}
-                            </select>
-                          ) : (
-                            <Input
-                              type={cf.field_type === "number" ? "number" : "text"}
-                              placeholder={`Enter ${cf.field_label.toLowerCase()}`}
-                              value={customFieldValues[cf.id] || ""}
-                              onChange={(e) =>
-                                setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
-                              }
-                              required={cf.is_required}
-                            />
-                          )}
-                        </div>
-                      );
-                    }
-                    return null;
-                  });
-                })()}
 
-                <Button type="submit" className="w-full mt-2 border-0 font-semibold" style={{ backgroundColor: "#e09615", color: "#fff" }}>Start Exam</Button>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
+                    return fullOrder.map((key) => {
+                      if (key === "name") {
+                        return (
+                          <FormField key="name" control={form.control} name="fullName" render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Full Name</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                  <Input placeholder="Enter your full name" className="pl-10" {...field} />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                        );
+                      }
+                      if (key === "email" && (!formSettings || formSettings.email_visible)) {
+                        return (
+                          <FormField key="email" control={form.control} name="email" render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email{formSettings && !formSettings.email_required ? " (Optional)" : ""}</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                  <Input type="email" placeholder="Enter your email" className="pl-10" {...field} />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                        );
+                      }
+                      if (key === "phone" && (!formSettings || formSettings.phone_visible)) {
+                        return (
+                          <FormField key="phone" control={form.control} name="phone" render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Phone Number{formSettings && !formSettings.phone_required ? " (Optional)" : ""}</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                  <Input type="tel" placeholder="Enter your phone number" className="pl-10" {...field} />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                        );
+                      }
+                      if (key.startsWith("custom:")) {
+                        const cfId = key.replace("custom:", "");
+                        const cf = customFieldDefs.find((c) => c.id === cfId);
+                        if (!cf) return null;
+                        return (
+                          <div key={cf.id} className="space-y-2">
+                            <Label>
+                              {cf.field_label}
+                              {!cf.is_required && <span className="text-muted-foreground text-xs ml-1">(Optional)</span>}
+                            </Label>
+                            {cf.field_type === "dropdown" ? (
+                              <select
+                                value={customFieldValues[cf.id] || ""}
+                                onChange={(e) =>
+                                  setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
+                                }
+                                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                required={cf.is_required}
+                              >
+                                <option value="">Select {cf.field_label}</option>
+                                {cf.dropdown_options.map((opt) => (
+                                  <option key={opt} value={opt}>{opt}</option>
+                                ))}
+                              </select>
+                            ) : (
+                              <Input
+                                type={cf.field_type === "number" ? "number" : "text"}
+                                placeholder={`Enter ${cf.field_label.toLowerCase()}`}
+                                value={customFieldValues[cf.id] || ""}
+                                onChange={(e) =>
+                                  setCustomFieldValues((prev) => ({ ...prev, [cf.id]: e.target.value }))
+                                }
+                                required={cf.is_required}
+                              />
+                            )}
+                          </div>
+                        );
+                      }
+                      return null;
+                    });
+                  })()}
+
+                  <Button type="submit" className="w-full mt-2 border-0 font-semibold" style={{ backgroundColor: "#e09615", color: "#fff" }}>Start Exam</Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
