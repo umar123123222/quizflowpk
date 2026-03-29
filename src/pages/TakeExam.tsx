@@ -1229,12 +1229,12 @@ const TakeExam = () => {
                     { value: exam?.time_limit || "∞", label: "Minutes", sub: null, color: "#F59E0B" },
                     { value: `${exam?.passing_percentage ?? 50}%`, label: "To Pass", sub: null, color: "#22c55e" },
                   ].map((stat, i) => (
-                    <div key={i} className="rounded-xl py-3 px-2 text-center relative" style={{
+                    <div key={i} className="rounded-xl py-1.5 px-2 text-center relative" style={{
                       background: "rgba(255,255,255,0.03)",
                       border: "1px solid rgba(255,255,255,0.06)",
                     }}>
-                      <span className="block text-xl font-extrabold" style={{ color: stat.color, fontFamily: "'Playfair Display', serif" }}>{stat.value}</span>
-                      <div className="mx-auto mt-1 mb-1 w-5 h-[2px] rounded-full" style={{ background: stat.color, opacity: 0.5 }} />
+                      <span className="block text-lg font-extrabold" style={{ color: stat.color, fontFamily: "'Playfair Display', serif" }}>{stat.value}</span>
+                      <div className="mx-auto mt-0.5 mb-0.5 w-5 h-[2px] rounded-full" style={{ background: stat.color, opacity: 0.5 }} />
                       <span className="text-[9px] uppercase tracking-[0.12em] font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>{stat.label}</span>
                       {stat.sub && <span className="block text-[8px] mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>{stat.sub}</span>}
                     </div>
