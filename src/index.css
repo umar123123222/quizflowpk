@@ -22,7 +22,7 @@
     --secondary-foreground: 228 27% 7%;
 
     --muted: 220 27% 92%;
-    --muted-foreground: 228 16% 50%;
+    --muted-foreground: 228 20% 40%;
 
     --accent: 38 83% 48%;
     --accent-foreground: 0 0% 100%;
@@ -30,15 +30,15 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 27% 92%;
-    --input: 223 16% 84%;
+    --border: 220 20% 88%;
+    --input: 223 16% 82%;
     --ring: 38 83% 48%;
 
     --radius: 0.75rem;
 
     --hero-gradient: linear-gradient(135deg, hsl(228 30% 16%), hsl(38 83% 48%));
-    --card-shadow: 0 4px 24px -4px hsl(228 27% 7% / 0.06);
-    --card-shadow-hover: 0 8px 32px -4px hsl(228 27% 7% / 0.12);
+    --card-shadow: 0 4px 24px -4px hsl(228 27% 7% / 0.08);
+    --card-shadow-hover: 0 8px 32px -4px hsl(228 27% 7% / 0.14);
 
     --sidebar-background: 228 30% 16%;
     --sidebar-foreground: 220 10% 65%;
@@ -51,13 +51,13 @@
 
     --dashboard-bg: 220 27% 95%;
     --dashboard-card: 0 0% 100%;
-    --dashboard-border: 220 27% 92%;
+    --dashboard-border: 220 20% 88%;
     --dashboard-gold: 38 83% 48%;
     --dashboard-blue: 211 49% 45%;
     --dashboard-green: 142 71% 45%;
     --dashboard-dark-card: 228 30% 16%;
     --dashboard-text: 228 27% 7%;
-    --dashboard-text-muted: 228 18% 38%;
+    --dashboard-text-muted: 228 20% 35%;
     --dashboard-questions-bg: 228 20% 96%;
     --dashboard-toggle-off: 228 15% 85%;
   }

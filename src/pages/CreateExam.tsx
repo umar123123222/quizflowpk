@@ -424,7 +424,7 @@ const CreateExam = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] transition-colors hover:text-[hsl(var(--dashboard-text)/.9)]"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.75)] transition-colors hover:text-[hsl(var(--dashboard-text)/.9)]"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -473,7 +473,7 @@ const CreateExam = () => {
                   min={1}
                   className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                 />
-                <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.65)]">
+                <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.75)]">
                   Leave empty to use 1 mark per question
                 </p>
               </div>
@@ -495,7 +495,7 @@ const CreateExam = () => {
                   max={100}
                   className="bg-[hsl(var(--dashboard-card))] border-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.9)] placeholder:text-[hsl(var(--dashboard-text)/.7)] focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                 />
-                <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.65)]">
+                <p className="font-mono text-[9px] text-[hsl(var(--dashboard-text)/.75)]">
                   Students scoring at or above this percentage will be marked as Pass. Default is 50% if left empty.
                 </p>
               </div>
@@ -541,7 +541,7 @@ const CreateExam = () => {
 
               {customMarking && (
                 <div className="rounded-[10px] border dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] dark:bg-[hsl(var(--dashboard-card))] bg-[#252a40] p-4 space-y-3">
-                  <p className="font-mono text-[9px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.65)] text-[#6b7494]">
+                  <p className="font-mono text-[9px] tracking-wider uppercase dark:text-[hsl(var(--dashboard-text)/.75)] text-[#6b7494]">
                     Default marks per question type (can be overridden individually)
                   </p>
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -636,7 +636,7 @@ const CreateExam = () => {
                         {!total && unassignedCount > 0 && (
                           <>
                             <span className="dark:text-[hsl(var(--dashboard-text))]/45 text-[#3a4060]">|</span>
-                            <span className="font-mono text-[10px] tracking-wider dark:text-[hsl(var(--dashboard-text)/.65)] text-[#9aa0b4]">
+                            <span className="font-mono text-[10px] tracking-wider dark:text-[hsl(var(--dashboard-text)/.75)] text-[#9aa0b4]">
                               {unassignedMcq > 0 && <span>{unassignedMcq} MCQ × {typeof defaultMcqMarks === "number" ? defaultMcqMarks : 1}</span>}
                               {unassignedMcq > 0 && unassignedText > 0 && <span>{" + "}</span>}
                               {unassignedText > 0 && <span>{unassignedText} Text × {typeof defaultTextMarks === "number" ? defaultTextMarks : 1}</span>}
@@ -716,7 +716,7 @@ const CreateExam = () => {
                             className={`flex items-center gap-1 px-2.5 py-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
                               q.type === "mcq"
                                 ? "bg-[hsl(var(--dashboard-gold))] text-white font-bold"
-                                : "dark:text-[hsl(var(--dashboard-text)/.65)] text-[#6b7494] hover:text-[#9aa0b4]"
+                                : "dark:text-[hsl(var(--dashboard-text)/.75)] text-[#6b7494] hover:text-[#9aa0b4]"
                             }`}
                           >
                             <ListChecks className="h-3 w-3" />
@@ -727,7 +727,7 @@ const CreateExam = () => {
                             className={`flex items-center gap-1 px-2.5 py-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
                               q.type === "text"
                                 ? "bg-[hsl(var(--dashboard-gold))] text-white font-bold"
-                                : "dark:text-[hsl(var(--dashboard-text)/.65)] text-[#6b7494] hover:text-[#9aa0b4]"
+                                : "dark:text-[hsl(var(--dashboard-text)/.75)] text-[#6b7494] hover:text-[#9aa0b4]"
                             }`}
                           >
                             <FileText className="h-3 w-3" />
@@ -747,7 +747,7 @@ const CreateExam = () => {
                               step={0.5}
                               className="w-16 h-7 dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] dark:text-[hsl(var(--dashboard-text)/.9)] text-[#e09615] dark:placeholder:text-[hsl(var(--dashboard-text)/.7)] placeholder:text-[#6b7494] text-xs text-center font-bold focus-visible:ring-[hsl(var(--dashboard-gold)/0.4)]"
                             />
-                            <span className="font-mono text-[9px] dark:text-[hsl(var(--dashboard-text)/.65)] text-[#6b7494]">marks</span>
+                            <span className="font-mono text-[9px] dark:text-[hsl(var(--dashboard-text)/.75)] text-[#6b7494]">marks</span>
                           </div>
                         )}
                         {questions.length > 1 && (
@@ -889,7 +889,7 @@ const CreateExam = () => {
           {/* Step indicator */}
           <div className="flex gap-2 mt-1">
             <div className="flex-1 h-1 rounded-full" style={{ backgroundColor: '#e09615' }} />
-            <div className={`flex-1 h-1 rounded-full transition-colors ${publishStep >= 2 ? "" : "bg-white/10"}`} style={publishStep >= 2 ? { backgroundColor: '#e09615' } : {}} />
+            <div className={`flex-1 h-1 rounded-full transition-colors ${publishStep >= 2 ? "" : "bg-[hsl(var(--dashboard-border))]"}`} style={publishStep >= 2 ? { backgroundColor: '#e09615' } : {}} />
           </div>
 
           {publishStep === 1 && (
@@ -1027,7 +1027,7 @@ const CreateExam = () => {
               <div className="flex gap-3 pt-1">
                 <button
                   onClick={() => setShowPublishDialog(false)}
-                  className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)] transition-colors"
+                  className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.75)] hover:text-[hsl(var(--dashboard-text)/.9)] transition-colors"
                 >
                   Cancel
                 </button>
@@ -1127,7 +1127,7 @@ const CreateExam = () => {
               <div className="flex gap-3 pt-1">
                 <button
                   onClick={() => setPublishStep(1)}
-                  className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.65)] hover:text-[hsl(var(--dashboard-text)/.9)] transition-colors"
+                  className="flex-1 rounded-md border border-[hsl(var(--dashboard-border))] py-2.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.75)] hover:text-[hsl(var(--dashboard-text)/.9)] transition-colors"
                 >
                   ← Back
                 </button>

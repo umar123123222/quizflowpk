@@ -366,7 +366,7 @@ const Submissions = () => {
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.6)] transition-colors hover:text-[hsl(var(--dashboard-text)/.9)]"
+                className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[hsl(var(--dashboard-text)/.75)] transition-colors hover:text-[hsl(var(--dashboard-text)/.9)]"
               >
                 <LogOut className="h-3 w-3" />
                 Sign out
@@ -511,8 +511,8 @@ const Submissions = () => {
                       statusFilter === tab.key
                         ? tab.key === "pending_review"
                           ? "bg-[hsl(var(--dashboard-gold)/0.25)] text-[hsl(var(--dashboard-gold))]"
-                          : "bg-white/10 text-[hsl(var(--dashboard-text)/.75)]"
-                        : "bg-white/5 text-[hsl(var(--dashboard-text)/.65)]"
+                          : "bg-[hsl(var(--dashboard-gold)/0.1)] text-[hsl(var(--dashboard-text)/.75)]"
+                        : "bg-[hsl(var(--dashboard-border))] text-[hsl(var(--dashboard-text)/.75)]"
                     }`}>
                       {tab.count}
                     </span>
@@ -617,7 +617,7 @@ const Submissions = () => {
                       {isExpanded && (
                         <div className="border-t border-[hsl(var(--dashboard-border))]">
                           {exam.submissions.length === 0 ? (
-                            <p className="px-5 py-6 text-center font-mono text-xs text-[hsl(var(--dashboard-text)/.65)]">
+                            <p className="px-5 py-6 text-center font-mono text-xs text-[hsl(var(--dashboard-text)/.75)]">
                               No submissions yet
                             </p>
                           ) : (
