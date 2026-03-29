@@ -783,7 +783,7 @@ const CreateExam = () => {
                               <RadioGroupItem
                                 value={optionLabels[oIndex]}
                                 id={`q${qIndex}-opt${oIndex}`}
-                                className="dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-green-500 data-[state=checked]:text-green-500"
+                                className="dark:border-[hsl(var(--dashboard-border))] border-[#3a4060] text-[hsl(var(--dashboard-gold))] data-[state=checked]:border-[#e09615] data-[state=checked]:text-[#e09615]"
                               />
                               <Label
                                 htmlFor={`q${qIndex}-opt${oIndex}`}
