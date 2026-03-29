@@ -660,14 +660,14 @@ const CreateExam = () => {
               )}
 
             {/* Shuffle Settings */}
-            <div className="rounded-lg border dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] dark:bg-[hsl(var(--dashboard-card))] bg-[#252a40] p-4 space-y-3">
-              <p className="font-mono text-[10px] tracking-[0.15em] uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-[#6b7494]">
+            <div className="rounded-xl border dark:border-[hsl(var(--dashboard-border))] border-[#2d3250] dark:bg-[hsl(var(--dashboard-card))] bg-[#1e2235] p-4 space-y-3">
+              <p className="font-mono text-[10px] tracking-[0.15em] uppercase dark:text-[hsl(var(--dashboard-text)/.7)] text-white font-semibold">
                 Shuffle Settings
               </p>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <p className="text-sm dark:text-[hsl(var(--dashboard-text)/.9)] text-white/90">Shuffle Question Order</p>
+                    <p className="text-sm dark:text-[hsl(var(--dashboard-text)/.9)] text-[#9aa0b4]">Shuffle Question Order</p>
                     <p className="font-mono text-[9px] dark:text-[hsl(var(--dashboard-text)/.8)] text-[#6b7494]">Each student receives questions in a different random order</p>
                   </div>
                   <button
@@ -681,7 +681,7 @@ const CreateExam = () => {
                 <div className="h-px dark:bg-[hsl(var(--dashboard-border))] bg-[#2d3250]" />
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <p className="text-sm dark:text-[hsl(var(--dashboard-text)/.9)] text-white/90">Shuffle MCQ Options</p>
+                    <p className="text-sm dark:text-[hsl(var(--dashboard-text)/.9)] text-[#9aa0b4]">Shuffle MCQ Options</p>
                     <p className="font-mono text-[9px] dark:text-[hsl(var(--dashboard-text)/.8)] text-[#6b7494]">Answer choices are randomized per student for each MCQ question</p>
                   </div>
                   <button
