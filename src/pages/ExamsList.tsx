@@ -154,7 +154,7 @@ const ExamsList = () => {
             {/* Search & Filter Bar */}
             <div className="flex flex-col sm:flex-row gap-3 mb-8">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[hsl(var(--dashboard-text)/.65)]" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[hsl(var(--dashboard-text)/.75)]" />
                 <Input
                   placeholder="Search exams by name..."
                   value={searchQuery}
@@ -172,7 +172,7 @@ const ExamsList = () => {
                   <option value="published">Published</option>
                   <option value="draft">Draft</option>
                 </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[hsl(var(--dashboard-text)/.65)] pointer-events-none" />
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[hsl(var(--dashboard-text)/.75)] pointer-events-none" />
               </div>
               <div className="relative">
                 <select
@@ -183,7 +183,7 @@ const ExamsList = () => {
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
                 </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[hsl(var(--dashboard-text)/.65)] pointer-events-none" />
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[hsl(var(--dashboard-text)/.75)] pointer-events-none" />
               </div>
             </div>
 
@@ -197,13 +197,13 @@ const ExamsList = () => {
                   <FileText className="h-6 w-6 text-[hsl(var(--dashboard-text)/.8)]" />
                 </div>
                 <p className="text-sm text-[hsl(var(--dashboard-text)/.7)] mb-1">No exams yet</p>
-                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)] mb-6">Create your first exam to get started</p>
-                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)]">Only teachers can create exams</p>
+                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.75)] mb-6">Create your first exam to get started</p>
+                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.75)]">Only teachers can create exams</p>
               </div>
             ) : filteredExams.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <p className="text-sm text-[hsl(var(--dashboard-text)/.7)] mb-1">No exams match your filters</p>
-                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)]">Try adjusting your search or filters</p>
+                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.75)]">Try adjusting your search or filters</p>
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -248,11 +248,11 @@ const ExamsList = () => {
                       )}
                       <div className="flex items-center gap-3 mb-4">
                         {exam.time_limit && (
-                          <span className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)]">
+                          <span className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.75)]">
                             {exam.time_limit} min
                           </span>
                         )}
-                        <span className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)]">
+                        <span className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.75)]">
                           {exam.created_at
                             ? new Date(exam.created_at).toLocaleDateString("en-US", {
                                 month: "short",

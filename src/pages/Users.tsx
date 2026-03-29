@@ -283,7 +283,7 @@ const Users = () => {
                   <UsersIcon className="h-6 w-6 text-[hsl(var(--dashboard-text)/.8)]" />
                 </div>
                 <p className="text-sm text-[hsl(var(--dashboard-text)/.7)] mb-1">No teachers yet</p>
-                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.65)]">Add your first teacher to get started</p>
+                <p className="font-mono text-[10px] text-[hsl(var(--dashboard-text)/.75)]">Add your first teacher to get started</p>
               </div>
             ) : (
               <div className="rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-card))] overflow-hidden">
