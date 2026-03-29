@@ -1460,7 +1460,7 @@ const TakeExam = () => {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="w-full h-[52px] mt-4 rounded-xl font-bold text-[15px] tracking-wide transition-all duration-300 relative overflow-hidden group flex items-center justify-center gap-2"
+                      className="w-full h-[44px] mt-2 rounded-xl font-bold text-[14px] tracking-wide transition-all duration-300 relative overflow-hidden group flex items-center justify-center gap-2"
                       style={{
                         background: "linear-gradient(135deg, #F59E0B, #D97706)",
                         color: "#080810",
