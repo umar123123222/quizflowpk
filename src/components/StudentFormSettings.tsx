@@ -260,6 +260,22 @@ const StudentFormSettings = () => {
     },
   });
 
+  const toggleCustomRequiredMutation = useMutation({
+    mutationFn: async ({ fieldId, isRequired }: { fieldId: string; isRequired: boolean }) => {
+      const { error } = await supabase
+        .from("organization_custom_fields")
+        .update({ is_required: isRequired })
+        .eq("id", fieldId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["custom-fields"] });
+    },
+    onError: (err: any) => {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
   const toggleVisible = (field: keyof FormSettings) => {
     setSettings((prev) => ({
       ...prev,
@@ -375,9 +391,10 @@ const StudentFormSettings = () => {
                       disabled={defaultKey === "name" || !settings[defaultKey].visible}
                     />
                   ) : cf ? (
-                    <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded ${cf.is_required ? "bg-[hsl(var(--dashboard-gold)/0.15)] text-[hsl(var(--dashboard-gold))]" : "bg-[hsl(var(--dashboard-text-muted)/.08)] text-[#9aa0b4]"}`}>
-                      {cf.is_required ? "Req" : "Opt"}
-                    </span>
+                    <Switch
+                      checked={cf.is_required}
+                      onCheckedChange={(checked) => toggleCustomRequiredMutation.mutate({ fieldId: cf.id, isRequired: checked })}
+                    />
                   ) : null}
                 </div>
 
