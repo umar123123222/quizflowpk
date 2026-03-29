@@ -1331,7 +1331,7 @@ const TakeExam = () => {
                 </div>
 
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onStudentSubmit)} className="space-y-5">
+                  <form onSubmit={form.handleSubmit(onStudentSubmit)} className="space-y-3">
                     {(() => {
                       const order = formSettings?.field_order || ["name", "email", "phone"];
                       const allCustomIds = customFieldDefs.map((cf) => `custom:${cf.id}`);
