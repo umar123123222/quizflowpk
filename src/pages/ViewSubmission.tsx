@@ -347,7 +347,7 @@ const ViewSubmission = () => {
                           <div className="w-px h-10 bg-border" />
                           {/* Text Score */}
                           <div className="text-center">
-                            <div className={`text-2xl font-bold ${pendingReview ? "text-yellow-500" : "text-primary"}`}>
+                            <div className={`text-2xl font-bold ${pendingReview ? "text-[#e09615]" : "text-primary"}`}>
                               {pendingReview ? "—" : `${textEarned}/${textTotal}`}
                             </div>
                             <p className="text-[10px] text-muted-foreground mt-0.5">{pendingReview ? "Awaiting Review" : "Text Score"}</p>
@@ -358,9 +358,9 @@ const ViewSubmission = () => {
                       {/* Total */}
                       <div className="text-center">
                         <div className={`text-2xl font-bold ${
-                          pendingReview ? "text-yellow-500"
+                          pendingReview ? "text-[#e09615]"
                             : (score ?? 0) >= 70 ? "text-green-500"
-                            : (score ?? 0) >= 40 ? "text-yellow-500"
+                            : (score ?? 0) >= 40 ? "text-[#e09615]"
                             : "text-destructive"
                         }`}>
                           {pendingReview ? `${mcqEarned}/${grandTotal}` : `${grandEarned}/${grandTotal}`}
@@ -374,7 +374,7 @@ const ViewSubmission = () => {
                       <Badge
                         className={`text-xs px-3 py-1 ${
                           pendingReview
-                            ? "bg-yellow-500/15 text-yellow-500 border-yellow-500/30 hover:bg-yellow-500/20"
+                            ? "bg-[#e09615]/15 text-[#e09615] border-[#e09615]/30 hover:bg-[#e09615]/20"
                             : (score ?? 0) >= 50
                             ? "bg-green-500/15 text-green-500 border-green-500/30 hover:bg-green-500/20"
                             : "bg-destructive/15 text-destructive border-destructive/30 hover:bg-destructive/20"

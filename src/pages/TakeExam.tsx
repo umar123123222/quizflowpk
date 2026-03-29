@@ -849,7 +849,7 @@ const TakeExam = () => {
                   <span className="text-sm text-muted-foreground">Score</span>
                   <span className="text-lg font-bold text-foreground">
                     {pendingReview ? (
-                      <span className="text-yellow-500">Pending Review</span>
+                      <span className="text-[#e09615]">Pending Review</span>
                     ) : (
                       `${ps.earnedPoints} / ${ps.totalPoints}`
                     )}
