@@ -60,7 +60,7 @@ const Hero = () => {
             <br />
             <span style={{
               background: isDark
-                ? 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 20%, #c98a1a 70%, #c98a1a 100%)'
+                ? 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 20%, #e09615 70%, #e09615 100%)'
                 : 'linear-gradient(to right, #1E3A5F 0%, #1E3A5F 20%, #e09615 70%, #e09615 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
