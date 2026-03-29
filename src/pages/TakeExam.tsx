@@ -1182,7 +1182,7 @@ const TakeExam = () => {
         }} />
 
         {/* Header bar */}
-        <header className="relative z-20 w-full px-5 sm:px-8 py-4 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <header className="relative z-20 w-full px-5 sm:px-8 py-2.5 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="flex items-center gap-2.5">
             <GraduationCap className="h-6 w-6" style={{ color: "#F59E0B" }} />
             <span className="text-lg font-bold tracking-tight" style={{ color: "#F59E0B", fontFamily: "'Playfair Display', serif" }}>QuizFlow</span>
