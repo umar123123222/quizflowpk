@@ -88,7 +88,7 @@ export function TeacherSidebar() {
 
       <SidebarFooter className="px-4 py-4 border-t border-[hsl(var(--dashboard-border))]">
         <div className="flex items-center gap-3 mb-3">
-          <div className="<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e09615] font-mono text-xs font-medium text-[hsl(var(--dashboard-bg))]"> className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e09615] font-mono text-xs font-medium text-[hsl(var(--dashboard-bg))]"> font-mono text-xs font-medium text-[hsl(var(--dashboard-bg))]">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e09615] font-mono text-xs font-medium text-[hsl(var(--dashboard-bg))]">"flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e09615] font-mono text-xs font-medium text-[hsl(var(--dashboard-bg))]"> className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e09615] font-mono text-xs font-medium text-[hsl(var(--dashboard-bg))]"> font-mono text-xs font-medium text-[hsl(var(--dashboard-bg))]">
             {initials}
           </div>
           {!collapsed && (
