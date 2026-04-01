@@ -27,24 +27,36 @@ serve(async (req) => {
 
     const { data: callerProfile } = await userClient
       .from("profiles")
-      .select("role")
+      .select("role, full_name")
       .eq("id", caller.id)
       .single();
     if (callerProfile?.role !== "organization_owner") throw new Error("Only owners can add teachers");
 
-    // Get owner's org
-    const { data: org } = await userClient
+    // Get owner's org using admin client to bypass RLS
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+
+    let { data: org } = await adminClient
       .from("organizations")
       .select("id")
       .eq("owner_id", caller.id)
       .single();
-    if (!org) throw new Error("Organization not found");
+
+    // Auto-create organization if it doesn't exist
+    if (!org) {
+      const ownerName = callerProfile?.full_name || caller.email || "My Organization";
+      const { data: newOrg, error: orgError } = await adminClient
+        .from("organizations")
+        .insert({ name: ownerName, owner_id: caller.id })
+        .select("id")
+        .single();
+      if (orgError) throw new Error("Failed to create organization: " + orgError.message);
+      org = newOrg;
+    }
 
     const { email, full_name, contact_number, subject, password } = await req.json();
     if (!email || !full_name || !password) throw new Error("Missing required fields");
 
-    // Use admin client to create the teacher user
-    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+    // Create the teacher user
 
     // Create user with teacher role
     const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
