@@ -27,7 +27,7 @@ serve(async (req) => {
 
     const { data: callerProfile } = await userClient
       .from("profiles")
-      .select("role")
+      .select("role, full_name")
       .eq("id", caller.id)
       .single();
     if (callerProfile?.role !== "organization_owner") throw new Error("Only owners can add teachers");
