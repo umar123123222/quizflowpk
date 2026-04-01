@@ -56,8 +56,7 @@ serve(async (req) => {
     const { email, full_name, contact_number, subject, password } = await req.json();
     if (!email || !full_name || !password) throw new Error("Missing required fields");
 
-    // Use admin client to create the teacher user
-    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+    // Create the teacher user
 
     // Create user with teacher role
     const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
