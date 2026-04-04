@@ -478,12 +478,17 @@ const Submissions = () => {
                         const padCount = (maxQs - sortedQs.length) * 5;
                         for (let p = 0; p < padCount; p++) qCols.push("");
                         const pct = totalMarks > 0 ? Math.round((earnedTotal / totalMarks) * 100) : 0;
+                        const customFieldValues = customFieldOrder.map((cf) => {
+                          const fields = sub.answers?._customFields as Record<string, string> | undefined;
+                          return fields?.[cf.id] || "—";
+                        });
                         const row = [
                           exam.title,
                           ...(isOwner ? [exam.teacher_name || "—"] : []),
                           sub.student.full_name + (sub.attemptLabel ? ` (${sub.attemptLabel})` : ""),
                           sub.student.email || "—",
                           sub.student.phone || "—",
+                          ...customFieldValues,
                           violations,
                           date,
                           ...qCols,
