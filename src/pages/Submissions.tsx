@@ -64,6 +64,7 @@ const Submissions = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [examsWithSubs, setExamsWithSubs] = useState<ExamWithSubmissions[]>([]);
+  const [orgCustomFields, setOrgCustomFields] = useState<{ id: string; field_label: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedExams, setExpandedExams] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
