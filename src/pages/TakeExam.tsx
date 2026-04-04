@@ -212,12 +212,25 @@ const TakeExam = () => {
       setExam(examData as any);
       setExamId(examData.id);
 
-      // Fetch form settings for the org
-      if (examData.organization_id) {
+      // Resolve organization_id: use exam's org, or look up teacher's org
+      let resolvedOrgId = examData.organization_id;
+      if (!resolvedOrgId) {
+        const { data: membership } = await supabase
+          .from("organization_teachers")
+          .select("organization_id")
+          .eq("teacher_id", examData.created_by)
+          .maybeSingle();
+        if (membership) {
+          resolvedOrgId = membership.organization_id;
+        }
+      }
+
+      // Fetch form settings and custom fields for the org
+      if (resolvedOrgId) {
         const { data: fs } = await supabase
           .from("organization_form_settings")
           .select("*")
-          .eq("organization_id", examData.organization_id)
+          .eq("organization_id", resolvedOrgId)
           .single();
         if (fs) {
           const savedOrder = Array.isArray(fs.field_order)
@@ -237,7 +250,7 @@ const TakeExam = () => {
         const { data: cfData } = await supabase
           .from("organization_custom_fields")
           .select("*")
-          .eq("organization_id", examData.organization_id)
+          .eq("organization_id", resolvedOrgId)
           .order("sort_order", { ascending: true });
         if (cfData) {
           setCustomFieldDefs(
