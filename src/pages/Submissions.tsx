@@ -64,6 +64,7 @@ const Submissions = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [examsWithSubs, setExamsWithSubs] = useState<ExamWithSubmissions[]>([]);
+  const [orgCustomFields, setOrgCustomFields] = useState<{ id: string; field_label: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedExams, setExpandedExams] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
@@ -141,6 +142,14 @@ const Submissions = () => {
           .single();
 
         if (!org) { setLoading(false); return; }
+
+        // Fetch org custom fields for CSV export
+        const { data: customFields } = await supabase
+          .from("organization_custom_fields")
+          .select("id, field_label")
+          .eq("organization_id", org.id)
+          .order("sort_order", { ascending: true });
+        if (customFields) setOrgCustomFields(customFields);
 
         const { data } = await supabase
           .from("exams")
@@ -402,9 +411,17 @@ const Submissions = () => {
                       qHeaders.push(`Q${i + 1} - Status`);
                       qHeaders.push(`Q${i + 1} - Marks`);
                     }
-                    // Collect all unique custom field IDs and labels across all submissions
+                    // Collect custom field columns: prefer org-level DB fields, fallback to embedded labels
                     const customFieldOrder: { id: string; label: string }[] = [];
                     const seenFieldIds = new Set<string>();
+                    // First: add org-level custom fields from DB
+                    orgCustomFields.forEach((cf) => {
+                      if (!seenFieldIds.has(cf.id)) {
+                        seenFieldIds.add(cf.id);
+                        customFieldOrder.push({ id: cf.id, label: cf.field_label });
+                      }
+                    });
+                    // Then: add any additional fields found in submission data (covers deleted fields or teacher orgs)
                     examsWithSubs.forEach((exam) => {
                       exam.submissions.forEach((sub) => {
                         const labels = sub.answers?._customFieldLabels as Record<string, string> | undefined;
