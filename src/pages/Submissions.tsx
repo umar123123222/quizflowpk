@@ -402,9 +402,34 @@ const Submissions = () => {
                       qHeaders.push(`Q${i + 1} - Status`);
                       qHeaders.push(`Q${i + 1} - Marks`);
                     }
+                    // Collect all unique custom field IDs and labels across all submissions
+                    const customFieldOrder: { id: string; label: string }[] = [];
+                    const seenFieldIds = new Set<string>();
+                    examsWithSubs.forEach((exam) => {
+                      exam.submissions.forEach((sub) => {
+                        const labels = sub.answers?._customFieldLabels as Record<string, string> | undefined;
+                        const fields = sub.answers?._customFields as Record<string, string> | undefined;
+                        if (labels) {
+                          Object.entries(labels).forEach(([id, label]) => {
+                            if (!seenFieldIds.has(id)) {
+                              seenFieldIds.add(id);
+                              customFieldOrder.push({ id, label });
+                            }
+                          });
+                        } else if (fields) {
+                          Object.keys(fields).forEach((id) => {
+                            if (!seenFieldIds.has(id)) {
+                              seenFieldIds.add(id);
+                              customFieldOrder.push({ id, label: id });
+                            }
+                          });
+                        }
+                      });
+                    });
+                    const customFieldHeaders = customFieldOrder.map((cf) => cf.label);
                     const baseHeader = isOwner
-                      ? ["Exam", "Teacher", "Name", "Email", "Phone", "Violations", "Date"]
-                      : ["Exam", "Name", "Email", "Phone", "Violations", "Date"];
+                      ? ["Exam", "Teacher", "Name", "Email", "Phone", ...customFieldHeaders, "Violations", "Date"]
+                      : ["Exam", "Name", "Email", "Phone", ...customFieldHeaders, "Violations", "Date"];
                     const header = [...baseHeader, ...qHeaders, "Total Score", "Total Marks", "Percentage", "Pass/Fail"];
                     const rows: string[][] = [header];
                     examsWithSubs.forEach((exam) => {
