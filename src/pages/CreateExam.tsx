@@ -231,6 +231,19 @@ const CreateExam = () => {
         return false;
       }
     }
+    // Check for questions that would receive 0 marks
+    const zeroMarkQuestions = questions.filter((q) => {
+      const pts = getQuestionPoints(q);
+      return pts <= 0;
+    });
+    if (zeroMarkQuestions.length > 0) {
+      toast({
+        title: `${zeroMarkQuestions.length} question(s) have 0 marks`,
+        description: `${zeroMarkQuestions.length} out of ${questions.length} questions have no marks allocated. Please adjust Total Marks, default marks, or assign marks individually.`,
+        variant: "destructive",
+      });
+      return false;
+    }
     return true;
   };
 
