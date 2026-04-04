@@ -411,9 +411,17 @@ const Submissions = () => {
                       qHeaders.push(`Q${i + 1} - Status`);
                       qHeaders.push(`Q${i + 1} - Marks`);
                     }
-                    // Collect all unique custom field IDs and labels across all submissions
+                    // Collect custom field columns: prefer org-level DB fields, fallback to embedded labels
                     const customFieldOrder: { id: string; label: string }[] = [];
                     const seenFieldIds = new Set<string>();
+                    // First: add org-level custom fields from DB
+                    orgCustomFields.forEach((cf) => {
+                      if (!seenFieldIds.has(cf.id)) {
+                        seenFieldIds.add(cf.id);
+                        customFieldOrder.push({ id: cf.id, label: cf.field_label });
+                      }
+                    });
+                    // Then: add any additional fields found in submission data (covers deleted fields or teacher orgs)
                     examsWithSubs.forEach((exam) => {
                       exam.submissions.forEach((sub) => {
                         const labels = sub.answers?._customFieldLabels as Record<string, string> | undefined;
