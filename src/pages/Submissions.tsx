@@ -143,6 +143,14 @@ const Submissions = () => {
 
         if (!org) { setLoading(false); return; }
 
+        // Fetch org custom fields for CSV export
+        const { data: customFields } = await supabase
+          .from("organization_custom_fields")
+          .select("id, field_label")
+          .eq("organization_id", org.id)
+          .order("sort_order", { ascending: true });
+        if (customFields) setOrgCustomFields(customFields);
+
         const { data } = await supabase
           .from("exams")
           .select("id, title, created_by")
