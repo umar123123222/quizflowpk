@@ -344,6 +344,60 @@ const Settings = () => {
                 </div>
               </div>
 
+              {/* Organization Logo Section - only for owners */}
+              {userRole === "organization_owner" && (
+                <div className={sectionClass}>
+                  <div className="h-[2px] bg-[hsl(var(--dashboard-gold))]" />
+                  <div className={sectionHeaderClass}>
+                    <ImageIcon className="h-4 w-4 text-[hsl(var(--dashboard-gold))]" />
+                    <span className="font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] font-semibold">
+                      Organization Logo
+                    </span>
+                  </div>
+                  <div className="p-5 space-y-4">
+                    {orgData?.logo_url && (
+                      <div className="flex items-center gap-4">
+                        <div className="h-20 w-20 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] flex items-center justify-center overflow-hidden">
+                          <img
+                            src={orgData.logo_url}
+                            alt="Organization logo"
+                            className="max-h-full max-w-full object-contain"
+                          />
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleRemoveLogo}
+                          disabled={uploadingLogo}
+                          className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                          Remove
+                        </Button>
+                      </div>
+                    )}
+                    <div className="space-y-2">
+                      <label className={labelClass}>Upload Logo (PNG, JPG, SVG — max 2MB)</label>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".png,.jpg,.jpeg,.svg"
+                        onChange={handleLogoUpload}
+                        className="hidden"
+                      />
+                      <Button
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingLogo}
+                        className="flex items-center gap-2 bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-mono text-[11px] tracking-wider uppercase font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
+                      >
+                        {uploadingLogo ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+                        {uploadingLogo ? "Uploading..." : orgData?.logo_url ? "Replace Logo" : "Upload Logo"}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Security Section */}
               <div className={sectionClass}>
                 <div className="h-[2px] bg-[hsl(var(--dashboard-gold))]" />
