@@ -1,13 +1,13 @@
-import { useState } from "react"; // refresh
+import { useState, useRef } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, User, Shield, Mail, Save, Loader2, Eye, EyeOff, BadgeCheck } from "lucide-react";
+import { LogOut, User, Shield, Mail, Save, Loader2, Eye, EyeOff, BadgeCheck, ImageIcon, Upload, Trash2 } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useNavigate } from "react-router-dom";
 
