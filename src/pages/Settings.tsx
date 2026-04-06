@@ -1,13 +1,13 @@
-import { useState } from "react"; // refresh
+import { useState, useRef } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RoleSidebar } from "@/components/RoleSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, User, Shield, Mail, Save, Loader2, Eye, EyeOff, BadgeCheck } from "lucide-react";
+import { LogOut, User, Shield, Mail, Save, Loader2, Eye, EyeOff, BadgeCheck, ImageIcon, Upload, Trash2 } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useNavigate } from "react-router-dom";
 
@@ -49,6 +49,89 @@ const Settings = () => {
   // Backup email
   const [backupEmail, setBackupEmail] = useState("");
   const [savingBackup, setSavingBackup] = useState(false);
+
+  // Logo upload
+  const queryClient = useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+
+  const { data: orgData } = useQuery({
+    queryKey: ["org-logo", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("organizations")
+        .select("id, logo_url")
+        .eq("owner_id", user!.id)
+        .single();
+      return data;
+    },
+    enabled: !!user?.id && userRole === "organization_owner",
+  });
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validTypes = ["image/png", "image/jpeg", "image/svg+xml"];
+    if (!validTypes.includes(file.type)) {
+      toast({ title: "Invalid file", description: "Please upload a PNG, JPG, or SVG file.", variant: "destructive" });
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Logo must be under 2MB.", variant: "destructive" });
+      return;
+    }
+
+    setUploadingLogo(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const filePath = `${user!.id}/logo.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("org-logos")
+        .upload(filePath, file, { upsert: true });
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage.from("org-logos").getPublicUrl(filePath);
+
+      const logoUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+      const { error: updateError } = await supabase
+        .from("organizations")
+        .update({ logo_url: logoUrl } as any)
+        .eq("owner_id", user!.id);
+      if (updateError) throw updateError;
+
+      queryClient.invalidateQueries({ queryKey: ["org-logo"] });
+      toast({ title: "Logo updated", description: "Your organization logo has been saved." });
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    } finally {
+      setUploadingLogo(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveLogo = async () => {
+    setUploadingLogo(true);
+    try {
+      // List and remove files in user folder
+      const { data: files } = await supabase.storage.from("org-logos").list(user!.id);
+      if (files?.length) {
+        await supabase.storage.from("org-logos").remove(files.map(f => `${user!.id}/${f.name}`));
+      }
+      await supabase
+        .from("organizations")
+        .update({ logo_url: null } as any)
+        .eq("owner_id", user!.id);
+
+      queryClient.invalidateQueries({ queryKey: ["org-logo"] });
+      toast({ title: "Logo removed" });
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -260,6 +343,60 @@ const Settings = () => {
                   </Button>
                 </div>
               </div>
+
+              {/* Organization Logo Section - only for owners */}
+              {userRole === "organization_owner" && (
+                <div className={sectionClass}>
+                  <div className="h-[2px] bg-[hsl(var(--dashboard-gold))]" />
+                  <div className={sectionHeaderClass}>
+                    <ImageIcon className="h-4 w-4 text-[hsl(var(--dashboard-gold))]" />
+                    <span className="font-mono text-[11px] tracking-wider uppercase text-[hsl(var(--dashboard-gold))] font-semibold">
+                      Organization Logo
+                    </span>
+                  </div>
+                  <div className="p-5 space-y-4">
+                    {orgData?.logo_url && (
+                      <div className="flex items-center gap-4">
+                        <div className="h-20 w-20 rounded-lg border border-[hsl(var(--dashboard-border))] bg-[hsl(var(--dashboard-bg))] flex items-center justify-center overflow-hidden">
+                          <img
+                            src={orgData.logo_url}
+                            alt="Organization logo"
+                            className="max-h-full max-w-full object-contain"
+                          />
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleRemoveLogo}
+                          disabled={uploadingLogo}
+                          className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                          Remove
+                        </Button>
+                      </div>
+                    )}
+                    <div className="space-y-2">
+                      <label className={labelClass}>Upload Logo (PNG, JPG, SVG — max 2MB)</label>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".png,.jpg,.jpeg,.svg"
+                        onChange={handleLogoUpload}
+                        className="hidden"
+                      />
+                      <Button
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingLogo}
+                        className="flex items-center gap-2 bg-[hsl(var(--dashboard-gold))] text-[hsl(var(--dashboard-bg))] font-mono text-[11px] tracking-wider uppercase font-bold hover:bg-[hsl(var(--dashboard-gold)/0.85)]"
+                      >
+                        {uploadingLogo ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+                        {uploadingLogo ? "Uploading..." : orgData?.logo_url ? "Replace Logo" : "Upload Logo"}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Security Section */}
               <div className={sectionClass}>
