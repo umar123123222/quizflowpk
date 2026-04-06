@@ -231,18 +231,21 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
+          logo_url: string | null
           name: string
           owner_id: string
         }
         Insert: {
           created_at?: string | null
           id?: string
+          logo_url?: string | null
           name: string
           owner_id: string
         }
         Update: {
           created_at?: string | null
           id?: string
+          logo_url?: string | null
           name?: string
           owner_id?: string
         }
