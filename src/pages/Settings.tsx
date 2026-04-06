@@ -50,6 +50,89 @@ const Settings = () => {
   const [backupEmail, setBackupEmail] = useState("");
   const [savingBackup, setSavingBackup] = useState(false);
 
+  // Logo upload
+  const queryClient = useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+
+  const { data: orgData } = useQuery({
+    queryKey: ["org-logo", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("organizations")
+        .select("id, logo_url")
+        .eq("owner_id", user!.id)
+        .single();
+      return data;
+    },
+    enabled: !!user?.id && userRole === "organization_owner",
+  });
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validTypes = ["image/png", "image/jpeg", "image/svg+xml"];
+    if (!validTypes.includes(file.type)) {
+      toast({ title: "Invalid file", description: "Please upload a PNG, JPG, or SVG file.", variant: "destructive" });
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Logo must be under 2MB.", variant: "destructive" });
+      return;
+    }
+
+    setUploadingLogo(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const filePath = `${user!.id}/logo.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("org-logos")
+        .upload(filePath, file, { upsert: true });
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage.from("org-logos").getPublicUrl(filePath);
+
+      const logoUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+      const { error: updateError } = await supabase
+        .from("organizations")
+        .update({ logo_url: logoUrl } as any)
+        .eq("owner_id", user!.id);
+      if (updateError) throw updateError;
+
+      queryClient.invalidateQueries({ queryKey: ["org-logo"] });
+      toast({ title: "Logo updated", description: "Your organization logo has been saved." });
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    } finally {
+      setUploadingLogo(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveLogo = async () => {
+    setUploadingLogo(true);
+    try {
+      // List and remove files in user folder
+      const { data: files } = await supabase.storage.from("org-logos").list(user!.id);
+      if (files?.length) {
+        await supabase.storage.from("org-logos").remove(files.map(f => `${user!.id}/${f.name}`));
+      }
+      await supabase
+        .from("organizations")
+        .update({ logo_url: null } as any)
+        .eq("owner_id", user!.id);
+
+      queryClient.invalidateQueries({ queryKey: ["org-logo"] });
+      toast({ title: "Logo removed" });
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
